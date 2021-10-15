@@ -9,5 +9,5 @@ class Todo(models.Model):
     completed = models.BooleanField(default=False)  
     
     
-    def __str__(self):
+    def _str_(self):
         return self.title
