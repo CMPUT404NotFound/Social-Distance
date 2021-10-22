@@ -19,6 +19,6 @@ from django.urls.conf import re_path
 import api.views as views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    re_path(r'^api/author/([A-Za-z0-9])+$', views.author)
+    path("admin/", admin.site.urls),
+    re_path(r"^api/author/(?P<id>[A-Za-z0-9]+)$", views.author),
 ]
