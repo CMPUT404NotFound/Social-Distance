@@ -1,9 +1,10 @@
 from django.db import models
-
+import uuid
 # Create your models here.
 
 
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+
 
 
 class AuthorManager(BaseUserManager):
@@ -11,6 +12,8 @@ class AuthorManager(BaseUserManager):
 
         if not displayName:
             raise ValueError("Users must have a displayName")
+        if not password:
+            raise ValueError("Users must have a password")
 
         user = self.model(
             displayName=displayName,
@@ -31,6 +34,8 @@ class AuthorManager(BaseUserManager):
 
 class Author(AbstractBaseUser):
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
     displayName = models.CharField(
         "displayName",
         max_length=40,
@@ -48,7 +53,7 @@ class Author(AbstractBaseUser):
     def __str__(self):
         return f"author: {self.displayName}, id: {self.id}"
 
-    objects = AuthorManager()
+    objects : AuthorManager = AuthorManager()
 
     USERNAME_FIELD = "displayName"
     REQUIRED_FIELDS = []

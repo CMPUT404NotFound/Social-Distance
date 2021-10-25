@@ -15,6 +15,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+TOKEN_EXPIRE_TIME = 60 * 60 * 3  # number of seconds until token expires
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -38,7 +39,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
+    # local app
     "api",
 ]
 
@@ -103,6 +106,11 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
 ]
 
+# DRF auth
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ("api.token.TokenAuth",),
+  
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
