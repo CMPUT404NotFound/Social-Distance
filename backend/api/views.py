@@ -63,10 +63,10 @@ def handleAuthorById(request: Request, id):
 @api_view(["GET"])
 def getAllAuthors(request: Request):
     """
-    GET to get a list of all authors, with pagination options
-    POST to register a new author
+    GET to get a list of all authors, with pagination options\n
     """
     if request.method == "GET":
+        print(request.query_params)
         # TODO pagination/query params. (if no params given, return 5 most recent)
         authors = Author.objects.all()
         s = AuthorSerializer(authors, many=True)
