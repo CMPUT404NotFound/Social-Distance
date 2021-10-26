@@ -3,11 +3,20 @@ from rest_framework.authtoken.models import Token
 
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly,
+    AllowAny,
+)
 
 from api.token import expires_in, refreshToken
+from api.token import TokenAuth
 
 from .models import Author
 from .serializers import *
@@ -16,10 +25,11 @@ from .serializers import *
 
 
 @api_view(["GET", "POST"])
-@permission_classes((IsAuthenticatedOrReadOnly,))
+@permission_classes([IsAuthenticatedOrReadOnly])
 def handleAuthorById(request: Request, id):
-
+    print("entering ")
     if request.method == "GET":
+        print("GET")
         try:
             author = Author.objects.get(pk=id)
             s = AuthorSerializer(author)
@@ -31,6 +41,7 @@ def handleAuthorById(request: Request, id):
         """
         Author Updates, auth needed
         """
+        print("post")
         try:
             print("test", id)
             a: Author = Author.objects.get(pk=id)
