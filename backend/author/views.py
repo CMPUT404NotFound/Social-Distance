@@ -135,6 +135,7 @@ def getAllAuthors(request: Request):
 @api_view(["POST"])
 def signUp(request: Request):
     data = request.data
+    print(data)
     try:
         Author.objects.create_user(
             data["userName"],
