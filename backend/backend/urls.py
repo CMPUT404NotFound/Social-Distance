@@ -25,4 +25,6 @@ urlpatterns = [
     path("api/authors", views.getAllAuthors),
     path("api/login", views.login),
     path("api/signup", views.signUp),
+    path("api/author/<uuid:id>/followers", views.getAllFollowers),
+    path("api/author/<uuid:author_id>/followers/<uuid:follower_id>", views.addFollower),
 ]

@@ -73,3 +73,12 @@ class Author(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+class Follower(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sender = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="sender")
+    receiver = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="receiver")
+
+class Follow_Request(models.Model):
+    requestor = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="requestor")
+    requestee = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="requestee")
