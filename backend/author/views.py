@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate
-
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authtoken.models import Token
 
 from rest_framework.response import Response
@@ -135,6 +135,7 @@ def getAllAuthors(request: Request):
 @api_view(["POST"])
 def signUp(request: Request):
     data = request.data
+    print(data)
     try:
         Author.objects.create_user(
             data["userName"],
