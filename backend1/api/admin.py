@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from django.db.models import fields
 from .models import Author
 
 # Register your models here.
