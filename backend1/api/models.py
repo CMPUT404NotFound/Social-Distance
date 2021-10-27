@@ -1,22 +1,22 @@
 from django.db import models
 import uuid
+
 # Create your models here.
-
-
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 
-
 class AuthorManager(BaseUserManager):
-    def create_user(self, displayName, github="", profileImage="", password=None):
-
-        if not displayName:
-            raise ValueError("Users must have a displayName")
+    def create_user(
+        self, userName, displayName="", github="", profileImage="", password=None
+    ):
+        if not userName:
+            raise ValueError("Users must have a userName")
         if not password:
             raise ValueError("Users must have a password")
 
         user = self.model(
-            displayName=displayName,
+            userName=userName,
+            displayName=displayName if displayName else userName,
             github=github,
             profileImage=profileImage,
         )
@@ -24,9 +24,11 @@ class AuthorManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, displayName, github="", profileImage="", password=None):
+    def create_superuser(
+        self, userName, displayName="", github="", profileImage="", password=None
+    ):
 
-        user = self.create_user(displayName, github, profileImage, password)
+        user = self.create_user(userName, displayName, github, profileImage, password)
         user.is_admin = True
         user.save(using=self._db)
         return user
@@ -34,28 +36,33 @@ class AuthorManager(BaseUserManager):
 
 class Author(AbstractBaseUser):
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, max_length=36)
 
     displayName = models.CharField(
-        "displayName",
+        max_length=40, null=False, blank=True, default=""
+    )
+
+    userName = models.CharField(
+        "userName",
         max_length=40,
         unique=True,
         null=False,
         blank=False,
+        default="defaultName",
     )  # max 40 chars should be more than enough
     github = models.URLField(
-        "github", max_length=60, blank=True
+        "github", max_length=60, blank=True, null=False
     )  # len('https://github.com/'), and max user name length on github is 39 chars
-    profileImage = models.URLField("profileImage", blank=True)
+    profileImage = models.URLField("profileImage", blank=True, null=False)
 
     is_admin = models.BooleanField(default=False)
 
     def __str__(self):
         return f"author: {self.displayName}, id: {self.id}"
 
-    objects : AuthorManager = AuthorManager()
+    objects: AuthorManager = AuthorManager()
 
-    USERNAME_FIELD = "displayName"
+    USERNAME_FIELD = "userName"
     REQUIRED_FIELDS = []
 
     def has_perm(self, perm, obj=None):

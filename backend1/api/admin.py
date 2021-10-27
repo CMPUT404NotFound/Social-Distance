@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
+from django.db.models import fields
 from .models import Author
 
 # Register your models here.
@@ -16,11 +17,10 @@ class UserCreationForm(ModelForm):
     password2 = forms.CharField(
         label="Password confirmation", widget=forms.PasswordInput
     )
-    is_admin = forms.BooleanField(label="Admin", required=False)
 
     class meta:
         model = Author
-        fields = ["displayName", "github", "profileImage"]
+        fields = ["userName", "displayName", "github", "profileImage", "is_admin"]
 
     def clean_password2(self):
         # clean_<variable>() is called to clean the variable. Here te 2 passwords are compared to make sure they match.
@@ -50,6 +50,7 @@ class UserChangeForm(ModelForm):
     class Meta:
         model = Author
         fields = [
+            "userName",
             "displayName",
             "password",
             "is_admin",
@@ -67,12 +68,12 @@ class AuthorAdmin(UserAdmin):
 
     # im not sure what the following does
     # help
-    list_display = ("displayName", "github", "profileImage", "is_admin")
+    list_display = ("userName", "displayName", "github", "profileImage", "is_admin")
     list_filter = ("is_admin",)
     # fields for when modifying an existing user
     fieldsets = (
-        (None, {"fields": ("displayName", "password")}),
-        ("Personal info", {"fields": ("github", "profileImage")}),
+        (None, {"fields": ("userName", "password")}),
+        ("Personal info", {"fields": ("displayName", "github", "profileImage")}),
         ("Permissions", {"fields": ("is_admin",)}),
     )
 
@@ -83,20 +84,21 @@ class AuthorAdmin(UserAdmin):
             {
                 "classes": ("wide",),
                 "fields": (
-                    "displayName",
-                    "is_admin",
+                    "userName",
                     "password1",
                     "password2",
+                    "displayName",
                     "github",
                     "profileImage",
+                    "is_admin",
                 ),
             },
         ),
     )
 
     # for when displaying in a list
-    search_fields = ("displayName",)
-    ordering = ("displayName",)
+    search_fields = ("userName", "displayName")
+    ordering = ("userName",)
     filter_horizontal = ()
 
 

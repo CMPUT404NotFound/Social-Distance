@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib.auth.models import Group
-from django.forms import forms
+import django.forms as forms
 from django.forms.models import ModelForm
 from .models import Author
 from django.contrib.auth.forms import ReadOnlyPasswordHashField

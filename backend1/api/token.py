@@ -44,7 +44,7 @@ class TokenAuth(TokenAuthentication):
 
         Ensures that request has a valid token
         """
-        print("wtfw tf wtwf \n\n\n\n")
+
         auth = get_authorization_header(request).split()
 
         if not auth or auth[0].lower() != self.keyword.lower().encode():
@@ -64,6 +64,7 @@ class TokenAuth(TokenAuthentication):
                 "Invalid token header. Token string should not contain invalid characters."
             )
 
+
         data = request.data
         try:
             author2 = Token.objects.get(key=token).user
@@ -73,6 +74,7 @@ class TokenAuth(TokenAuthentication):
             author1 = Author.objects.get(
                 pk=data.get("id", uuid.UUID(int=0))
             )  # if there is no id in the request, then force NotFound Exception
+            
         except Author.DoesNotExist:
             raise AuthenticationFailed(
                 "Author not found. Is id included in the request? If so, a Athor with corresponding id is not found."
@@ -87,15 +89,3 @@ class TokenAuth(TokenAuthentication):
             raise AuthenticationFailed("Token expired")
 
         return (token.user, token)
-
-    # def authenticate_credentials(self, key):
-    #     try:
-    #         token = Token.objects.get(key=key)
-    #     except Token.DoesNotExist:
-    #         # token given is not found in database
-    #         raise AuthenticationFailed("Invalid token")
-
-    #     if token_expired(token):
-    #         raise AuthenticationFailed("Token expired")
-
-    #     return (token.user, token)
