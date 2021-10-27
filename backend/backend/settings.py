@@ -134,4 +134,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 import django_on_heroku
 
-django_heroku.settings(locals())
+django_on_heroku.settings(locals())
