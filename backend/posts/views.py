@@ -17,8 +17,8 @@ from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
-@api_view(["GET"],["POST"])
-def getAllPosts(request: Request, id):
+@api_view(["GET","POST"])
+def getAllPosts(request: Request, author_id):
     """
     GET to get a list of all authors, with pagination options
     POST to register a new author
@@ -26,8 +26,10 @@ def getAllPosts(request: Request, id):
     if request.method == "GET":
         try:
             
-            post = posts.objects.filter(=id)
-            s = FollowerSerializer(author, context={'request': request}, many=True)
+            post = posts.objects.filter(pk = author_id)
+            s = PostsSerializer(posts, context={'request': request}, many=True)
             return Response(s.data)
-        except Author.DoesNotExist:
+        except posts.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+    elif request.method == "POST":
+        pass
