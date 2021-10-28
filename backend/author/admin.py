@@ -19,7 +19,7 @@ class UserCreationForm(ModelForm):
 
     class meta:
         model = Author
-        fields = ["displayName", "github", "profileImage"]
+        fields = ["userName", "displayName", "github", "profileImage"]
 
     def clean_password2(self):
         # clean_<variable>() is called to clean the variable. Here te 2 passwords are compared to make sure they match.
@@ -44,6 +44,7 @@ class UserCreationForm(ModelForm):
 class UserChangeForm(ModelForm):
     # for updating values of existing users
     password = ReadOnlyPasswordHashField()
+
     class Meta:
         model = Author
         fields = [
@@ -68,8 +69,8 @@ class AuthorAdmin(UserAdmin):
     list_filter = ("is_admin",)
     # fields for when modifying an existing user
     fieldsets = (
-        (None, {"fields": ("displayName", "password")}),
-        ("Personal info", {"fields": ("github", "profileImage")}),
+        (None, {"fields": ("userName", "password")}),
+        ("Personal info", {"fields": ("displayName", "github", "profileImage")}),
         ("Permissions", {"fields": ("is_admin",)}),
     )
 
@@ -80,10 +81,11 @@ class AuthorAdmin(UserAdmin):
             {
                 "classes": ("wide",),
                 "fields": (
-                    "displayName",
-                    "is_admin",
+                    "userName",
                     "password1",
                     "password2",
+                    "is_admin",
+                    "displayName",
                     "github",
                     "profileImage",
                 ),
