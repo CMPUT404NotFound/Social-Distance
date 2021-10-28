@@ -17,7 +17,7 @@ import django_on_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TOKEN_EXPIRE_TIME = 60 * 60 * 3
-
+SITE_ADDRESS = "http://localhost:8000"  # todo temp address
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # local apps
     "author",
     "Followers",
+    "comment",
 ]
 
 MIDDLEWARE = [
