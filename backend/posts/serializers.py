@@ -2,13 +2,14 @@ from rest_framework import serializers
 from .models import posts
 from backend.settings import SITE_ADDRESS
 
+
 class PostsSerializer(serializers.ModelSerializer):
 
     type = serializers.SerializerMethodField()
 
-    host = serializers.SerializerMethodField()
+    # host = serializers.SerializerMethodField()
 
-    url = serializers.SerializerMethodField()
+    # url = serializers.SerializerMethodField()
 
     class Meta:
         model = posts
@@ -16,5 +17,3 @@ class PostsSerializer(serializers.ModelSerializer):
 
     def get_type(self, obj):
         return "post"
-
- 

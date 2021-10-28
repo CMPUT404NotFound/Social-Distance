@@ -1,12 +1,15 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
+
 # Register your models here.
 import django.forms as forms
 from django.forms.models import ModelForm
 from .models import posts
 
+
 class PostAdmin(ModelAdmin):
-    fields = ["title", "visibility","content"]
-    list_display = ["title", "visibility","content"]
+    fields = ["author_id", "title", "visibility", "content"]
+    list_display = ["post_id", "title", "visibility", "content"]
+
 
 admin.site.register(posts, PostAdmin)
