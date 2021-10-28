@@ -15,11 +15,12 @@ from rest_framework.permissions import (
 
 from .token import expires_in, refreshToken
 
-
 from .models import Author
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .documentations import *
+
+from django.db.utils import IntegrityError
 
 # Create your views here.
 
@@ -128,14 +129,17 @@ def getAllAuthors(request: Request):
 @swagger_auto_schema(
     method="post",
     operation_summary="Sign up with username and password. author personal info optional",
-    responses={201: "author created", 400: "bad sign up information"},
+    responses={
+        201: "author created",
+        400: "bad sign up information",
+        409: "username already exist",
+    },
     field_inspectors=[NoSchemaTitleInspector],
     request_body=SignUpSerializer,
 )
 @api_view(["POST"])
 def signUp(request: Request):
     data = request.data
-    
     try:
         Author.objects.create_user(
             data["userName"],
@@ -147,6 +151,8 @@ def signUp(request: Request):
         return Response(status=status.HTTP_201_CREATED)
     except (ValueError, AttributeError) as error:
         return Response(error, status=status.HTTP_400_BAD_REQUEST)
+    except IntegrityError as error:
+        return Response(error, status=status.HTTP_409_CONFLICT)
 
 
 @swagger_auto_schema(

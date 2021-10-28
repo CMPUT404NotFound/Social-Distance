@@ -31,13 +31,14 @@ class CommentAdmin(ModelAdmin):
         "post",
         "author",
         "comment",
-        "content_type",
+        "contentType",
     ]
-    list_display = ["post", "author", "comment", "content_type", "published"]
+    list_display = ["post", "author", "comment", "contentType", "published"]
 
 
 class PostAdmin(ModelAdmin):
-    fields = ["content"]
+    fields = ["id", "content"]
+    list_display = ["id", "content"]
 
 
 admin.site.register(Comment, CommentAdmin)
