@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     # local apps
     "author",
+    "Followers",
 ]
 
 MIDDLEWARE = [
