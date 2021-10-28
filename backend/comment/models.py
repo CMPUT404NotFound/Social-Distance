@@ -20,7 +20,7 @@ class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     post = models.ForeignKey(
-        "Post", on_delete=models.CASCADE, related_name="post_comment"
+        "Post", on_delete=models.CASCADE, related_name="post_comments"
     )
 
     author = models.ForeignKey(
@@ -31,8 +31,8 @@ class Comment(models.Model):
         "comment", max_length=360, blank=True, null=False, default=""
     )
 
-    content_type = models.CharField(
-        "content-type",
+    contentType = models.CharField(
+        "contentType",
         choices=Content_choices,
         max_length=1,
         default="P",
