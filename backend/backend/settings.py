@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # local apps
     "author",
     "Followers",
+    "posts"
 ]
 
 MIDDLEWARE = [
