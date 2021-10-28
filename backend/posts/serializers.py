@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import posts
+from backend.settings import SITE_ADDRESS
 
 class PostsSerializer(serializers.ModelSerializer):
 
@@ -15,4 +16,5 @@ class PostsSerializer(serializers.ModelSerializer):
 
     def get_type(self, obj):
         return "post"
+
  
