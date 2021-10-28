@@ -43,9 +43,7 @@ class UserCreationForm(ModelForm):
 
 class UserChangeForm(ModelForm):
     # for updating values of existing users
-
     password = ReadOnlyPasswordHashField()
-
     class Meta:
         model = Author
         fields = [
