@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 import author.views as authorViews
+import Followers.views as followerViews
 
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -51,4 +52,7 @@ urlpatterns = [
     path(
         "api/redoc", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
     ),
+    path("api/author/<uuid:id>/followers", followerViews.getAllFollowers),
+    path("api/author/<uuid:author_id>/followers/<uuid:follower_id>",
+         followerViews.addFollower),
 ]
