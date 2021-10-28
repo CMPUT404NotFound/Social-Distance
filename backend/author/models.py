@@ -7,20 +7,28 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 class AuthorManager(BaseUserManager):
     def create_user(
-        self, userName, displayName="", github="", profileImage="", password=None
+        self,
+        userName=None,
+        displayName="",
+        github="",
+        profileImage="",
+        password=None,
+        isLocalUser=True,
     ):
-        if not userName:
-            raise ValueError("Users must have a userName")
-        if not password:
-            raise ValueError("Users must have a password")
+        if isLocalUser:
+            if not userName:
+                raise ValueError("Users must have a userName")
+            if not password:
+                raise ValueError("Users must have a password")
 
         user = self.model(
-            userName=userName,
+            userName=userName if isLocalUser else uuid.uuid4(),
             displayName=displayName if displayName else userName,
             github=github,
             profileImage=profileImage,
+            isLocalUser=isLocalUser,
         )
-        user.set_password(password)
+        user.set_password(password if isLocalUser else uuid.uuid4())
         user.save(using=self._db)
         return user
 
@@ -56,6 +64,8 @@ class Author(AbstractBaseUser):
     profileImage = models.URLField("profileImage", blank=True, null=False)
 
     is_admin = models.BooleanField(default=False)
+
+    isLocalUser = models.BooleanField(default=True)
 
     def __str__(self):
         return f"author: {self.displayName}, id: {self.id}"
