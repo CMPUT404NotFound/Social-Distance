@@ -24,16 +24,12 @@ def getAllPosts(request: Request, author_id):
         try:
             post = posts.objects.filter(author_id=author_id)
             s = PostsSerializer(post, context={"request": request}, many=True)
-            a_data = AuthorSerializer(Author)
+            return Response(s.data)
             
         except posts.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+      
         
-        output = {
-            "type": "post",
-            "author": a_data.data,
-        }
-        return Response(output,status=400)
         
     elif request.method == "POST":
         try:
