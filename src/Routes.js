@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Switch } from "react-router";
 import Login from "./Pages/Login/login";
+import Inbox from "./Pages/Inbox/inbox";
 
 const Routes = () => {
-	return (
-		<Switch>
-			<Route exact path="/" component={Login} />
-		</Switch>
-	);
+	const [loggedIn, setLoggedIn] = useState(false);
+
+	if (loggedIn) {
+		return (
+			<Switch>
+				<Route exact path="/" component={Inbox} />
+			</Switch>
+		);
+	} else {
+		return (
+			<Switch>
+				<Route exact path="/" component={Login} />
+			</Switch>
+		);
+	}
 };
 
 export default Routes;
