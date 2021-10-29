@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Route, Switch } from "react-router";
 import Login from "./Pages/Login/login";
+import CreatePost from "./Pages/Create/create";
 import Inbox from "./Pages/Inbox/inbox";
 import Signup from "./Pages/Signup/signup";
 import Error404 from "./Error/error404";
@@ -13,6 +14,7 @@ const Routes = () => {
 			<Switch>
 				<Route exact path="/">
 					<Inbox setLoggedIn={setLoggedIn} />
+					<Route path="/CreatePost" component={CreatePost} />
 				</Route>
 				<Route component={Error404} />
 			</Switch>

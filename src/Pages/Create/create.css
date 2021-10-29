@@ -1,0 +1,12 @@
+@import 'antd/dist/antd.css';
+
+.textField {
+    width: 500px;
+    height: 50vh;
+    margin: auto;
+    padding: 10px;
+}
+
+.title {
+    padding: 25px;
+}
