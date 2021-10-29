@@ -51,22 +51,26 @@ def addFollower(request: Request, author_id, follower_id):
             follow = Follower.objects.create(sender=sender, receiver=receiver)
             # author.sender.add(follower)
             follow.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_201_CREATED)
         except Author.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-    # elif request.method == "PUT":
-    #     try:
-    #         author = Author.objects.get(pk=author_id)
-    #         follower = Author.objects.get(pk=follower_id)
-    #         author.sender.add(follower)
-    #         return Response(status=status.HTTP_204_NO_CONTENT)
-    #     except Author.DoesNotExist:
-    #         return Response(status=status.HTTP_404_NOT_FOUND)
-    # elif request.method == "DELETE":
-    #     try:
-    #         author = Author.objects.get(pk=author_id)
-    #         follower = Author.objects.get(pk=follower_id)
-    #         author.sender.remove(follower)
-    #         return Response(status=status.HTTP_204_NO_CONTENT)
-    #     except Author.DoesNotExist:
-    #         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    elif request.method == "DELETE":
+        try:
+            author = Author.objects.get(pk=author_id)
+            follower = Author.objects.get(pk=follower_id)
+            follow = Follower.objects.get(sender=follower, receiver=author)
+            follow.delete()
+            return Response(status=status.HTTP_200_OK)
+        except Author.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    elif request.method == "GET":
+        try:
+            author = Author.objects.get(pk=author_id)
+            follower = Author.objects.get(pk=follower_id)
+            follow = Follower.objects.get(sender=follower, receiver=author)
+            if follow:
+                return Response(status=status.HTTP_200_OK)
+        except Follower.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)

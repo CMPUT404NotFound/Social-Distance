@@ -98,6 +98,7 @@ def handleAuthorById(request: Request, id):
             default=10,
         ),
     ],
+    
 )
 @api_view(["GET"])
 def getAllAuthors(request: Request):

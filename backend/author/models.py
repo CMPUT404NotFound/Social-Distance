@@ -7,20 +7,33 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 class AuthorManager(BaseUserManager):
     def create_user(
-        self, userName, displayName="", github="", profileImage="", password=None
+        self,
+        userName=None,
+        displayName="",
+        github="",
+        profileImage="",
+        password=None,
+        isLocalUser=True,
+        id=None,
     ):
-        if not userName:
-            raise ValueError("Users must have a userName")
-        if not password:
-            raise ValueError("Users must have a password")
+        if isLocalUser:
+            if not userName:
+                raise ValueError("Users must have a userName")
+            if not password:
+                raise ValueError("Users must have a password")
+        else:
+            if not id:
+                raise ValueError("Foreign user must provide id")
 
         user = self.model(
-            userName=userName,
+            id=id if not isLocalUser else uuid.uuid4(),
+            userName=userName if isLocalUser else uuid.uuid4(),
             displayName=displayName if displayName else userName,
             github=github,
             profileImage=profileImage,
+            isLocalUser=isLocalUser,
         )
-        user.set_password(password)
+        user.set_password(password if isLocalUser else str(uuid.uuid4()))
         user.save(using=self._db)
         return user
 
@@ -36,9 +49,7 @@ class AuthorManager(BaseUserManager):
 
 class Author(AbstractBaseUser):
 
-    id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, max_length=36
-    )
+    id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False, max_length=200)
 
     displayName = models.CharField(max_length=40, null=False, blank=True, default="")
 
@@ -50,12 +61,16 @@ class Author(AbstractBaseUser):
         blank=False,
         default="defaultName",
     )  # max 40 chars should be more than enough
+    
     github = models.URLField(
         "github", max_length=60, blank=True, null=False
     )  # len('https://github.com/'), and max user name length on github is 39 chars
+    
     profileImage = models.URLField("profileImage", blank=True, null=False)
 
     is_admin = models.BooleanField(default=False)
+
+    isLocalUser = models.BooleanField(default=True)
 
     def __str__(self):
         return f"author: {self.displayName}, id: {self.id}"

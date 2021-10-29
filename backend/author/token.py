@@ -78,7 +78,7 @@ class TokenAuth(TokenAuthentication):
                 "Author not found. Is id included in the request? If so, a Athor with corresponding id is not found."
             )
 
-        if author1 != author2:
+        if author1 != author2 and not author1.is_admin: #if the token belongs to admin, then user identity check can be skipped
             raise AuthenticationFailed(
                 "Token's Author and Request's author does not match"
             )
