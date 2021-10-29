@@ -37,7 +37,7 @@ class CommentAdmin(ModelAdmin):
 
 
 class PostAdmin(ModelAdmin):
-    fields = ["id", "content"]
+    fields = ["content"]
     list_display = ["id", "content"]
 
 
