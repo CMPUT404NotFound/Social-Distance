@@ -10,8 +10,6 @@ visibility_choice = {("PU", "PUBLIC"), ("PR", "PRIVATE")}
 class postsManager(models.Model):
     pass
 
-
-
 class posts(models.Model):
 
     post_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
