@@ -5,6 +5,7 @@ from author.models import Author
 # Create your models here.
 
 visibility_choice = {("PU", "PUBLIC"), ("PR", "PRIVATE")}
+content_choice = {("markdown","text/markdown"),("plain","text/plain"),("app","application/base64"),("png","image/png;base64"),("jpeg","image/jpeg;base64")}
 
 
 class postsManager(models.Model):
@@ -22,7 +23,11 @@ class posts(models.Model):
     visibility = models.CharField(
         choices=visibility_choice, max_length=8, null=False, blank=False, default="PU"
     )
+    description = models.CharField("description", max_length=100, blank=True)
     content = models.TextField("content", max_length=200, blank=True)
+    contentType = models.CharField(
+        choices=content_choice, max_length= 20, null=False, default="plain"
+    )
 
     def __str__(self):
         return "place holder post"

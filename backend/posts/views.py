@@ -60,6 +60,9 @@ def getAllPosts(request: Request, author_id):
                author_id= author,
                title=request.data['title'],
                visibility= request.data['visibility'],
+               description= request.data['description'],
+               content= request.data['content'],
+               contentType= request.data['contentType']
             )
             # author.sender.add(follower)
             new_post.save()
