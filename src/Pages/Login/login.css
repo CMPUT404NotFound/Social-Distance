@@ -24,6 +24,13 @@
 
 .login_page .content {
 	flex: 1;
-	display: grid;
-	place-items: center;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	justify-content: center;
+	align-items: center;
+}
+
+.login_page .content .error {
+	max-width: 30rem;
 }

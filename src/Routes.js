@@ -14,7 +14,9 @@ const Routes = () => {
 			<Switch>
 				<Route exact path="/">
 					<Inbox setLoggedIn={setLoggedIn} />
-					<Route path="/CreatePost" component={CreatePost} />
+				</Route>
+				<Route exact path="/createpost">
+					<CreatePost setLoggedIn={setLoggedIn} />
 				</Route>
 				<Route component={Error404} />
 			</Switch>
