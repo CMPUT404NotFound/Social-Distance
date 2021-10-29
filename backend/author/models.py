@@ -14,14 +14,19 @@ class AuthorManager(BaseUserManager):
         profileImage="",
         password=None,
         isLocalUser=True,
+        id=None,
     ):
         if isLocalUser:
             if not userName:
                 raise ValueError("Users must have a userName")
             if not password:
                 raise ValueError("Users must have a password")
+        else:
+            if not id:
+                raise ValueError("Foreign user must provide id")
 
         user = self.model(
+            id=id if not isLocalUser else uuid.uuid4(),
             userName=userName if isLocalUser else uuid.uuid4(),
             displayName=displayName if displayName else userName,
             github=github,
@@ -44,9 +49,7 @@ class AuthorManager(BaseUserManager):
 
 class Author(AbstractBaseUser):
 
-    id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, max_length=36
-    )
+    id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False)
 
     displayName = models.CharField(max_length=40, null=False, blank=True, default="")
 

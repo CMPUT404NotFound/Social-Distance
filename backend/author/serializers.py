@@ -1,4 +1,5 @@
 
+from typing_extensions import Required
 from rest_framework import serializers
 from .models import Author
 
@@ -29,3 +30,23 @@ class AuthorSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     displayName = serializers.CharField(max_length=100)
     password = serializers.CharField(max_length=100)
+    
+    
+class ForeignAuthorSerializer(serializers.Serializer):
+    
+    type =serializers.CharField()
+
+    id = serializers.CharField(required = True)
+    
+    displayName = serializers.CharField(required = False)
+
+    host = serializers.SerializerMethodField(required = False)
+
+    url = serializers.SerializerMethodField(required = False)
+    
+    github = serializers.CharField(required = False)
+    
+    profileImage = serializers.CharField(required = False)
+
+
+    

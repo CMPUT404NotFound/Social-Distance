@@ -18,6 +18,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import ValidationError
 from .documentation import NoSchemaTitleInspector, getCommentsResponse
 
+from author.serializers import ForeignAuthorSerializer
+from author.models import Author
+
 
 @swagger_auto_schema(
     method="get",
@@ -29,6 +32,7 @@ from .documentation import NoSchemaTitleInspector, getCommentsResponse
         404: "Post not found",
     },
     field_inspectors=[NoSchemaTitleInspector],
+    tags=["commments"],
 )
 @api_view(["GET", "POST"])
 def handleComments(request: Request, authorId: str = "", postId: str = ""):
@@ -67,7 +71,49 @@ def handleComments(request: Request, authorId: str = "", postId: str = ""):
         data = request.data
 
         try:
-            if data["type"] == "comment":
-                pass  # todo handle foreign user
+            post = Post.objects.get(pk=postId)
+        except Post.DoesNotExist:
+            return Response("no post under this id", status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            if (
+                all(
+                    (
+                        item in data
+                        for item in (
+                            "type",
+                            "author",
+                            "comment",
+                            "commentType",
+                            "published",
+                        )
+                    )
+                )
+                and data["type"] == "comment"
+            ):
+
+                if "id" in data["author"]:  # just check if author has id
+                    if Author.objects.filter(
+                        pk=data["author"]["id"]
+                    ).exists():  # since if the db has the id already, then all other info is already in the db
+                        comment = Comment.objects.create(
+                            author=Author.objects.get(pk=data["author"]["id"]),
+                            comment=data["comment"],
+                            commentType=data["commentType"],
+                            published=data["published"],
+                            post=post,
+                        )
+                        comment.save()
+                        return Response(
+                            "comment created", status=status.HTTP_204_NO_CONTENT
+                        )
+                    else:
+                        pass  # handle foreign author
+            else:
+                return Response(
+                    "Bad request! Are you sure all of ('type', 'author', 'comment', 'commentType', 'published') are provided in the request?",
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
         except (KeyError,) as e:
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
