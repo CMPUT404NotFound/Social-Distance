@@ -14,7 +14,7 @@ import Explore from "./Pages/Explore/explore";
 import Error404 from "./Error/error404";
 
 const Routes = () => {
-	const [loggedIn, setLoggedIn] = useState(true);
+	const [loggedIn, setLoggedIn] = useState(false);
 	const [user, setUser] = useState(null);
 
 	if (loggedIn) {
