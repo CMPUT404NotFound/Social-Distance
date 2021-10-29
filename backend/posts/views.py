@@ -30,11 +30,10 @@ def getAllPosts(request: Request, author_id):
             return Response(status=status.HTTP_404_NOT_FOUND)
     elif request.method == "POST":
         try:
-            receiver = Author.objects.get(pk=author_id)
-            sender = Author.objects.get(pk=follower_id)
-            follow = Follower.objects.create(sender=sender, receiver=receiver)
+            author = posts.objects.get(author_id = author_id)
+            new_post = posts.objects.create(author)
             # author.sender.add(follower)
-            follow.save()
+            new_post.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except Author.DoesNotExist:
+        except posts.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
