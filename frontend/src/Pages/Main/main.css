@@ -1,0 +1,10 @@
+.main_page .content {
+	margin-left: 200px;
+	padding: 1rem;
+}
+
+.main_page .create_button {
+	position: fixed;
+	bottom: 2rem;
+	right: 2rem;
+}
