@@ -6,11 +6,9 @@ import {
 	LogoutOutlined,
 	PlusOutlined,
 } from "@ant-design/icons";
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import "./main.css";
-import axios from "axios";
 import history from "./../../history";
 
 const { Sider } = Layout;

@@ -29,9 +29,9 @@ const Inbox = ({ user }) => {
 
 	return (
 		<div className="inbox_page">
-			{posts.map((post) => {
-				<Post post={post} />;
-			})}
+			{posts.map((post) => (
+				<Post post={post} />
+			))}
 		</div>
 	);
 };

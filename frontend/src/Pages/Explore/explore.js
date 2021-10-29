@@ -27,9 +27,9 @@ const Explore = ({ user }) => {
 
 	return (
 		<div className="inbox_page">
-			{people.map((person) => {
-				<Profile post={person} />;
-			})}
+			{people.map((person) => (
+				<Profile post={person} />
+			))}
 		</div>
 	);
 };
