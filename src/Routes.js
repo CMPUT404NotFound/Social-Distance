@@ -31,10 +31,10 @@ const Routes = () => {
 					<Signup setLoggedIn={setLoggedIn} />
 				</Route>
 				<Route exact path="/login">
-					<Login />
+					<Login setLoggedIn={setLoggedIn} />
 				</Route>
 				<Route exact path="/">
-					<Login />
+					<Login setLoggedIn={setLoggedIn} />
 				</Route>
 				<Route component={Error404} />
 			</Switch>

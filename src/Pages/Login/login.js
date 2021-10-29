@@ -30,12 +30,14 @@ const Login = ({ setLoggedIn }) => {
 				console.log(response);
 
 				setLoggedIn(true); // if successful, confirm that we're logged in
+
 				// redirect to inbox
 				history.push("inbox");
 			})
 			.catch(function (error) {
 				console.log(error);
 				setError("There was an error logging you in.");
+				setLoading(false);
 			});
 	};
 
