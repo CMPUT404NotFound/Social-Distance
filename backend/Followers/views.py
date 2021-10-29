@@ -24,13 +24,9 @@ from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
-
+@swagger_auto_schema(method="get",tags=['followers'])
 @api_view(["GET"])
 def getAllFollowers(request: Request, id):
-    """
-    GET to get a list of all authors, with pagination options
-    POST to register a new author
-    """
     if request.method == "GET":
         try:
             #author = Author.objects.get(pk=id)
@@ -41,7 +37,9 @@ def getAllFollowers(request: Request, id):
         except Author.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-
+@swagger_auto_schema(method="get",tags=['followers'])
+@swagger_auto_schema(method="put",tags=['followers'])
+@swagger_auto_schema(method="delete",tags=['followers'])
 @api_view(["GET", "PUT", "DELETE"])
 def addFollower(request: Request, author_id, follower_id):
     if request.method == "PUT":

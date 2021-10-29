@@ -17,12 +17,10 @@ from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
+@swagger_auto_schema(method="get",tags=['posts'])
+@swagger_auto_schema(method="post",tags=['posts'])
 @api_view(["GET","POST"])
 def getAllPosts(request: Request, author_id):
-    """
-    GET to get a list of all authors, with pagination options
-    POST to register a new author
-    """
     if request.method == "GET":
         try:
             

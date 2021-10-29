@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 from .models import Author
-
+from backend.settings import SITE_ADDRESS
 
 class AuthorSerializer(serializers.ModelSerializer):
 
@@ -20,8 +20,7 @@ class AuthorSerializer(serializers.ModelSerializer):
         return "Author"
 
     def get_host(self, obj):
-        return "temp place holder host name"
-
+        return SITE_ADDRESS if obj.host == "" else obj.host
     def get_url(self, obj: Author):
         return "placeholderserice/author/" + str(obj.id) 
     
