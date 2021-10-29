@@ -4,12 +4,11 @@ import { Router } from "react-router";
 import history from "./history";
 import Routes from "./Routes";
 import "antd/dist/antd.css";
+import "./styles.css";
 
 ReactDOM.render(
-	<React.StrictMode>
-		<Router history={history}>
-			<Routes />
-		</Router>
-	</React.StrictMode>,
+	<Router history={history}>
+		<Routes />
+	</Router>,
 	document.getElementById("root")
 );

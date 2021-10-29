@@ -12,9 +12,14 @@ const Routes = () => {
 	if (loggedIn) {
 		return (
 			<Switch>
+				<Route exact path="/createpost">
+					<CreatePost setLoggedIn={setLoggedIn} />
+				</Route>
+				<Route exact path="/inbox">
+					<Inbox setLoggedIn={setLoggedIn} />
+				</Route>
 				<Route exact path="/">
 					<Inbox setLoggedIn={setLoggedIn} />
-					<Route path="/CreatePost" component={CreatePost} />
 				</Route>
 				<Route component={Error404} />
 			</Switch>
@@ -26,10 +31,10 @@ const Routes = () => {
 					<Signup setLoggedIn={setLoggedIn} />
 				</Route>
 				<Route exact path="/login">
-					<Login />
+					<Login setLoggedIn={setLoggedIn} />
 				</Route>
 				<Route exact path="/">
-					<Login />
+					<Login setLoggedIn={setLoggedIn} />
 				</Route>
 				<Route component={Error404} />
 			</Switch>

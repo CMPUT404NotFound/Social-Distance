@@ -9,7 +9,6 @@
 	justify-content: space-between;
 	background: #001529;
 
-	/* limit the menu width */
 	--contentWidth: 1000px;
 	padding: 0 max(2rem, 50vw - var(--contentWidth) / 2);
 }
@@ -25,6 +24,13 @@
 
 .login_page .content {
 	flex: 1;
-	display: grid;
-	place-items: center;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	justify-content: center;
+	align-items: center;
+}
+
+.login_page .content .error {
+	max-width: 30rem;
 }
