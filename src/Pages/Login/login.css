@@ -9,7 +9,6 @@
 	justify-content: space-between;
 	background: #001529;
 
-	/* limit the menu width */
 	--contentWidth: 1000px;
 	padding: 0 max(2rem, 50vw - var(--contentWidth) / 2);
 }
