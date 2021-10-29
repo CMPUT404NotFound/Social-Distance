@@ -31,4 +31,4 @@ class Post(models.Model):
     )
 
     def __str__(self):
-        return "place holder post"
+        return f"post:{self.post_id}"
