@@ -88,7 +88,11 @@ export default class CreatePost extends React.Component {
 	}
 
 	submitPost = () => {
-		const url = "https://project-api-404.herokuapp.com/api/post";
+		const { user } = this.props;
+
+		const url = `https://project-api-404.herokuapp.com/api/author/${
+			user ? user.id : "dc9548ca-801c-4bed-b610-7e9d6e2fb8e0"
+		}/posts/`;
 
 		const data = {
 			content: this.state.markdown,
