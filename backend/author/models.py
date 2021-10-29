@@ -3,7 +3,7 @@ import uuid
 
 # Create your models here.
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-
+from backend.settings import SITE_ADDRESS
 
 class AuthorManager(BaseUserManager):
     def create_user(
@@ -15,6 +15,7 @@ class AuthorManager(BaseUserManager):
         password=None,
         isLocalUser=True,
         id=None,
+        host = None
     ):
         if isLocalUser:
             if not userName:
@@ -24,6 +25,8 @@ class AuthorManager(BaseUserManager):
         else:
             if not id:
                 raise ValueError("Foreign user must provide id")
+            if not host:
+                raise ValueError("Foreign user must provide host")
 
         user = self.model(
             id=id if not isLocalUser else uuid.uuid4(),
@@ -32,6 +35,7 @@ class AuthorManager(BaseUserManager):
             github=github,
             profileImage=profileImage,
             isLocalUser=isLocalUser,
+            host = "" if isLocalUser else host
         )
         user.set_password(password if isLocalUser else str(uuid.uuid4()))
         user.save(using=self._db)
@@ -71,6 +75,8 @@ class Author(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
 
     isLocalUser = models.BooleanField(default=True)
+    
+    host = models.URLField(blank=True, null=False, default="")
 
     def __str__(self):
         return f"author: {self.displayName}, id: {self.id}"

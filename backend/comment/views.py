@@ -29,11 +29,27 @@ from author.models import Author
         404: "Post not found",
     },
     field_inspectors=[NoSchemaTitleInspector],
-    tags=["commments"],
+    tags=["comments"],
+)
+@swagger_auto_schema(
+    method="post",
+    operation_summary="Create a comment",
+    operation_description='''Create a comment for a post, id for comment does not need to be provided. In the author section,
+    if the author is a local user, only the id is needed, if the author is a foreign user, the id, url, host, and displayName are needed.
+    ''',
+    responses={
+        204: "Comment created",
+        400: "bad formatting on input (there's a lot of inputs here)",
+    },
+    request_body=CommentSerializer,
+    field_inspectors=[NoSchemaTitleInspector],
+    tags=["comments"],
+    
 )
 @api_view(["GET", "POST"])
 def handleComments(request: Request, authorId: str = "", postId: str = ""):
 
+    #todo verify if post's author is the same as the author privided in the url
     if request.method == "GET":
         try:
             comments = Post.objects.get(pk=postId).post_comments.all()
@@ -96,7 +112,8 @@ def handleComments(request: Request, authorId: str = "", postId: str = ""):
                                 github=authorData.get('github', ''),
                                 profileImage=authorData.get('profileImage', ''),
                                 isLocalUser=False,
-                                id=authorData['id']
+                                id=authorData['id'],
+                                host = authorData['host'],
                             )
                             
                             comment = Comment.objects.create(

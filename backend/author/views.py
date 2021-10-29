@@ -21,7 +21,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .documentations import *
 
 from django.db.utils import IntegrityError
-
+import django.utils.timezone as timezone
 # Create your views here.
 
 
@@ -30,6 +30,7 @@ from django.db.utils import IntegrityError
     operation_summary="Get a single author by id in path",
     responses={200: getAuthorResponse, 404: "Author not found"},
     field_inspectors=[NoSchemaTitleInspector],
+    tags=["Author"]
 )
 @swagger_auto_schema(
     method="post",
@@ -46,6 +47,7 @@ from django.db.utils import IntegrityError
             default="Token <token>",
         )
     ],
+    tags=["Author"]
 )
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticatedOrReadOnly])
@@ -98,7 +100,7 @@ def handleAuthorById(request: Request, id):
             default=10,
         ),
     ],
-    
+    tags=["Author"]
 )
 @api_view(["GET"])
 def getAllAuthors(request: Request):
@@ -137,6 +139,7 @@ def getAllAuthors(request: Request):
     },
     field_inspectors=[NoSchemaTitleInspector],
     request_body=SignUpSerializer,
+    tags=["Authentications"]
 )
 @api_view(["POST"])
 def signUp(request: Request):
@@ -168,6 +171,7 @@ def signUp(request: Request):
     },
     field_inspectors=[NoSchemaTitleInspector],
     request_body=LoginSerializer,
+     tags=["Authentications"]
 )
 @api_view(["POST"])
 def login(request: Request) -> Response:
@@ -193,6 +197,9 @@ def login(request: Request) -> Response:
     if not created:
         token = refreshToken(token)
 
+    user.last_login = timezone.now()
+    user.save()
+    
     return Response(
         {
             "token": token.key,
@@ -201,6 +208,8 @@ def login(request: Request) -> Response:
         },
         status=status.HTTP_200_OK,
     )
+
+#todo make logout api
 
 
 """
