@@ -1,5 +1,5 @@
 
-from typing_extensions import Required
+
 from rest_framework import serializers
 from .models import Author
 
@@ -34,19 +34,20 @@ class LoginSerializer(serializers.Serializer):
     
 class ForeignAuthorSerializer(serializers.Serializer):
     
-    type =serializers.CharField()
+    type =serializers.SerializerMethodField()
 
-    id = serializers.CharField(required = True)
+    id = serializers.CharField(required = True,)
     
-    displayName = serializers.CharField(required = False)
+    displayName = serializers.CharField(required = True)
 
-    host = serializers.SerializerMethodField(required = False)
+    host = serializers.CharField(required = True)
 
-    url = serializers.SerializerMethodField(required = False)
+    url = serializers.CharField(required = True)
     
-    github = serializers.CharField(required = False)
+    github = serializers.CharField(required = False, allow_blank=True)
     
-    profileImage = serializers.CharField(required = False)
+    profileImage = serializers.CharField(required = False,  allow_blank=True)
 
 
-    
+    def get_type(self, obj):
+        return "Author"

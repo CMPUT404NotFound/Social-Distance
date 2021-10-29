@@ -33,7 +33,7 @@ class AuthorManager(BaseUserManager):
             profileImage=profileImage,
             isLocalUser=isLocalUser,
         )
-        user.set_password(password if isLocalUser else uuid.uuid4())
+        user.set_password(password if isLocalUser else str(uuid.uuid4()))
         user.save(using=self._db)
         return user
 
@@ -49,7 +49,7 @@ class AuthorManager(BaseUserManager):
 
 class Author(AbstractBaseUser):
 
-    id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False, max_length=200)
 
     displayName = models.CharField(max_length=40, null=False, blank=True, default="")
 
@@ -61,9 +61,11 @@ class Author(AbstractBaseUser):
         blank=False,
         default="defaultName",
     )  # max 40 chars should be more than enough
+    
     github = models.URLField(
         "github", max_length=60, blank=True, null=False
     )  # len('https://github.com/'), and max user name length on github is 39 chars
+    
     profileImage = models.URLField("profileImage", blank=True, null=False)
 
     is_admin = models.BooleanField(default=False)

@@ -55,6 +55,5 @@ urlpatterns = [
         "api/redoc", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
     ),
     path("api/author/<uuid:id>/followers", followerViews.getAllFollowers),
-    path("api/author/<uuid:author_id>/followers/<uuid:follower_id>",
-         followerViews.addFollower),
+    path("api/author/<uuid:author_id>/followers/<uuid:follower_id>", followerViews.addFollower),
 ]
