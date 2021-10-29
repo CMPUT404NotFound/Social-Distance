@@ -8,6 +8,8 @@ from rest_framework import status
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
+
+from author.models import Author
 from .models import posts
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -26,8 +28,13 @@ def getAllPosts(request: Request, author_id):
             return Response(status=status.HTTP_404_NOT_FOUND)
     elif request.method == "POST":
         try:
-            author = posts.objects.get(author_id = author_id)
-            new_post = posts.objects.create(author)
+            author = Author.objects.get(pk = author_id)
+
+            new_post = posts.objects.create(
+               author_id= author,
+               title=request.data['title'],
+               visibility= request.data['visibility'],
+            )
             # author.sender.add(follower)
             new_post.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
