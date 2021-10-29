@@ -1,5 +1,4 @@
 from drf_yasg.utils import swagger_auto_schema
-
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.decorators import (
@@ -9,7 +8,6 @@ from rest_framework import status
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
-
 from .models import posts
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
