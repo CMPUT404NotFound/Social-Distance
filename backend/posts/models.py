@@ -11,8 +11,9 @@ content_choice = {("markdown","text/markdown"),("plain","text/plain"),("app","ap
 class postsManager(models.Model):
     pass
 
-class posts(models.Model):
 
+class Post(models.Model):
+    
     post_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     author_id = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="post_author"

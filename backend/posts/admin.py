@@ -4,7 +4,7 @@ from django.contrib.admin import ModelAdmin
 # Register your models here.
 import django.forms as forms
 from django.forms.models import ModelForm
-from .models import posts
+from .models import Post
 
 
 class PostAdmin(ModelAdmin):
@@ -12,4 +12,4 @@ class PostAdmin(ModelAdmin):
     list_display = ["post_id", "title", "visibility","content","description","contentType"]
 
 
-admin.site.register(posts, PostAdmin)
+admin.site.register(Post, PostAdmin)

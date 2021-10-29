@@ -24,7 +24,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-from posts.models import posts
+from posts.models import Post
 
 ...
 
@@ -49,7 +49,7 @@ urlpatterns = [
     path("api/authors", authorViews.getAllAuthors),
     path("api/login", authorViews.login),
     path("api/signup", authorViews.signUp),
-    path("api/author/<uuid:authorId>/post/<uuid:postId>/comments", commentViews.handleComments),
+    path("api/author/<slug:authorId>/post/<slug:postId>/comments", commentViews.handleComments),
     path(
         "api/",
         schema_view.with_ui("swagger", cache_timeout=0),
