@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import "./signup.css";
 import axios from "axios";
+import history from "./../../history";
 
-const Signup = () => {
+const Signup = ({ setLoggedIn }) => {
 	// Inspired by AntD docs
 	// https://ant.design/components/form/
 
@@ -31,6 +32,10 @@ const Signup = () => {
 			.post(url, data, config)
 			.then(function (response) {
 				console.log(response);
+
+				setLoggedIn(true); // if successful, confirm that we're logged in
+				// redirect to inbox
+				history.push("inbox");
 			})
 			.catch(function (error) {
 				console.log(error);

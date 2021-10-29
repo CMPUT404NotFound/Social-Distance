@@ -1,9 +1,12 @@
 import React from "react";
-import { Row, Col, Divider, Upload, Button, message, Radio, Space, Checkbox } from "antd";
+import { Row, Col, Divider, Upload, Button, message, Radio, Space, Checkbox, Tabs } from "antd";
 import { UploadOutlined, SendOutlined } from "@ant-design/icons";
 import TextArea from "rc-textarea";
 import "./create.css";
+import axios from "axios";
 import history from "./../../history";
+
+const { TabPane } = Tabs;
 let ReactCommonmark = require("react-commonmark");
 
 // To verify only PNG files are uploaded
@@ -19,6 +22,7 @@ const Uploader = () => {
 			console.log(info.fileList);
 		},
 	};
+
 	return (
 		<Upload {...props}>
 			<Button icon={<UploadOutlined />}>Upload PNGs only</Button>
@@ -83,50 +87,70 @@ export default class CreatePost extends React.Component {
 		this.setState({ markdown });
 	}
 
+	submitPost = () => {
+		const url = "https://project-api-404.herokuapp.com/api/post";
+
+		const data = {
+			content: this.state.markdown,
+		};
+
+		let config = {};
+
+		axios
+			.post(url, data, config)
+			.then(function (response) {
+				console.log(response);
+
+				// redirect to inbox
+				history.push("inbox");
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	};
+
 	render() {
 		return (
-			<>
+			<div className="create_page">
 				<Row justify="center">
 					<Col className="title" type="flex" align="middle">
 						<h1>Create a Post</h1>
 					</Col>
 				</Row>
-				<Row justify="center">
+				<Row justify="center" className="editor">
 					<Col flex={1} type="flex" align="middle">
-						<h2>Enter your text</h2>
-						<TextArea
-							className="textField"
-							value={this.state.markdown}
-							onChange={(e) => {
-								this.updateMarkdown(e.target.value);
-							}}
-						></TextArea>
-						<h2 className="uploadText">...or upload some images</h2>
-						<Space>
-							<Uploader />
-						</Space>
+						<Tabs defaultActiveKey="1" centered className="tabs">
+							<TabPane tab="Edit Text" key="1">
+								<TextArea
+									className="textfield"
+									value={this.state.markdown}
+									onChange={(e) => {
+										this.updateMarkdown(e.target.value);
+									}}
+								></TextArea>
+							</TabPane>
+							<TabPane tab="Preview" key="2">
+								<ReactCommonmark className="preview" source={this.state.markdown} />
+							</TabPane>
+						</Tabs>
 					</Col>
-					<Col flex={1}>
-						<h2 type="flex" align="middle">
-							Preview your post
-						</h2>
-						<ReactCommonmark source={this.state.markdown} />
-						<Divider></Divider>
+					<Col className="options">
 						<Space direction="vertical">
+							<Uploader />
 							<h2>Share your post to: </h2>
 							<ShareTo />
 							<Button
 								type="primary"
 								shape="round"
 								icon={<SendOutlined />}
-								onClick={() => history.push("/Inbox")}
+								onClick={this.submitPost}
 							>
 								Send Post
 							</Button>
 						</Space>
 					</Col>
 				</Row>
-			</>
+			</div>
 		);
 	}
 }

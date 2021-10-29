@@ -7,16 +7,19 @@ import Signup from "./Pages/Signup/signup";
 import Error404 from "./Error/error404";
 
 const Routes = () => {
-	const [loggedIn, setLoggedIn] = useState(false);
+	const [loggedIn, setLoggedIn] = useState(true);
 
 	if (loggedIn) {
 		return (
 			<Switch>
-				<Route exact path="/">
-					<Inbox setLoggedIn={setLoggedIn} />
-				</Route>
 				<Route exact path="/createpost">
 					<CreatePost setLoggedIn={setLoggedIn} />
+				</Route>
+				<Route exact path="/inbox">
+					<Inbox setLoggedIn={setLoggedIn} />
+				</Route>
+				<Route exact path="/">
+					<Inbox setLoggedIn={setLoggedIn} />
 				</Route>
 				<Route component={Error404} />
 			</Switch>
