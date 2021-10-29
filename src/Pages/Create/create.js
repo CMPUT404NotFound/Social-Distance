@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Divider, Upload, Button, message, Radio, Space, Checkbox, Tabs } from "antd";
+import { Row, Col, Upload, Button, message, Radio, Space, Checkbox, Tabs } from "antd";
 import { UploadOutlined, SendOutlined } from "@ant-design/icons";
 import TextArea from "rc-textarea";
 import "./create.css";
