@@ -1,13 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Switch } from "react-router";
 import Login from "./Pages/Login/login";
+import Inbox from "./Pages/Inbox/inbox";
+import Signup from "./Pages/Signup/signup";
+import Error404 from "./Error/error404";
 
 const Routes = () => {
-	return (
-		<Switch>
-			<Route exact path="/" component={Login} />
-		</Switch>
-	);
+	const [loggedIn, setLoggedIn] = useState(false);
+
+	if (loggedIn) {
+		return (
+			<Switch>
+				<Route exact path="/">
+					<Inbox setLoggedIn={setLoggedIn} />
+				</Route>
+				<Route component={Error404} />
+			</Switch>
+		);
+	} else {
+		return (
+			<Switch>
+				<Route exact path="/signup">
+					<Signup setLoggedIn={setLoggedIn} />
+				</Route>
+				<Route exact path="/login">
+					<Login />
+				</Route>
+				<Route exact path="/">
+					<Login />
+				</Route>
+				<Route component={Error404} />
+			</Switch>
+		);
+	}
 };
 
 export default Routes;
