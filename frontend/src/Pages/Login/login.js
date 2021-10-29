@@ -6,7 +6,7 @@ import "./login.css";
 import axios from "axios";
 import history from "./../../history";
 
-const Login = ({ setLoggedIn }) => {
+const Login = ({ setLoggedIn, setUser }) => {
 	// Inspired by AntD docs
 	// https://ant.design/components/form/
 
@@ -30,6 +30,7 @@ const Login = ({ setLoggedIn }) => {
 				console.log(response);
 
 				setLoggedIn(true); // if successful, confirm that we're logged in
+				setUser(response.data.author);
 
 				// redirect to inbox
 				history.push("inbox");
