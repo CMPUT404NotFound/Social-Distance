@@ -12,7 +12,7 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
 
-from .models import posts
+from .models import Post
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -24,10 +24,10 @@ def getAllPosts(request: Request, author_id):
     if request.method == "GET":
         try:
             
-            post = posts.objects.get(pk = author_id).all()
+            post = Post.objects.get(pk = author_id).all()
             s = PostsSerializer(post, context={'request': request}, many=True)
             return Response(s.data)
-        except posts.DoesNotExist:
+        except Post.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
     elif request.method == "POST":
         pass

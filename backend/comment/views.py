@@ -12,7 +12,7 @@ from rest_framework.decorators import (
 
 
 from .models import Comment
-from posts.models import posts as Post
+from posts.models import Post as Post
 from .serializers import CommentSerializer
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import ValidationError

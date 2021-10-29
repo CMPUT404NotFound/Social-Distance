@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import posts
+from .models import Post
 from backend.settings import SITE_ADDRESS
 
 class PostsSerializer(serializers.ModelSerializer):
@@ -11,7 +11,7 @@ class PostsSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
 
     class Meta:
-        model = posts
+        model = Post
         fields = ("type", "post_id", "author_id", "title", "visibility")
 
     def get_type(self, obj):

@@ -6,14 +6,14 @@ import uuid
 
 Content_choices = {("P", "text/plain"), ("M", "text/markdown")}
 
-from posts.models import posts
+from posts.models import Post
 
 class Comment(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     post = models.ForeignKey(
-        posts, on_delete=models.CASCADE, related_name="post_comments"
+        Post, on_delete=models.CASCADE, related_name="post_comments"
     )
 
     author = models.ForeignKey(
