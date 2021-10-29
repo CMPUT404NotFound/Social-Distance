@@ -1,4 +1,5 @@
 
+
 from rest_framework import serializers
 from .models import Author
 
@@ -29,3 +30,24 @@ class AuthorSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     displayName = serializers.CharField(max_length=100)
     password = serializers.CharField(max_length=100)
+    
+    
+class ForeignAuthorSerializer(serializers.Serializer):
+    
+    type =serializers.SerializerMethodField()
+
+    id = serializers.CharField(required = True,)
+    
+    displayName = serializers.CharField(required = True)
+
+    host = serializers.CharField(required = True)
+
+    url = serializers.CharField(required = True)
+    
+    github = serializers.CharField(required = False, allow_blank=True)
+    
+    profileImage = serializers.CharField(required = False,  allow_blank=True)
+
+
+    def get_type(self, obj):
+        return "Author"
