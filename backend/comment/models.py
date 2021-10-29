@@ -6,21 +6,14 @@ import uuid
 
 Content_choices = {("P", "text/plain"), ("M", "text/markdown")}
 
-# todo use real post instead
-class Post(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    content = models.TextField(max_length=20, blank=True)
-
-    def __str__(self):
-        return "place holder post"
-
+from posts.models import posts
 
 class Comment(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     post = models.ForeignKey(
-        "Post", on_delete=models.CASCADE, related_name="post_comments"
+        posts, on_delete=models.CASCADE, related_name="post_comments"
     )
 
     author = models.ForeignKey(

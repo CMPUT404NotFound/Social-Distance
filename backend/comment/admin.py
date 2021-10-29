@@ -4,8 +4,7 @@ from django.contrib.admin import ModelAdmin
 # Register your models here.
 import django.forms as forms
 from django.forms.models import ModelForm
-from .models import Comment, Post
-
+from .models import Comment
 
 # class CommentCreationForm(ModelForm):
 #     class Meta:
@@ -36,10 +35,6 @@ class CommentAdmin(ModelAdmin):
     list_display = ["post", "author", "comment", "contentType", "published"]
 
 
-class PostAdmin(ModelAdmin):
-    fields = ["content"]
-    list_display = ["id", "content"]
 
 
 admin.site.register(Comment, CommentAdmin)
-admin.site.register(Post, PostAdmin)
