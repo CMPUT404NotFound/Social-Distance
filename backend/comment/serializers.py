@@ -45,7 +45,7 @@ class CommentSerializer(serializers.Serializer):
         ordering = ['published']
     
     def get_id(self, obj: Comment):
-        return f"{SITE_ADDRESS}/author/{obj.author.id}/post/{obj.post.id}/{obj.id}"
+        return f"{SITE_ADDRESS}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.id}"
     
     def get_type(self, obj: Comment):
         return 'comment'

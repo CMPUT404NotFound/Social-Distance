@@ -24,6 +24,11 @@ class AuthorSerializer(serializers.ModelSerializer):
     def get_url(self, obj: Author):
         return "placeholderserice/author/" + str(obj.id) 
     
+    def to_representation(self, instance):
+        stuff =  super().to_representation(instance)
+        stuff['id'] = f"{SITE_ADDRESS}/author/{stuff['id'] }"
+        return stuff
+    
 
 
 class LoginSerializer(serializers.Serializer):

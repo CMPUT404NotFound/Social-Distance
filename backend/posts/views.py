@@ -9,9 +9,12 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
 
+
 from author.models import Author
 from author.serializers import AuthorSerializer
-from .models import posts
+
+from .models import Post
+
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -32,9 +35,10 @@ def getAllPosts(request: Request, author_id):
       
     if request.method == "GET":
         try:
+
             params: dict = request.query_params
 
-            post = posts.objects.filter(author_id=author_id)
+            post = Post.objects.filter(author_id=author_id)
             if (
                 "page" in params and "size" in params
             ):  # make sure param has both page and size in order to paginate
@@ -50,13 +54,14 @@ def getAllPosts(request: Request, author_id):
             else:
                 s = PostsSerializer(post, context={"request": request}, many=True)
             return Response(s.data)  
-        except posts.DoesNotExist:
+        except Post.DoesNotExist:
+
             return Response(status=status.HTTP_404_NOT_FOUND)
     elif request.method == "POST":
         try:
             author = Author.objects.get(pk = author_id)
 
-            new_post = posts.objects.create(
+            new_post = Post.objects.create(
                author_id= author,
                title=request.data['title'],
                visibility= request.data['visibility'],
@@ -67,5 +72,5 @@ def getAllPosts(request: Request, author_id):
             # author.sender.add(follower)
             new_post.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except posts.DoesNotExist:
+        except Post.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
