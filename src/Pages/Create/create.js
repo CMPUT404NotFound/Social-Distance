@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Row, Col, Upload, Button, message, Radio, Input, Space } from 'antd';
-import 'antd/dist/antd.css';
-import { UploadOutlined } from '@ant-design/icons';
+import { Row, Col, Divider, Upload, Button, message, Radio, Input, Space, Checkbox } from 'antd';
+import { UploadOutlined, SendOutlined } from '@ant-design/icons';
 import TextArea from "rc-textarea";
+import './create.css'
+import history from './../../history';
 let ReactCommonmark = require('react-commonmark');
 
+// To verify only PNG files are uploaded
 const Uploader = () => {
     const props = {
       beforeUpload: file => {
@@ -19,11 +21,19 @@ const Uploader = () => {
     };
     return (
       <Upload {...props}>
-        <Button icon={<UploadOutlined />}>Upload png only</Button>
+        <Button icon={<UploadOutlined />}>Upload PNGs only</Button>
       </Upload>
     );
-  };
+};
 
+function onChange(checkedValues) {
+    console.log('checked = ', checkedValues);
+}
+
+// example list of authors to send post to
+const authors = [{label:'Lee Seokmin', value:'dokyeom'}, {label:'Joshua Hong', value:'joshua'}, {label:'Wen Junhui', value:'jun'}]
+
+// For Radio selection of who to share post to
 class ShareTo extends React.Component {
     state = {
         value: 1,
@@ -44,16 +54,19 @@ class ShareTo extends React.Component {
                 <Radio value={1}>Public</Radio>
                 <Radio value={2}>Friends Only</Radio>
                 <Radio value={3}>
-                    Specific Authors Only
-                    {value === 3 ? <Input style={{ width: 100, marginLeft: 10 }} /> : null}
+                    <Space direction="vertical">
+                        Specific Authors Only
+                        {value === 3 ? <Checkbox.Group options={authors} onChange={onChange}/> : null}
+                    </Space>
                 </Radio>
-                <Radio value={4}>More...</Radio>
+                <Radio value={4}>Unlisted</Radio>
             </Space>
         </Radio.Group>
         );
     }
 }
 
+// Main Create Post Page
 export default class CreatePost extends React.Component {
   constructor(props) {
     super(props);
@@ -67,60 +80,36 @@ export default class CreatePost extends React.Component {
   }
 
   render() {
-
-    var inputStyle = {
-        width: "500px",
-        height: "50vh",
-        marginLeft: "auto",
-        marginRight: "auto",
-        padding:"10px"
-      };
-
-    var outputStyle = {
-      width: "400px",
-      height: "50vh",
-      backgroundColor: "#DCDCDC",
-      marginLeft: "auto",
-      marginRight: "auto",
-      padding:"10px"
-    };
-
     return (
-      <>
-        <Row>
-        <Col span={24}>
-            <h1>Create a Post</h1>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={12}>
-            <h2>Enter your text</h2>
-            <TextArea style={inputStyle}
-                      value={this.state.markdown}
-                      onChange={(e) => {
-                        this.updateMarkdown(e.target.value);
-                      }}>        
-            </TextArea>
-        </Col>
-        <Col span={12}>
-            <h2>Preview your post</h2>
-            <ReactCommonmark source={this.state.markdown} />
-            
-        </Col>
-      </Row>
-      <Row>
-        <Col span={24}>
-            <h3>...or upload your images</h3>
-            <Uploader />
-        </Col>
-      </Row>
-      <Row>
-        <Col span={24}>
-            <h2>Share your post to: </h2>
-            <ShareTo />
-            <Button type="primary" shape="round">Download</Button>
-        </Col>
-      </Row>
+    <>
+        <Row justify="center">
+            <Col className="title" type="flex" align="middle">
+                <h1>Create a Post</h1>
+            </Col>
+        </Row>
+        <Row justify="center">
+            <Col flex={1} type="flex" align="middle">
+                <h2>Enter your text</h2>
+                <TextArea className="textField"
+                        value={this.state.markdown}
+                        onChange={(e) => {
+                            this.updateMarkdown(e.target.value);
+                        }}>        
+                </TextArea>
+                <h2 className="uploadText">...or upload some images</h2>
+                <Space><Uploader /></Space>
+            </Col>
+            <Col flex={1}>
+                <h2 type="flex" align="middle">Preview your post</h2>
+                <ReactCommonmark source={this.state.markdown} />
+                <Divider></Divider>
+                <Space direction="vertical" >
+                    <h2>Share your post to: </h2>
+                    <ShareTo />
+                    <Button type="primary" shape="round" icon={<SendOutlined />} onClick={() => history.push('/Inbox')}>Send Post</Button>
+                </Space>
+            </Col>
+        </Row>
     </>
     );
   }
