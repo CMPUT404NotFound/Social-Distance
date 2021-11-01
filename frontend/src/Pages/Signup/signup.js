@@ -1,14 +1,17 @@
-import { Form, Input, Button, Checkbox, Alert } from "antd";
-import { useState } from "react";
+import { Alert, Button, Checkbox, Form, Input } from "antd";
+import axios from "axios";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
-import "./signup.css";
-import axios from "axios";
 import history from "./../../history";
+import "./signup.css";
+import UserContext from "../../userContext";
 
-const Signup = ({ setLoggedIn }) => {
+const Signup = () => {
 	// Inspired by AntD docs
 	// https://ant.design/components/form/
+
+	const { setUser } = useContext(UserContext);
 
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
@@ -33,7 +36,8 @@ const Signup = ({ setLoggedIn }) => {
 			.then(function (response) {
 				console.log(response);
 
-				setLoggedIn(true); // if successful, confirm that we're logged in
+				// TODO: get author from signup
+				setUser(true); // if successful, confirm that we're logged in
 				// redirect to inbox
 				history.push("inbox");
 			})

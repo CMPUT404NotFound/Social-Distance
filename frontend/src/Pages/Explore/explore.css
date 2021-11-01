@@ -1,0 +1,8 @@
+.explore_page .profile_container {
+	background: white;
+	padding: 1rem;
+	border-radius: 1rem;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+	cursor: pointer;
+	margin-bottom: 1rem;
+}

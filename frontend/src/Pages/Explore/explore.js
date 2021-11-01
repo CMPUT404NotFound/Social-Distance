@@ -1,13 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import "./explore.css";
 import axios from "axios";
 import Profile from "./profile";
+import UserContext from "../../userContext";
 
-const Explore = ({ user }) => {
+const Explore = () => {
+	const { user } = useContext(UserContext);
+
 	const [people, setPeople] = useState([]);
 
 	useEffect(() => {
-		// TODO: Remove temporary user id
 		const url = `https://project-api-404.herokuapp.com/api/authors`;
 
 		const data = {};
@@ -26,9 +28,9 @@ const Explore = ({ user }) => {
 	}, [user]);
 
 	return (
-		<div className="inbox_page">
-			{people.map((person) => (
-				<Profile post={person} />
+		<div className="explore_page">
+			{people.map((person, i) => (
+				<Profile person={person} key={i} />
 			))}
 		</div>
 	);
