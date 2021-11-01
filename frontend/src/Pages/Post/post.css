@@ -1,0 +1,18 @@
+.post_page .post_container {
+	background: white;
+	padding: 1rem;
+	border-radius: 1rem;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+	cursor: pointer;
+}
+
+.post_page .comment_container {
+	background: rgba(255, 255, 255, 0.509);
+	padding: 0 1rem;
+	border-radius: 1rem;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+	cursor: pointer;
+	margin-top: 1rem;
+	width: 90%;
+	margin-left: auto;
+}

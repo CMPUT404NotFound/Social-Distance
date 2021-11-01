@@ -1,21 +1,25 @@
-import { Layout, Menu, Button } from "antd";
 import {
-	InboxOutlined,
 	BellOutlined,
 	CompassOutlined,
+	InboxOutlined,
 	LogoutOutlined,
 	PlusOutlined,
 } from "@ant-design/icons";
+import { Button, Layout, Menu } from "antd";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
-import "./main.css";
+import UserContext from "../../userContext";
 import history from "./../../history";
+import "./main.css";
 
 const { Sider } = Layout;
 
-const Main = ({ children, setLoggedIn }) => {
+const Main = ({ children }) => {
+	const { setUser } = useContext(UserContext);
+
 	const logout = () => {
-		setLoggedIn(false);
+		setUser(null);
 		history.push("");
 	};
 
@@ -29,7 +33,7 @@ const Main = ({ children, setLoggedIn }) => {
 					left: 0,
 				}}
 			>
-				<Menu theme="dark" mode="inline" defaultSelectedKeys={["4"]}>
+				<Menu theme="dark" mode="inline" defaultSelectedKeys={["0"]}>
 					<Menu.Item key="0">
 						<Link to="/">
 							<img src={logo} alt="logo" />

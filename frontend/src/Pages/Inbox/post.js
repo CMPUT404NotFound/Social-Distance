@@ -1,38 +1,25 @@
 import React from "react";
-import { Row, Col } from "antd";
-import { UserOutlined, HeartOutlined, CommentOutlined, ShareAltOutlined } from "@ant-design/icons";
-let ReactCommonmark = require("react-commonmark");
+import { Row, Col, Avatar } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+// import { Link } from "react-router-dom";
 
-const Post = ({ post }) => {
-	const sample_text = `# Spooky, scary skeletons
-    ## send shivers down your spine
-    `;
-	const sample_author = "dokyeom";
-	const sample_title = "This is a sample post";
-
+const InboxPost = ({ post }) => {
 	return (
-		<div className="post_container">
-			<Row justify="center">
-				<Col span={10}>
-					<UserOutlined />
-					<p>{post ? post.author.displayName : sample_author}</p>
-				</Col>
-			</Row>
-			<Row justify="center">
-				<Col span={10}>
-					<h3>{post ? post.title : sample_title}</h3>
-					<ReactCommonmark source={post ? post.content : sample_text} />
-				</Col>
-			</Row>
-			<Row justify="center">
-				<Col span={10}>
-					<HeartOutlined />
-					<CommentOutlined />
-					<ShareAltOutlined />
-				</Col>
-			</Row>
-		</div>
+		<Row align="middle" gutter={[16, 16]} className="post_container">
+			<Col>
+				{post.author.profileImage ? (
+					<Avatar src={post.author.profileImage} size={64} />
+				) : (
+					<Avatar icon={<UserOutlined />} size={64} />
+				)}
+			</Col>
+			<Col>
+				<p>{post.author.displayName}</p>
+				<h3>{post.title}</h3>
+				<p className="post_description">{post.description}</p>
+			</Col>
+		</Row>
 	);
 };
 
-export default Post;
+export default InboxPost;
