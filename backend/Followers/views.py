@@ -24,8 +24,7 @@ from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
-
-@swagger_auto_schema(method="get", tags=['followers'])
+@swagger_auto_schema(method="get",tags=['followers'])
 @api_view(["GET"])
 def getAllFollowers(request: Request, id):
     if request.method == "GET":
@@ -38,23 +37,15 @@ def getAllFollowers(request: Request, id):
         except Author.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-
-@swagger_auto_schema(method="get", tags=['followers'])
-@swagger_auto_schema(method="put", tags=['followers'])
-@swagger_auto_schema(method="delete", tags=['followers'])
+@swagger_auto_schema(method="get",tags=['followers'])
+@swagger_auto_schema(method="put",tags=['followers'])
+@swagger_auto_schema(method="delete",tags=['followers'])
 @api_view(["GET", "PUT", "DELETE"])
 def addFollower(request: Request, author_id, follower_id):
     if request.method == "PUT":
         try:
             receiver = Author.objects.get(pk=author_id)
             sender = Author.objects.get(pk=follower_id)
-            try:
-                follower_exist = Follower.objects.get(
-                    sender=sender, receiver=receiver)
-                if follower_exist:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
-            except:
-                pass
             follow = Follower.objects.create(sender=sender, receiver=receiver)
             # author.sender.add(follower)
             follow.save()
