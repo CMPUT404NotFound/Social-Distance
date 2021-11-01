@@ -1,11 +1,12 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
-from rest_framework.request import Request
+from rest_framework.request import Empty, Request
 from rest_framework.decorators import (
     api_view,
 )
 from rest_framework import status
 from rest_framework.permissions import (
+    NOT,
     IsAuthenticatedOrReadOnly,
 )
 
@@ -58,19 +59,25 @@ def getAllPosts(request: Request, author_id):
 
             return Response(status=status.HTTP_404_NOT_FOUND)
     elif request.method == "POST":
+        
         try:
             author = Author.objects.get(pk = author_id)
+        except Author.DoesNotExist:
+            return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
 
-            new_post = Post.objects.create(
-               author_id= author,
-               title=request.data['title'],
-               visibility= request.data['visibility'],
-               description= request.data['description'],
-               content= request.data['content'],
-               contentType= request.data['contentType']
-            )
-            # author.sender.add(follower)
-            new_post.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Post.DoesNotExist:
+        try:
+            if not request.data["title"]:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:    
+                new_post = Post.objects.create(
+                author_id= author,
+                title=request.data["title"],
+                visibility= request.data.get("visibility", "PU"),
+                description= request.data.get("description", ""),
+                content= request.data.get("content",""),
+                contentType= request.data.get("contentType", "plain")
+                )
+                new_post.save()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+        except :
             return Response(status=status.HTTP_404_NOT_FOUND)
