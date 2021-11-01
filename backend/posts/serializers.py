@@ -16,7 +16,7 @@ class PostsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ("type", "post_id", "author", "title", "visibility")
+        fields = ("type", "post_id", "author", "title", "visibility","description","content", "contentType")
 
     def get_type(self, obj):
         return "post"
