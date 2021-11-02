@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import Post
+from .models import content_choice, visibility_choice, Post
 from backend.settings import SITE_ADDRESS
 from author.serializers import AuthorSerializer 
-
+from comment.serializers import ChoiceField
 
 class PostsSerializer(serializers.ModelSerializer):
 
@@ -13,6 +13,8 @@ class PostsSerializer(serializers.ModelSerializer):
     # host = serializers.SerializerMethodField()
 
     # url = serializers.SerializerMethodField()
+    contentType = ChoiceField(choices=content_choice)
+    visibility = ChoiceField(choices=visibility_choice)
 
     class Meta:
         model = Post
@@ -23,4 +25,3 @@ class PostsSerializer(serializers.ModelSerializer):
     def get_author(self, obj):
         return AuthorSerializer(obj.author_id).data
 
-   

@@ -14,7 +14,7 @@ from rest_framework.permissions import (
 
 from author.models import Author
 from author.serializers import AuthorSerializer
-from backend.comment.documentation import NoSchemaTitleInspector
+from comment.documentation import NoSchemaTitleInspector
 
 from .models import Post
 
@@ -36,7 +36,10 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
                      operation_summary="Create a post",
                       field_inspectors=[NoSchemaTitleInspector],
                       responses={204: "Post Created Successfully.",
+                                 400: "Bad post creation json format.",
+                                 404: "Author not found."
                                  },
+                      request_body=PostsSerializer
                      )
 @api_view(["GET","POST"])
 def getAllPosts(request: Request, author_id):
@@ -93,5 +96,5 @@ def getAllPosts(request: Request, author_id):
             new_post.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-        except :
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
