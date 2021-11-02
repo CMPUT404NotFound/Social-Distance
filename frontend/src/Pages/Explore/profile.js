@@ -15,6 +15,8 @@ const Profile = ({ person }) => {
 	)}/followers/${user.id}`;
 
 	const check_following = () => {
+		if (getIDfromURL(person.id) === user.id) return;
+
 		axios
 			.get(url)
 			.then(function (response) {
