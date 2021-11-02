@@ -15,11 +15,13 @@ const Profile = ({ person }) => {
 	)}/followers/${user.id}`;
 
 	const check_following = () => {
+		if (getIDfromURL(person.id) === user.id) return;
+
 		axios
 			.get(url)
 			.then(function (response) {
 				console.log(response);
-				setFollowing(response.data);
+				setFollowing(true);
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -74,7 +76,12 @@ const Profile = ({ person }) => {
 						Unfollow
 					</Button>
 				) : (
-					<Button type="primary" icon={<PlusOutlined />} onClick={follow}>
+					<Button
+						type="primary"
+						icon={<PlusOutlined />}
+						onClick={follow}
+						disabled={getIDfromURL(person.id) === user.id}
+					>
 						Follow
 					</Button>
 				)}

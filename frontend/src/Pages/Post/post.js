@@ -35,21 +35,23 @@ const Post = () => {
 			</div>
 
 			{/* Display comments */}
-			{post.commentsSrc.comments.map((comment, i) => (
-				<Comment
-					className="comment_container"
-					author={comment.author.displayName}
-					avatar={
-						comment.author.profileImage ? (
-							<Avatar src={comment.author.profileImage} size={64} />
-						) : (
-							<Avatar icon={<UserOutlined />} size={64} />
-						)
-					}
-					content={comment.comment}
-					key={i}
-				/>
-			))}
+			{post.commentsSrc &&
+				post.commentsSrc.comments &&
+				post.commentsSrc.comments.map((comment, i) => (
+					<Comment
+						className="comment_container"
+						author={comment.author.displayName}
+						avatar={
+							comment.author.profileImage ? (
+								<Avatar src={comment.author.profileImage} size={64} />
+							) : (
+								<Avatar icon={<UserOutlined />} size={64} />
+							)
+						}
+						content={comment.comment}
+						key={i}
+					/>
+				))}
 
 			{/* Display option to comment */}
 		</div>

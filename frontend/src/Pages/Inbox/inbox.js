@@ -84,11 +84,12 @@ const Inbox = () => {
 
 	return (
 		<div className="inbox_page">
-			{posts.map((post, i) => (
-				<Link to={{ pathname: "/post", state: post }}>
-					<InboxPost post={post} key={i} />
-				</Link>
-			))}
+			{posts &&
+				posts.map((post, i) => (
+					<Link to={{ pathname: "/post", state: post }}>
+						<InboxPost post={post} key={i} />
+					</Link>
+				))}
 		</div>
 	);
 };
