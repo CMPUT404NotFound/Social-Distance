@@ -19,7 +19,7 @@ class Post(models.Model):
         Author, on_delete=models.CASCADE, related_name="post_author"
     )
     title = models.CharField(
-        "title", max_length=100, unique=False, null=False, blank=False
+        "title", max_length=100, unique=False, null=False, blank=False, default= ""
     )
     visibility = models.CharField(
         choices=visibility_choice, max_length=8, null=False, blank=False, default="PU"
