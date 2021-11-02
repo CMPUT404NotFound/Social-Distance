@@ -23,7 +23,6 @@ const Profile = ({ person }) => {
 			})
 			.catch(function (error) {
 				console.log(error);
-				setFollowing(false);
 			});
 	};
 
@@ -75,7 +74,12 @@ const Profile = ({ person }) => {
 						Unfollow
 					</Button>
 				) : (
-					<Button type="primary" icon={<PlusOutlined />} onClick={follow}>
+					<Button
+						type="primary"
+						icon={<PlusOutlined />}
+						onClick={follow}
+						disabled={getIDfromURL(person.id) === user.id}
+					>
 						Follow
 					</Button>
 				)}
