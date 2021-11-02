@@ -29,9 +29,7 @@ const Explore = () => {
 
 	return (
 		<div className="explore_page">
-			{people.map((person, i) => (
-				<Profile person={person} key={i} />
-			))}
+			{people && people.map((person, i) => <Profile person={person} key={i} />)}
 		</div>
 	);
 };

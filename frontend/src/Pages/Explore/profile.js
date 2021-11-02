@@ -19,10 +19,11 @@ const Profile = ({ person }) => {
 			.get(url)
 			.then(function (response) {
 				console.log(response);
-				setFollowing(response.data);
+				setFollowing(true);
 			})
 			.catch(function (error) {
 				console.log(error);
+				setFollowing(false);
 			});
 	};
 
