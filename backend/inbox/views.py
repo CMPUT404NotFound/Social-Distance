@@ -116,8 +116,6 @@ def putItemInInbox(request, authorId : str):
         return Response("'type' is not found", status=400) 
 
 
-
-
 def clearInbox(request, authorId):
 
     InboxItem.objects.filter(author = authorId).delete()
@@ -134,9 +132,10 @@ def getInboxItems(request, authorId):
     item = 0
   
 
-    itemsOutput = filter(lambda x: x != {}, [({'F': FollowerSerializer, 'P':PostsSerializer, 'L':LikeSerializer}[item.type]({"L":Like.objects.get, "P" : Post.objects.get, "F" : Follower.objects.get}[item.type](**{'pk': item.contentId})).data 
-                    if  {"L":Like.objects.filter, "P" : Post.objects.filter, "F" : Follower.objects.filter}[item.type](**{'pk': item.contentId}).exists() 
-                    else  makeRequest(method="GET", url = item.contentId).data
+    itemsOutput = filter(lambda x: x != {}, 
+                    [({'F': FollowerSerializer, 'P':PostsSerializer, 'L':LikeSerializer}[item.type]({"L":Like.objects.get, "P" : Post.objects.get, "F" : Follower.objects.get}[item.type](**{'pk': item.contentId})).data 
+                    if {"L":Like.objects.filter, "P" : Post.objects.filter, "F" : Follower.objects.filter}[item.type](**{'pk': item.contentId}).exists() 
+                    else makeRequest(method="GET", url = item.contentId).data
                     ) for item in items ])#woah dude
     
     output = {
