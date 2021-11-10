@@ -19,7 +19,7 @@ import author.views as authorViews
 import posts.views as postsViews
 import Followers.views as followerViews
 import comment.views as commentViews
-
+import inbox.views as inboxViews
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -45,11 +45,18 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/author/<slug:id>", authorViews.handleAuthorById),
-    path("api/author/<uuid:author_id>/posts/", postsViews.getAllPosts),
+    path("api/author/<uuid:author_id>/posts", postsViews.getAllPosts),
     path("api/authors", authorViews.getAllAuthors),
     path("api/login", authorViews.login),
     path("api/signup", authorViews.signUp),
     path("api/author/<slug:authorId>/post/<slug:postId>/comments", commentViews.handleComments),
+    
+    path("api/author/<uuid:id>/followers", followerViews.getAllFollowers),
+    path("api/author/<uuid:author_id>/followers/<uuid:follower_id>", followerViews.addFollower),
+    
+    path("api/author/<uuid:authorId>/inbox", inboxViews.putItemInInbox),
+    
+    #api paths
     path(
         "api/",
         schema_view.with_ui("swagger", cache_timeout=0),
@@ -58,6 +65,4 @@ urlpatterns = [
     path(
         "api/redoc", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
     ),
-    path("api/author/<uuid:id>/followers", followerViews.getAllFollowers),
-    path("api/author/<uuid:author_id>/followers/<uuid:follower_id>", followerViews.addFollower),
 ]
