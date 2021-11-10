@@ -10,7 +10,7 @@ class LikeSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Like
-        fields = ('type', 'author', 'summary',  "object")
+        fields = ('type', 'author',   "object")
     
     type = serializers.SerializerMethodField()
     object = serializers.SerializerMethodField()
@@ -19,9 +19,9 @@ class LikeSerializer(serializers.ModelSerializer):
         return 'Like'
     
     def get_object(self, obj):
-        return obj.post
+        return obj.parentId
     
     def to_representation(self, obj):
-        repr =  super().to_representation(obj)
-        repr['@context'] = obj.context
+        repr = super().to_representation(obj)
+        repr['@context'] = "https://www.w3.org/ns/activitystreams"
         return repr

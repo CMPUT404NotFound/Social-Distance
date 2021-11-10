@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from author.models import Author
 from Followers.models import Follow_Request
+from Followers.models import Follower
 from comment.models import Comment
 from posts.models import Post
 from inbox.models import InboxItem
@@ -14,6 +15,10 @@ from likes.models import Like
 from author.token import TokenAuth
 from utils.permission import CustomPermissionFilter
 
+from Followers.serializers import FollowerSerializer
+from likes.serializers import LikeSerializer
+from posts.serializers import PostsSerializer
+from utils.request import makeRequest
 # Create your views here.
 
 def getAuthorId(request, authorId):
@@ -52,7 +57,7 @@ def handleLike(request, authorId):
             parentId = None
 
         if parentId:
-            like = Like.objects.create(author = authorid, parentId = parentId, summary = data.get('summary', ""))
+            like = Like.objects.create(author = authorid, parentId = parentId)
             InboxItem.objects.create(author = author, type = 'L', contentId = like.pk )
             return Response(status=201)
         
@@ -118,9 +123,34 @@ def clearInbox(request, authorId):
     InboxItem.objects.filter(author = authorId).delete()
     return Response(status=204)
 
+def getInboxItems(request, authorId):
+    
+    try:
+        author = Author.objects.get(pk = authorId)
+    except Author.DoesNotExist:
+        return Response("author not found", status=404)
+    
+    items = InboxItem.objects.filter(author = author)
+    item = 0
+  
+
+    itemsOutput = filter(lambda x: x != {}, [({'F': FollowerSerializer, 'P':PostsSerializer, 'L':LikeSerializer}[item.type]({"L":Like.objects.get, "P" : Post.objects.get, "F" : Follower.objects.get}[item.type](**{'pk': item.contentId})).data 
+                    if  {"L":Like.objects.filter, "P" : Post.objects.filter, "F" : Follower.objects.filter}[item.type](**{'pk': item.contentId}).exists() 
+                    else  makeRequest(method="GET", url = item.contentId).data
+                    ) for item in items ])#woah dude
+    
+    output = {
+        "type": "inbox",
+        "author": f"placeholder/api/author/{authorId}",
+        "items":[*itemsOutput]
+    }
+    
+    return Response(output, status=200)
 
 
-@api_view(["POST", 'DELETE'])
+
+
+@api_view(["POST", 'DELETE', "GET"])
 @permission_classes([CustomPermissionFilter(allowedMethods=["POST"])])
 def handleInbox(request, authorId : str):
     print(request.method)
@@ -128,3 +158,5 @@ def handleInbox(request, authorId : str):
         return putItemInInbox(request, authorId)
     elif request.method == "DELETE":
         return clearInbox(request, authorId)
+    elif request.method == "GET":
+        return getInboxItems(request, authorId)
