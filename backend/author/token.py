@@ -38,13 +38,14 @@ def refreshToken(token: Token) -> Token:
 
 
 class TokenAuth(TokenAuthentication):
+    
     def authenticate(self, request):
         """
         mostly code ripped from the super class
 
         Ensures that request has a valid token
         """
-        print("wtfw tf wtwf \n\n\n\n")
+        
         auth = get_authorization_header(request).split()
 
         if not auth or auth[0].lower() != self.keyword.lower().encode():
@@ -58,20 +59,22 @@ class TokenAuth(TokenAuthentication):
             )
 
         try:
-            token = auth[1].decode()
+            token = Token.objects.get(pk=auth[1].decode())
         except UnicodeError:
             raise AuthenticationFailed(
                 "Invalid token header. Token string should not contain invalid characters."
             )
 
-        data = request.data
         try:
             author2 = Token.objects.get(key=token).user
         except Token.DoesNotExist as e:
             raise AuthenticationFailed("Invalid token")
+        
         try:
+            id = (items := request.path.split('/'))[items.index('author') + 1]
+            
             author1 = Author.objects.get(
-                pk=data.get("id", uuid.UUID(int=0))
+                pk=id
             )  # if there is no id in the request, then force NotFound Exception
         except Author.DoesNotExist:
             raise AuthenticationFailed(

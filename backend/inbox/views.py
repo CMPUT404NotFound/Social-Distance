@@ -1,6 +1,7 @@
-from django.shortcuts import render
 
-from rest_framework.decorators import api_view
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from author.models import Author
@@ -9,6 +10,9 @@ from comment.models import Comment
 from posts.models import Post
 from inbox.models import InboxItem
 from likes.models import Like
+
+from author.token import TokenAuth
+from utils.permission import CustomPermissionFilter
 
 # Create your views here.
 
@@ -98,12 +102,29 @@ def handlePost(request, authorId):
 
 functions = {"like": handleLike, "follow": handleFollows, "post": handlePost}
 
-@api_view(["POST"])
+
 def putItemInInbox(request, authorId : str):
-    
     try: 
         type = request.data["type"]
         return functions[type.lower()](request, authorId)
     except KeyError:
         return Response("'type' is not found", status=400) 
-    
+
+
+
+
+def clearInbox(request, authorId):
+
+    InboxItem.objects.filter(author = authorId).delete()
+    return Response(status=204)
+
+
+
+@api_view(["POST", 'DELETE'])
+@permission_classes([CustomPermissionFilter(allowedMethods=["POST"])])
+def handleInbox(request, authorId : str):
+    print(request.method)
+    if request.method == "POST":
+        return putItemInInbox(request, authorId)
+    elif request.method == "DELETE":
+        return clearInbox(request, authorId)

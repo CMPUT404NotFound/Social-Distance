@@ -53,6 +53,14 @@ INSTALLED_APPS = [
     "inbox",
     'likes'
 ]
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        'author.token.TokenAuth'
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        'rest_framework.permissions.AllowAny'
+    ]
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
