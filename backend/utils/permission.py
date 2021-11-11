@@ -9,8 +9,7 @@ class CustomPermissionFilter(BasePermission):
         super().__init__(*args, **kwargs)
         self.allowedMethod = allowedMethods
     
-    
-    
+
     def has_permission(self, request, view):
         return bool(request.method in self.allowedMethod or (request.user and request.user.is_authenticated))
     
