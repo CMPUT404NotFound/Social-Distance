@@ -80,9 +80,7 @@ def handleFollows(request, authorId: str):
         if Author.objects.filter(
             authorId
         ).exist():  # need varify the given author to follow exist in local db
-            request = Follow_Request.objects.create(
-                requestor=follower, requestee=authorId
-            )
+            request = Follow_Request.objects.create(requestor=follower, requestee=authorId)
             InboxItem.objects.create(author=author, type="F", contentId=request.pk)
             return Response(status=204)
         else:
@@ -142,14 +140,10 @@ def getInboxItems(request, authorId):
         lambda x: x != {},
         [
             (
-                {"F": FollowerSerializer, "P": PostsSerializer, "L": LikeSerializer}[
-                    item.type
-                ](
-                    {
-                        "L": Like.objects.get,
-                        "P": Post.objects.get,
-                        "F": Follower.objects.get,
-                    }[item.type](**{"pk": item.contentId})
+                {"F": FollowerSerializer, "P": PostsSerializer, "L": LikeSerializer}[item.type](
+                    {"L": Like.objects.get, "P": Post.objects.get, "F": Follower.objects.get,}[
+                        item.type
+                    ](**{"pk": item.contentId})
                 ).data
                 if {
                     "L": Like.objects.filter,

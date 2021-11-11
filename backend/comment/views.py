@@ -1,5 +1,6 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
+from rest_framework import response
 from rest_framework.response import Response
 from rest_framework.request import Request
 
@@ -90,19 +91,13 @@ def handleComments(request: Request, authorId: str = "", postId: str = ""):
             return Response("no post under this id", status=status.HTTP_404_NOT_FOUND)
 
         try:
-            if (
-                all(
-                    (
-                        item in data
-                        for item in ("type", "author", "comment", "contentType")
-                    )
-                )
-                and data["type"] == "comment"
-            ):
+            if all((item in data for item in ("type", "author", "comment", "contentType"))) and data["type"] == "comment":
                 if "id" in data["author"]:  # just check if author has id
-                    if Author.objects.filter(
-                        pk=data["author"]["id"]
-                    ).exists():  # since if the db has the id already, then all other info is already in the db
+                    
+                    realAuthorId = data["author"]["id"].split('/author/')[-1]
+                    
+                    if Author.objects.filter(pk=realAuthorId).exists():
+                        # since if the db has the id already, then all other info is already in the db
                         comment = Comment.objects.create(
                             author=Author.objects.get(pk=data["author"]["id"]),
                             comment=data["comment"],
@@ -110,39 +105,22 @@ def handleComments(request: Request, authorId: str = "", postId: str = ""):
                             post=post,
                         )
                         comment.save()
-                        return Response(
-                            "comment created", status=status.HTTP_204_NO_CONTENT
-                        )
+                        return Response("comment created", status=status.HTTP_204_NO_CONTENT)
                     else:
-                        validator = ForeignAuthorSerializer(data=data["author"])
-                        print("bruh")
-                        if validator.is_valid():
-                            print("valid!!")
-                            authorData = validator.data
+                        #since author does not exist in current database, just save the id, to be looked up later
 
-                            author = Author.objects.create_user(
-                                displayName=authorData["displayName"],
-                                github=authorData.get("github", ""),
-                                profileImage=authorData.get("profileImage", ""),
-                                isLocalUser=False,
-                                id=authorData["id"],
-                                host=authorData["host"],
-                            )
 
-                            comment = Comment.objects.create(
-                                author=author,
-                                comment=data["comment"],
-                                contentType=data["contentType"],
-                                post=post,
-                            )
-                            comment.save()
-                            return Response(
-                                "comment created", status=status.HTTP_204_NO_CONTENT
-                            )
-                        else:
-                            return Response(
-                                validator.errors, status=status.HTTP_400_BAD_REQUEST
-                            )
+                        comment = Comment.objects.create(
+                            author=data["author"]["id"],
+                            comment=data["comment"],
+                            contentType=data["contentType"],
+                            post=post,
+                        )
+                        comment.save()
+                        return Response("comment created", status=status.HTTP_204_NO_CONTENT)
+                       
+                else:
+                    return Response('bad formatting in author', status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response(
                     "Bad request! Are you sure all of ('type', 'author', 'comment', 'contentType') are provided in the request?",
