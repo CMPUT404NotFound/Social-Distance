@@ -10,7 +10,11 @@ def makeRequest(method: str, url: str, data: Union[dict, None] =None):
     if (method, url) in cache:
         return cache.get((method, url))
 
-    result = requests.request(method, url, data=data)
+    try:
+        result = requests.request(method, url, data=data)
+    except:
+        result = requests.Response()
+    
     response = Response(result.content, result.status_code)
 
     if response.status_code == 200:

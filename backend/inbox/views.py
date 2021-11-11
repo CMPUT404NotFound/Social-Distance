@@ -1,5 +1,6 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.expressions import Value
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -7,12 +8,13 @@ from rest_framework.response import Response
 from author.models import Author
 from Followers.models import Follow_Request
 from Followers.models import Follower
+from inbox.documentation import InboxItemSerializer
+from comment.documentation import NoSchemaTitleInspector
 from comment.models import Comment
 from posts.models import Post
 from inbox.models import InboxItem
 from likes.models import Like
 
-from author.token import TokenAuth
 from utils.permission import CustomPermissionFilter
 
 from Followers.serializers import FollowerSerializer
@@ -172,6 +174,31 @@ def getInboxItems(request, authorId):
     return Response(output, status=200)
 
 
+@swagger_auto_schema(
+    method="POST",
+    operation_summary="add a item to inbox",
+    operation_description="add a item to an author's inbox, authentication needed. note any of the 3 types of inbox item are accepted, all 3 is not needed",
+    responses={204: "adding inbox item success", 400: "bad request formatting", 404: "author id not found"},
+    field_inspectors=[NoSchemaTitleInspector],
+    request_body=InboxItemSerializer,
+    tags=["Inbox"],
+)
+@swagger_auto_schema(
+    method="DELETE",
+    operation_summary="clear the entire inbox",
+    operation_description="clear an author's inbox, authentication needed. ",
+    responses={204: "inbox cleared"},
+    field_inspectors=[NoSchemaTitleInspector],
+    tags=["Inbox"],
+)
+@swagger_auto_schema(
+    method="GET",
+    operation_summary="get inbox items",
+    operation_description="get items in an author's inbox, authentication needed. Paginated.",
+    responses={200: InboxItemSerializer, 400: "bag request or pagination", 404: "author not found"},
+    field_inspectors=[NoSchemaTitleInspector],
+    tags=["Inbox"],
+)
 @api_view(["POST", "DELETE", "GET"])
 @permission_classes([CustomPermissionFilter(allowedMethods=["POST"])])
 def handleInbox(request, authorId: str):
