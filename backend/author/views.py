@@ -22,6 +22,7 @@ from .documentations import *
 
 from django.db.utils import IntegrityError
 import django.utils.timezone as timezone
+
 # Create your views here.
 
 
@@ -30,7 +31,7 @@ import django.utils.timezone as timezone
     operation_summary="Get a single author by id in path",
     responses={200: getAuthorResponse, 404: "Author not found"},
     field_inspectors=[NoSchemaTitleInspector],
-    tags=["Author"]
+    tags=["Author"],
 )
 @swagger_auto_schema(
     method="post",
@@ -47,7 +48,7 @@ import django.utils.timezone as timezone
             default="Token <token>",
         )
     ],
-    tags=["Author"]
+    tags=["Author"],
 )
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticatedOrReadOnly])
@@ -100,7 +101,7 @@ def handleAuthorById(request: Request, id):
             default=10,
         ),
     ],
-    tags=["Author"]
+    tags=["Author"],
 )
 @api_view(["GET"])
 def getAllAuthors(request: Request):
@@ -139,7 +140,7 @@ def getAllAuthors(request: Request):
     },
     field_inspectors=[NoSchemaTitleInspector],
     request_body=SignUpSerializer,
-    tags=["Authentications"]
+    tags=["Authentications"],
 )
 @api_view(["POST"])
 def signUp(request: Request):
@@ -171,7 +172,7 @@ def signUp(request: Request):
     },
     field_inspectors=[NoSchemaTitleInspector],
     request_body=LoginSerializer,
-     tags=["Authentications"]
+    tags=["Authentications"],
 )
 @api_view(["POST"])
 def login(request: Request) -> Response:
@@ -199,7 +200,7 @@ def login(request: Request) -> Response:
 
     user.last_login = timezone.now()
     user.save()
-    
+
     return Response(
         {
             "token": token.key,
@@ -209,7 +210,8 @@ def login(request: Request) -> Response:
         status=status.HTTP_200_OK,
     )
 
-#todo make logout api
+
+# todo make logout api
 
 
 """

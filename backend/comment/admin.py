@@ -35,6 +35,4 @@ class CommentAdmin(ModelAdmin):
     list_display = ["post", "author", "comment", "contentType", "published"]
 
 
-
-
 admin.site.register(Comment, CommentAdmin)

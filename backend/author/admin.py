@@ -19,7 +19,14 @@ class UserCreationForm(ModelForm):
 
     class meta:
         model = Author
-        fields = ["userName", "displayName", "github", "profileImage", "isLocalUser", "host"]
+        fields = [
+            "userName",
+            "displayName",
+            "github",
+            "profileImage",
+            "isLocalUser",
+            "host",
+        ]
 
     def clean_password2(self):
         # clean_<variable>() is called to clean the variable. Here te 2 passwords are compared to make sure they match.
@@ -53,7 +60,7 @@ class UserChangeForm(ModelForm):
             "is_admin",
             "github",
             "profileImage",
-             "host"
+            "host",
         ]
 
 
@@ -90,7 +97,7 @@ class AuthorAdmin(UserAdmin):
                     "displayName",
                     "github",
                     "profileImage",
-                     "host"
+                    "host",
                 ),
             },
         ),

@@ -38,14 +38,13 @@ def refreshToken(token: Token) -> Token:
 
 
 class TokenAuth(TokenAuthentication):
-    
     def authenticate(self, request):
         """
         mostly code ripped from the super class
 
         Ensures that request has a valid token
         """
-        
+
         auth = get_authorization_header(request).split()
 
         if not auth or auth[0].lower() != self.keyword.lower().encode():
@@ -69,10 +68,10 @@ class TokenAuth(TokenAuthentication):
             author2 = Token.objects.get(key=token).user
         except Token.DoesNotExist as e:
             raise AuthenticationFailed("Invalid token")
-        
+
         try:
-            id = (items := request.path.split('/'))[items.index('author') + 1]
-            
+            id = (items := request.path.split("/"))[items.index("author") + 1]
+
             author1 = Author.objects.get(
                 pk=id
             )  # if there is no id in the request, then force NotFound Exception
@@ -81,7 +80,9 @@ class TokenAuth(TokenAuthentication):
                 "Author not found. Is id included in the request? If so, a Athor with corresponding id is not found."
             )
 
-        if author1 != author2 and not author1.is_admin: #if the token belongs to admin, then user identity check can be skipped
+        if (
+            author1 != author2 and not author1.is_admin
+        ):  # if the token belongs to admin, then user identity check can be skipped
             raise AuthenticationFailed(
                 "Token's Author and Request's author does not match"
             )
@@ -90,4 +91,3 @@ class TokenAuth(TokenAuthentication):
             raise AuthenticationFailed("Token expired")
 
         return (token.user, token)
-
