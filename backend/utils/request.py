@@ -6,7 +6,7 @@ from django.core.cache import cache
 from rest_framework.response import Response
 
 
-def makeRequest(method: str, url: str, data: Union[dict, None]):
+def makeRequest(method: str, url: str, data: Union[dict, None] =None):
     if (method, url) in cache:
         return cache.get((method, url))
 

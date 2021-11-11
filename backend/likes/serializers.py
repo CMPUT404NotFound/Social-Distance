@@ -1,9 +1,8 @@
 from rest_framework import serializers
 
-from backend.author.models import Author
-from backend.author.serializers import AuthorSerializer
+from author.models import Author
+from author.serializers import AuthorSerializer
 from .models import Like
-from backend.settings import SITE_ADDRESS
 from utils.request import makeRequest
 
 

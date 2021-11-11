@@ -1,8 +1,8 @@
-from django.shortcuts import render
+
 from rest_framework.decorators import api_view
-from backend.author.models import Author
-from backend.likes.models import Like
-from backend.likes.serializers import LikeSerializer
+from author.models import Author
+from likes.models import Like
+from likes.serializers import LikeSerializer
 
 from posts.models import Post
 from rest_framework.response import Response
@@ -11,7 +11,7 @@ from rest_framework.response import Response
 
 
 @api_view(["GET"])
-def getPostLikes(request, postId):
+def getPostLikes(request, authorId, postId):
     
     
     try: 
@@ -25,7 +25,7 @@ def getPostLikes(request, postId):
 
 
 @api_view(["GET"])
-def getCommentLikes(request, commentId):
+def getCommentLikes(request,authorId, postId,  commentId):
     
     try: 
         comment = Post.objects.get(pk = commentId)

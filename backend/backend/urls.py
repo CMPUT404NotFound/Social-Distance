@@ -57,8 +57,8 @@ urlpatterns = [
     
     path("api/author/<uuid:authorId>/inbox", inboxViews.handleInbox),
     path('api/author/<uuid:authorId>/liked', likeviews.getLiked ),
-    path("api/author/<uuid>/post/<uuid:postId>/likes", likeviews.getPostLikes),
-    path("api/author/<uuid>/post/<uuid>/comments/<uuid:commentId>/likes", likeviews.getCommentLikes),
+    path("api/author/<uuid:authorId>/posts/<uuid:postId>/likes", likeviews.getPostLikes),
+    path("api/author/<uuid:authorId>/posts/<uuid:postId>/comments/<uuid:commentId>/likes", likeviews.getCommentLikes),
     
     #api paths
     path(
