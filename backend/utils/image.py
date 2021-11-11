@@ -15,7 +15,7 @@ def saveImage(base64Image, fileName):
 
 def getImage(fileName):
     '''
-    grabs the image from the static folder and returns it as a base64 string
+    grabs the image from the static folder, or a internet link and returns it as a base64 string
     '''
     
     
