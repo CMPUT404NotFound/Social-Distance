@@ -2,8 +2,6 @@ from django.db import models
 
 # Create your models here.
 
-from author.models import Author
-from posts.models import Post
 
 class Like(models.Model):
     

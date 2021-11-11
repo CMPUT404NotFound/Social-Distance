@@ -1,3 +1,5 @@
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models.expressions import Value
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -77,9 +79,7 @@ def handleFollows(request, authorId: str):
         except Author.DoesNotExist:
             return Response("Author does not exist", status=404)
 
-        if Author.objects.filter(
-            authorId
-        ).exist():  # need varify the given author to follow exist in local db
+        if Author.objects.filter(authorId).exist():  # need varify the given author to follow exist in local db
             request = Follow_Request.objects.create(requestor=follower, requestee=authorId)
             InboxItem.objects.create(author=author, type="F", contentId=request.pk)
             return Response(status=204)
@@ -145,16 +145,23 @@ def getInboxItems(request, authorId):
                         item.type
                     ](**{"pk": item.contentId})
                 ).data
-                if {
-                    "L": Like.objects.filter,
-                    "P": Post.objects.filter,
-                    "F": Follower.objects.filter,
-                }[item.type](**{"pk": item.contentId}).exists()
+                if {"L": Like.objects.filter, "P": Post.objects.filter, "F": Follower.objects.filter,}[
+                    item.type
+                ](**{"pk": item.contentId}).exists()
                 else makeRequest(method="GET", url=item.contentId).data
             )
             for item in items
         ],
     )  # woah dude
+
+    params: dict = request.query_params
+
+    if "page" in params and "size" in params:
+        try:
+            pager = Paginator(itemsOutput, int(params["size"]))
+            itemsOutput = pager.page(int(params["page"]))
+        except (ValueError, EmptyPage, PageNotAnInteger) as e:
+            return Response(str(e), status=400)
 
     output = {
         "type": "inbox",
