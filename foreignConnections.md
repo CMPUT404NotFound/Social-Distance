@@ -21,3 +21,4 @@ So for nodes that needs authentication, `Authorization: Basic userid:password`,
 if auth is not required, then when handling incoming/outgoing requests its just a simple black/white list via `allowIncoming` & `allowOutgoing`.
 
 Hanlding of incoming requests should be done in the class `TokenAuth` (maybe rename this), or perhaps a seperate Authentication class. Outgoing requests should be checked in `utils.requests.py`, so check if the outgoing request is allowed, if auth is to be added etc.  
+

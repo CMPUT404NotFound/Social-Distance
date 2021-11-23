@@ -1,4 +1,5 @@
 import datetime
+from typing import List
 
 import uuid
 
@@ -38,6 +39,13 @@ def refreshToken(token: Token) -> Token:
 
 
 class TokenAuth(TokenAuthentication):
+    
+    def __init__(self, bypassedMethod : List[str]):
+        self.bypassed = bypassedMethod
+    
+    def __call__(self):
+        return self #a bit of a hack, to allow initial tokenAuth with initialized params
+    
     def authenticate(self, request):
         """
         mostly code ripped from the super class
@@ -45,6 +53,9 @@ class TokenAuth(TokenAuthentication):
         Ensures that request has a valid token
         """
 
+        if request.method in self.bypassed:
+            return ("", None)
+        
         auth = get_authorization_header(request).split()
 
         if not auth or auth[0].lower() != self.keyword.lower().encode():
