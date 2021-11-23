@@ -41,9 +41,10 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
-
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
+    path("", RedirectView.as_view(url = 'https://cmput404project.netlify.app/', permanent = False)),
     path("admin/", admin.site.urls),
     path("api/author/<slug:id>", authorViews.handleAuthorById),
     path("api/author/<uuid:author_id>/posts", postsViews.getAllPosts),
@@ -59,7 +60,7 @@ urlpatterns = [
     path('api/author/<uuid:authorId>/liked', likeviews.getLiked ),
     path("api/author/<uuid:authorId>/posts/<uuid:postId>/likes", likeviews.getPostLikes),
     path("api/author/<uuid:authorId>/posts/<uuid:postId>/comments/<uuid:commentId>/likes", likeviews.getCommentLikes),
-    
+
     #api paths
     path(
         "api/",

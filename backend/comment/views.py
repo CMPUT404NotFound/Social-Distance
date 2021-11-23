@@ -1,3 +1,4 @@
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework import response
@@ -31,6 +32,22 @@ from author.models import Author
         400: "Bad path params or bad pagination",
         404: "Post not found",
     },
+   manual_parameters=[
+        openapi.Parameter(
+            name="page",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_INTEGER,
+            description="Page number",
+            default=1,
+        ),
+        openapi.Parameter(
+            name="size",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_INTEGER,
+            description="Page size",
+            default=10,
+        ),
+    ],
     field_inspectors=[NoSchemaTitleInspector],
     tags=["comments"],
 )

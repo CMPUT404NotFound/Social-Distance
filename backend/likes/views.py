@@ -1,3 +1,6 @@
+from typing import KeysView
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import response
 from rest_framework.decorators import api_view
@@ -8,8 +11,10 @@ from likes.serializers import LikeSerializer
 
 from posts.models import Post
 from rest_framework.response import Response
+from rest_framework.request import Empty, Request
 
-from .documentation import getLikesResponse
+from .documentation import AddLike, getLikesResponse
+from utils.request import checkIsLocal
 
 # Create your views here.
 
@@ -60,19 +65,71 @@ def getCommentLikes(request, authorId, postId, commentId):
 @swagger_auto_schema(
     method="GET",
     operation_summary="get all likes from a author",
-    operation_description="not paginated atm, kinda broken, need fixing, see todo^^^^",
+    operation_description="with pagination options ",
     responses={200: getLikesResponse, 404: "author with given id not found"},
     field_inspectors=[NoSchemaTitleInspector],
     tags=["Likes"],
+    manual_parameters=[
+        openapi.Parameter(
+            name="page",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_INTEGER,
+            description="Page number",
+            default=1,
+        ),
+        openapi.Parameter(
+            name="size",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_INTEGER,
+            description="Page size",
+            default=10,
+        ),
+    ],
 )
-@api_view(["GET"])
-def getLiked(request, authorId):
+@swagger_auto_schema(
+    method="post",
+    operation_summary="add a record of a local author liking a local or foreign media",
+    field_inspectors=[NoSchemaTitleInspector],
+    tags=["Likes"],
+    responses={
+        204: "like added",
+        400: "bad format"
+    },
+    request_body= AddLike
+)
+@api_view(["GET", "POST"])
+def getLiked(request : Request, authorId):
 
     try:
         author = Author.objects.get(pk=authorId)
     except Author.DoesNotExist:
         return Response("author does not exist", status=404)
 
-    likes = Like.objects.filter(author=authorId).all()
+    if request.method == "GET":
+        likes = Like.objects.filter(author=authorId).all()
+        
+        params = request.query_params
+        
+        if "page" in params and "size" in params:
+            try: 
+                pager = Paginator(likes, int(params['size']))
+                serial = LikeSerializer(pager.page(int(params["page"]), many = True))
+            except (ValueError, EmptyPage, PageNotAnInteger) as e:
+                return Response(str(e), status=400)
+        else:
+            serial = LikeSerializer(likes, many=True)
+        return Response({"type": "liked", "items": serial.data}, status=200)
+    elif request.method == "POST":
+        data = request.data
+        try:
+            target = data['target']
+            if pair := checkIsLocal(target): 
+                Like.objects.create(author = authorId,  parentId = pair[0])
+            else:
+                Like.objects.create(author = authorId,  parentId = target)
+            return Response(status=204)
+        
+        except KeyError as e:
+            return Response('bad request json format', status= 400)
 
-    return Response({"type": "liked", "items": LikeSerializer(likes, many=True).data}, status=200)
+
