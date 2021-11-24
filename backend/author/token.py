@@ -1,15 +1,19 @@
+import base64
+import binascii
 import datetime
 from typing import List
 
-import uuid
 
 import backend.settings as settings
-from rest_framework.authentication import TokenAuthentication, get_authorization_header
+from rest_framework.authentication import TokenAuthentication, get_authorization_header, BasicAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed
 import django.utils.timezone as timezone
 from .models import Author
+from rest_framework import exceptions
 
+import django.http.request as r
+Request = r.HttpRequest
 
 def expires_in(token: Token) -> int:
     """
@@ -45,6 +49,7 @@ class TokenAuth(TokenAuthentication):
 
     This authenticator always fails for foreign requests since they can't provide token.
     # :TODO write NodeBasicAuth to take over if TokenAuth fails.
+    :TODO let admin activate/deactivate author
     """
 
     def __init__(self, bypassAuthorCheck: List[str] = None, bypassEntirely: List[str] = None):
@@ -85,7 +90,7 @@ class TokenAuth(TokenAuthentication):
             raise AuthenticationFailed("Invalid token")
 
         if author2.is_admin:
-            return (token, author2)  # if token provided belongs to admin, no need to check if the users matchs, nor if the token is expired.
+            return (author2, token)  # if token provided belongs to admin, no need to check if the users matchs, nor if the token is expired.
 
         if not request.method in self.bypassedAuthor:
             try:
@@ -103,3 +108,30 @@ class TokenAuth(TokenAuthentication):
             raise AuthenticationFailed("Token expired")
 
         return (token.user, token)
+
+
+class NodeBasicAuth:
+    
+    
+    def authenticate(self, request: Request):
+        """
+        Returns a `User` if a correct username and password have been supplied
+        using HTTP Basic authentication.  Otherwise returns `None`.
+        """
+        auth = get_authorization_header(request).split()
+
+        if not auth or auth[0].lower() != b'basic':
+            return None
+
+        if len(auth) == 1:
+            msg = 'Invalid basic header. No credentials provided.'
+            raise exceptions.AuthenticationFailed(msg)
+        elif len(auth) > 2:
+            msg = 'Invalid basic header. Credentials string should not contain spaces.'
+            raise exceptions.AuthenticationFailed(msg)
+
+        print(auth[1])
+        partion = auth[1].partition(':')
+        username, password = partion[0], partion[2]
+        
+        

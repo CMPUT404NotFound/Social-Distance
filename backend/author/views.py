@@ -54,7 +54,7 @@ import django.utils.timezone as timezone
     tags=["Author"],
 )
 @api_view(["GET", "POST"])
-@permission_classes([IsAuthenticatedOrReadOnly])
+
 def handleAuthorById(request: Request, id):
     if request.method == "GET":
         try:
@@ -111,6 +111,7 @@ def getAllAuthors(request: Request):
     """
     GET to get a list of all authors, with pagination options\n
     """
+    print(request.META)
     # TODO add ordering to authors
     if request.method == "GET":
         params: dict = request.query_params

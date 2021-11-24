@@ -52,7 +52,11 @@ class AuthorManager(BaseUserManager):
 
 
 class Author(AbstractBaseUser):
-
+    '''
+    TODO let admin activate/deactivate authenticate.
+    '''
+    
+    
     id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False, max_length=200)
 
     displayName = models.CharField(max_length=40, null=False, blank=True, default="")
