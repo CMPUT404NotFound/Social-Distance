@@ -35,7 +35,7 @@ class ClassType(enum.Enum):
     post = 1
     comment = 2
 
-def checkIsLocal(id:str, type = None) -> Tuple[str, str]:
+def checkIsLocal(id:str, type : ClassType = None) -> Tuple[str, str]:
     '''
     returns (type, id) if is local, None otherwise. 
     Type is stuff like author, posts, comments, etc

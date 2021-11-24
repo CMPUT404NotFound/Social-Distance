@@ -51,14 +51,15 @@ INSTALLED_APPS = [
     "posts",
     "comment",
     "inbox",
-    'likes'
+    'likes',
+    'nodes'
 ]
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         'author.token.TokenAuth'
     ],
     "DEFAULT_PERMISSION_CLASSES": [
-        'rest_framework.permissions.AllowAny'
+        'rest_framework.permissions.IsAuthenticated'
     ]
 }
 

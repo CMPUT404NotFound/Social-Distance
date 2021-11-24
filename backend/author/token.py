@@ -18,8 +18,7 @@ def expires_in(token: Token) -> int:
     """
     return max(
         datetime.timedelta(0),
-        (token.created + datetime.timedelta(0, settings.TOKEN_EXPIRE_TIME, 0))
-        - timezone.now(),
+        (token.created + datetime.timedelta(0, settings.TOKEN_EXPIRE_TIME, 0)) - timezone.now(),
     )
 
 
@@ -39,13 +38,22 @@ def refreshToken(token: Token) -> Token:
 
 
 class TokenAuth(TokenAuthentication):
-    
-    def __init__(self, bypassedMethod : List[str]):
-        self.bypassed = bypassedMethod
-    
+    """
+    Every request from front end must provide token, (unless for login to obtain token)
+    token is needed to verify the requester is the our own frontend.
+    it's optional to require some methods to have the same author as well.
+
+    This authenticator always fails for foreign requests since they can't provide token.
+    # :TODO write NodeBasicAuth to take over if TokenAuth fails.
+    """
+
+    def __init__(self, bypassAuthorCheck: List[str] = None, bypassEntirely: List[str] = None):
+        self.bypassedAuthor = bypassAuthorCheck if bypassAuthorCheck else []
+        self.byEntirely = bypassEntirely if bypassEntirely else []
+
     def __call__(self):
-        return self #a bit of a hack, to allow initial tokenAuth with initialized params
-    
+        return self  # a bit of a hack, to allow initial tokenAuth with initialized params
+
     def authenticate(self, request):
         """
         mostly code ripped from the super class
@@ -53,9 +61,9 @@ class TokenAuth(TokenAuthentication):
         Ensures that request has a valid token
         """
 
-        if request.method in self.bypassed:
+        if request.method in self.byEntirely:
             return ("", None)
-        
+
         auth = get_authorization_header(request).split()
 
         if not auth or auth[0].lower() != self.keyword.lower().encode():
@@ -64,39 +72,32 @@ class TokenAuth(TokenAuthentication):
         if len(auth) == 1:
             raise AuthenticationFailed("Invalid token header. No credentials provided.")
         elif len(auth) > 2:
-            raise AuthenticationFailed(
-                "Invalid token header. Token string should not contain spaces."
-            )
+            raise AuthenticationFailed("Invalid token header. Token string should not contain spaces.")
 
         try:
             token = Token.objects.get(pk=auth[1].decode())
         except UnicodeError:
-            raise AuthenticationFailed(
-                "Invalid token header. Token string should not contain invalid characters."
-            )
+            raise AuthenticationFailed("Invalid token header. Token string should not contain invalid characters.")
 
         try:
-            author2 = Token.objects.get(key=token).user
+            author2: Author = Token.objects.get(key=token).user
         except Token.DoesNotExist as e:
             raise AuthenticationFailed("Invalid token")
 
-        try:
-            id = (items := request.path.split("/"))[items.index("author") + 1]
+        if author2.is_admin:
+            return (token, author2)  # if token provided belongs to admin, no need to check if the users matchs, nor if the token is expired.
 
-            author1 = Author.objects.get(
-                pk=id
-            )  # if there is no id in the request, then force NotFound Exception
-        except Author.DoesNotExist:
-            raise AuthenticationFailed(
-                "Author not found. Is id included in the request? If so, a Athor with corresponding id is not found."
-            )
+        if not request.method in self.bypassedAuthor:
+            try:
+                id = (items := request.path.split("/"))[items.index("author") + 1]
 
-        if (
-            author1 != author2 and not author1.is_admin
-        ):  # if the token belongs to admin, then user identity check can be skipped
-            raise AuthenticationFailed(
-                "Token's Author and Request's author does not match"
-            )
+                author1 = Author.objects.get(pk=id)  # if there is no id in the request, then force NotFound Exception
+            except Author.DoesNotExist:
+                #: FIXME this is not a good way to verify if token author and requested author matches, maybe?
+                raise AuthenticationFailed("Author not found. Is id included in the request? If so, a Author with corresponding id is not found.")
+
+            if author1 != author2:  # if the token belongs to admin, then user identity check can be skipped
+                raise AuthenticationFailed("Token's Author and Request's author does not match")
 
         if token_expired(token):
             raise AuthenticationFailed("Token expired")
