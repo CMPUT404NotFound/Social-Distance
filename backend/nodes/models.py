@@ -20,3 +20,5 @@ class Node(models.Model):
     
     incomingPassword = models.CharField(max_length=128,blank=False, null=False,default="passpass")
     outgoingPassword = models.CharField(max_length=128,blank=False, null=False,default="passpass")
+    
+    description = models.CharField(max_length=300, blank=True, default=False)

@@ -1,11 +1,12 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 
 from author.models import Author
 from Followers.models import Follow_Request
 from Followers.models import Follower
+from author.token import TokenAuth
 from inbox.documentation import InboxItemSerializer
 from comment.documentation import NoSchemaTitleInspector
 from comment.models import Comment
@@ -198,7 +199,7 @@ def getInboxItems(request, authorId):
     tags=["Inbox"],
 )
 @api_view(["POST", "DELETE", "GET"])
-@permission_classes([CustomPermissionFilter(allowedMethods=["POST"])])
+@authentication_classes([TokenAuth(needAuthorCheck=["GET", "DELETE"], bypassEntirely=["POST"])])
 def handleInbox(request, authorId: str):
     print(request.method)
     if request.method == "POST":

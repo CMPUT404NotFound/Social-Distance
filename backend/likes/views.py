@@ -3,8 +3,9 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from author.models import Author
+from author.token import TokenAuth
 from comment.documentation import NoSchemaTitleInspector
 from likes.models import Like
 from likes.serializers import LikeSerializer
@@ -98,6 +99,7 @@ def getCommentLikes(request, authorId, postId, commentId):
     request_body= AddLike
 )
 @api_view(["GET", "POST"])
+@permission_classes([TokenAuth(needAuthorCheck=["POST"])])
 def getLiked(request : Request, authorId):
 
     try:

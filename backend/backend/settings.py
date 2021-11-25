@@ -31,6 +31,19 @@ ALLOWED_HOSTS = ['*']
 # CORS_ORIGIN_ALLOW_ALL = True
 AUTH_USER_MODEL = "author.Author"
 
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -53,7 +66,7 @@ INSTALLED_APPS = [
     "inbox",
     'likes',
     'nodes',
-    'cors'
+
 ]
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [

@@ -27,7 +27,7 @@ from drf_yasg import openapi
 
 from posts.models import Post
 
-...
+
 
 schema_view = get_schema_view(
     openapi.Info(

@@ -48,12 +48,13 @@ class TokenAuth(TokenAuthentication):
     it's optional to require some methods to have the same author as well.
 
     This authenticator always fails for foreign requests since they can't provide token.
-    # :TODO write NodeBasicAuth to take over if TokenAuth fails.
-    :TODO let admin activate/deactivate author
+    * TODO write NodeBasicAuth to take over if TokenAuth fails.
+    * TODO let admin activate/deactivate author
     """
 
-    def __init__(self, bypassAuthorCheck: List[str] = None, bypassEntirely: List[str] = None):
-        self.bypassedAuthor = bypassAuthorCheck if bypassAuthorCheck else []
+    def __init__(self, needAuthorCheck: List[str] = None, bypassEntirely: List[str] = None):
+        
+        self.needAuthorCheck = needAuthorCheck if needAuthorCheck else []
         self.byEntirely = bypassEntirely if bypassEntirely else []
 
     def __call__(self):
@@ -92,7 +93,7 @@ class TokenAuth(TokenAuthentication):
         if author2.is_admin:
             return (author2, token)  # if token provided belongs to admin, no need to check if the users matchs, nor if the token is expired.
 
-        if not request.method in self.bypassedAuthor:
+        if  request.method in self.needAuthorCheck:
             try:
                 id = (items := request.path.split("/"))[items.index("author") + 1]
 

@@ -54,7 +54,7 @@ import django.utils.timezone as timezone
     tags=["Author"],
 )
 @api_view(["GET", "POST"])
-
+@permission_classes([TokenAuth(needAuthorCheck=["POST"])])
 def handleAuthorById(request: Request, id):
     if request.method == "GET":
         try:
@@ -147,6 +147,7 @@ def getAllAuthors(request: Request):
     tags=["Authentications"],
 )
 @api_view(["POST"])
+@permission_classes([TokenAuth(bypassEntirely=["POST"])])
 def signUp(request: Request):
     data = request.data
     try:
@@ -179,6 +180,7 @@ def signUp(request: Request):
     tags=["Authentications"],
 )
 @api_view(["POST"])
+@permission_classes([TokenAuth(bypassEntirely=["POST"])])
 def login(request: Request) -> Response:
 
     """

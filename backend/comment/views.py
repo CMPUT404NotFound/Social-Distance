@@ -9,7 +9,10 @@ from rest_framework.request import Request
 
 from rest_framework.decorators import (
     api_view,
+    permission_classes,
 )
+
+from author.token import TokenAuth
 
 
 from .models import Comment
@@ -66,6 +69,7 @@ from author.models import Author
     tags=["comments"],
 )
 @api_view(["GET", "POST"])
+@permission_classes([TokenAuth(needAuthorCheck=["POST"])])
 def handleComments(request: Request, authorId: str = "", postId: str = ""):
 
     # todo verify if post's author is the same as the author privided in the url
