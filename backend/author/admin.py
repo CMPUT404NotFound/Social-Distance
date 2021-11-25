@@ -24,8 +24,6 @@ class UserCreationForm(ModelForm):
             "displayName",
             "github",
             "profileImage",
-            "isLocalUser",
-            "host",
         ]
 
     def clean_password2(self):
@@ -60,7 +58,6 @@ class UserChangeForm(ModelForm):
             "is_admin",
             "github",
             "profileImage",
-            "host",
         ]
 
 
@@ -93,11 +90,9 @@ class AuthorAdmin(UserAdmin):
                     "password1",
                     "password2",
                     "is_admin",
-                    "isLocalUser",
                     "displayName",
                     "github",
                     "profileImage",
-                    "host",
                 ),
             },
         ),

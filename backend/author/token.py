@@ -156,7 +156,6 @@ class NodeBasicAuth(BasicAuthentication):
             if not node.allowIncoming:
                 raise exceptions.AuthenticationFailed("The origin provided is not allowed to access this server")
 
-         
             
             if node.authRequiredIncoming:
                 if not (node.incomingName == username and node.incomingPassword == password):
