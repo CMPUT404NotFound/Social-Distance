@@ -1,7 +1,7 @@
 import base64
 import binascii
 import datetime
-from typing import List
+from typing import List, Union
 
 
 import backend.settings as settings
@@ -12,8 +12,10 @@ import django.utils.timezone as timezone
 from .models import Author
 from rest_framework import exceptions
 
-import django.http.request as r
-Request = r.HttpRequest
+from django.http.request import HttpRequest
+from rest_framework.request import Request
+
+from nodes.models import Node
 
 def expires_in(token: Token) -> int:
     """
@@ -40,6 +42,11 @@ def refreshToken(token: Token) -> Token:
         token = Token.objects.create(user=token.user)
     return token
 
+
+class DummyAuthObject:
+    def __init__(self, user=False, is_authenticated = False):
+        self.user = user
+        self.is_authenticated = is_authenticated
 
 class TokenAuth(TokenAuthentication):
     """
@@ -111,10 +118,12 @@ class TokenAuth(TokenAuthentication):
         return (token.user, token)
 
 
-class NodeBasicAuth:
+
+
+class NodeBasicAuth(BasicAuthentication):
     
     
-    def authenticate(self, request: Request):
+    def authenticate(self, request: Union[Request, HttpRequest]):
         """
         Returns a `User` if a correct username and password have been supplied
         using HTTP Basic authentication.  Otherwise returns `None`.
@@ -131,8 +140,32 @@ class NodeBasicAuth:
             msg = 'Invalid basic header. Credentials string should not contain spaces.'
             raise exceptions.AuthenticationFailed(msg)
 
-        print(auth[1])
-        partion = auth[1].partition(':')
-        username, password = partion[0], partion[2]
+
+        partion = auth[1].decode().split(':')
+        username, password = partion[0], partion[1]
+        
+        try:
+            #origin is used to later varify if this requester is trusted
+            origin = request.headers['Origin']
+        except KeyError:
+            raise exceptions.AuthenticationFailed("Origin header not provided")
+    
+        try:
+            node : Node= Node.objects.get(url = origin)
+            
+            if not node.allowIncoming:
+                raise exceptions.AuthenticationFailed("The origin provided is not allowed to access this server")
+
+         
+            
+            if node.authRequiredIncoming:
+                if not (node.incomingName == username and node.incomingPassword == password):
+                    raise exceptions.AuthenticationFailed("Basic auth credentials does not match.")
+                
+        except Node.DoesNotExist:
+            raise exceptions.AuthenticationFailed("The origin provided is not yet registered in this server")
+        
+        return (DummyAuthObject(True, True), None)
+      
         
         

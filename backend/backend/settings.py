@@ -70,7 +70,8 @@ INSTALLED_APPS = [
 ]
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        'author.token.TokenAuth'
+        'author.token.TokenAuth',
+        'author.token.NodeBasicAuth'
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         'rest_framework.permissions.IsAuthenticated'

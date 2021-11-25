@@ -111,7 +111,7 @@ def getAllAuthors(request: Request):
     """
     GET to get a list of all authors, with pagination options\n
     """
-    print(request.META)
+
     # TODO add ordering to authors
     if request.method == "GET":
         params: dict = request.query_params

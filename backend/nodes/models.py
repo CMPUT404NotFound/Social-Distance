@@ -7,8 +7,7 @@ from django.db import models
 
 class Node(models.Model):
     
-    
-    url = models.URLField('url of node')
+    url = models.URLField('url of node', unique=True, null=False, blank=False)
     allowIncoming = models.BooleanField()
     allowOutgoing = models.BooleanField()
     
@@ -22,3 +21,8 @@ class Node(models.Model):
     outgoingPassword = models.CharField(max_length=128,blank=False, null=False,default="passpass")
     
     description = models.CharField(max_length=300, blank=True, default=False)
+    
+    
+    
+    def __str__(self) -> str:
+        return str(self.url)

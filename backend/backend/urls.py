@@ -21,11 +21,10 @@ import Followers.views as followerViews
 import comment.views as commentViews
 import inbox.views as inboxViews
 import likes.views as likeviews
+import nodes.views as nodeViews
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-
-from posts.models import Post
 
 
 
@@ -60,6 +59,8 @@ urlpatterns = [
     path('api/author/<uuid:authorId>/liked', likeviews.getLiked ),
     path("api/author/<uuid:authorId>/posts/<uuid:postId>/likes", likeviews.getPostLikes),
     path("api/author/<uuid:authorId>/posts/<uuid:postId>/comments/<uuid:commentId>/likes", likeviews.getCommentLikes),
+    
+    path("api/nodes", nodeViews.getNodes),
 
     #api paths
     path(
