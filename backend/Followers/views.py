@@ -9,16 +9,19 @@ from rest_framework.request import Request
 from rest_framework.decorators import (
     api_view,
     permission_classes,
+    authentication_classes,
 )
 from rest_framework import status
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
+from rest_framework.authentication import TokenAuthentication
 from author.token import expires_in, refreshToken
 
 
 from author.models import *
 from author.serializers import *
+from author.token import TokenAuth
 from .models import *
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -43,6 +46,8 @@ def getAllFollowers(request: Request, id):
 @swagger_auto_schema(method="put", tags=['followers'])
 @swagger_auto_schema(method="delete", tags=['followers'])
 @api_view(["GET", "PUT", "DELETE"])
+@permission_classes([IsAuthenticatedOrReadOnly])
+@authentication_classes([TokenAuthentication])
 def addFollower(request: Request, author_id, follower_id):
     if request.method == "PUT":
         try:
