@@ -7,7 +7,6 @@ from rest_framework.decorators import (
 )
 from rest_framework import status
 from rest_framework.permissions import (
-    NOT,
     IsAuthenticatedOrReadOnly,
 )
 
