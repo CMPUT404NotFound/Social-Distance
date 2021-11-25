@@ -10,9 +10,7 @@ from rest_framework.decorators import (
     permission_classes,
 )
 from rest_framework import status
-from rest_framework.permissions import (
-    IsAuthenticatedOrReadOnly,
-)
+
 
 from .token import TokenAuth, expires_in, refreshToken
 
@@ -54,7 +52,7 @@ import django.utils.timezone as timezone
     tags=["Author"],
 )
 @api_view(["GET", "POST"])
-@permission_classes([TokenAuth(needAuthorCheck=["POST"])])
+@authentication_classes([TokenAuth(needAuthorCheck=["POST"])])
 def handleAuthorById(request: Request, id):
     if request.method == "GET":
         try:
@@ -147,7 +145,7 @@ def getAllAuthors(request: Request):
     tags=["Authentications"],
 )
 @api_view(["POST"])
-@permission_classes([TokenAuth(bypassEntirely=["POST"])])
+@authentication_classes([TokenAuth(bypassEntirely=["POST"])])
 def signUp(request: Request):
     data = request.data
     try:
@@ -180,7 +178,7 @@ def signUp(request: Request):
     tags=["Authentications"],
 )
 @api_view(["POST"])
-@permission_classes([TokenAuth(bypassEntirely=["POST"])])
+@authentication_classes([TokenAuth(bypassEntirely=["POST"])])
 def login(request: Request) -> Response:
 
     """

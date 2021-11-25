@@ -9,6 +9,7 @@ from rest_framework.request import Request
 
 from rest_framework.decorators import (
     api_view,
+    authentication_classes,
     permission_classes,
 )
 
@@ -69,7 +70,7 @@ from author.models import Author
     tags=["comments"],
 )
 @api_view(["GET", "POST"])
-@permission_classes([TokenAuth(needAuthorCheck=["POST"])])
+@authentication_classes([TokenAuth(needAuthorCheck=["POST"])])
 def handleComments(request: Request, authorId: str = "", postId: str = ""):
 
     # todo verify if post's author is the same as the author privided in the url
@@ -129,8 +130,6 @@ def handleComments(request: Request, authorId: str = "", postId: str = ""):
                         return Response("comment created", status=status.HTTP_204_NO_CONTENT)
                     else:
                         #since author does not exist in current database, just save the id, to be looked up later
-
-
                         comment = Comment.objects.create(
                             author=data["author"]["id"],
                             comment=data["comment"],
@@ -139,7 +138,7 @@ def handleComments(request: Request, authorId: str = "", postId: str = ""):
                         )
                         comment.save()
                         return Response("comment created", status=status.HTTP_204_NO_CONTENT)
-                       
+
                 else:
                     return Response('bad formatting in author', status=status.HTTP_400_BAD_REQUEST)
             else:
