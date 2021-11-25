@@ -151,7 +151,7 @@ def signUp(request: Request):
     data = request.data
     try:
         
-        setting :Setting = Setting.getSettings()
+        setting :Setting = Setting.settings()
         
         Author.objects.create_user(
             data["userName"],

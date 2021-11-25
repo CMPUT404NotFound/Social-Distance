@@ -18,7 +18,7 @@ class PostsSerializer(serializers.ModelSerializer):
         model = Post
         fields = ("type", "post_id", "author", "title", 
         "visibility","description","content", "contentType",
-        "source", "origin","counts","categories","comments","unlisted","published")
+        "source", "origin","count","categories","comments","unlisted","published")
 
     def get_type(self, obj):
         return "post"

@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "inbox",
     'likes',
     'nodes',
+    "globalSetting"
 
 ]
 REST_FRAMEWORK = {
