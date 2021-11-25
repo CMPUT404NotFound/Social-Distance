@@ -13,46 +13,42 @@ class AuthorManager(BaseUserManager):
         github="",
         profileImage="",
         password=None,
-        isLocalUser=True,
-        id=None,
-        host = None
+        is_active = False
     ):
-        if isLocalUser:
-            if not userName:
-                raise ValueError("Users must have a userName")
-            if not password:
-                raise ValueError("Users must have a password")
-        else:
-            if not id:
-                raise ValueError("Foreign user must provide id")
-            if not host:
-                raise ValueError("Foreign user must provide host")
+        
+        if not userName:
+            raise ValueError("Users must have a userName")
+        if not password:
+            raise ValueError("Users must have a password")
+
 
         user = self.model(
-            id=id if not isLocalUser else uuid.uuid4(),
-            userName=userName if isLocalUser else uuid.uuid4(),
+            id=uuid.uuid4(),
+            userName=userName,
             displayName=displayName if displayName else userName,
             github=github,
             profileImage=profileImage,
-            isLocalUser=isLocalUser,
-            host = "" if isLocalUser else host
+            is_active = is_active
         )
-        user.set_password(password if isLocalUser else str(uuid.uuid4()))
+        user.set_password(password )
         user.save(using=self._db)
         return user
 
     def create_superuser(
         self, userName, displayName="", github="", profileImage="", password=None
     ):
-
-        user = self.create_user(userName, displayName, github, profileImage, password)
+        user = self.create_user(userName, displayName, github, profileImage, password, True)
         user.is_admin = True
         user.save(using=self._db)
         return user
 
 
 class Author(AbstractBaseUser):
-
+    '''
+    TODO let admin activate/deactivate authenticate.
+    '''
+    
+    
     id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False, max_length=200)
 
     displayName = models.CharField(max_length=40, null=False, blank=True, default="")
@@ -74,9 +70,7 @@ class Author(AbstractBaseUser):
 
     is_admin = models.BooleanField(default=False)
 
-    isLocalUser = models.BooleanField(default=True)
-    
-    host = models.URLField(blank=True, null=False, default="")
+    is_active = models.BooleanField(default=False)
 
     def __str__(self):
         return f"author: {self.displayName}, id: {self.id}"

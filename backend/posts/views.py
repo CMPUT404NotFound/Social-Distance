@@ -1,26 +1,46 @@
+from django.utils.functional import empty
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
-from rest_framework.request import Request
+from rest_framework.request import Empty, Request
 from rest_framework.decorators import (
     api_view,
 )
 from rest_framework import status
 from rest_framework.permissions import (
+    NOT,
     IsAuthenticatedOrReadOnly,
 )
 
 
 from author.models import Author
 from author.serializers import AuthorSerializer
+from comment.documentation import NoSchemaTitleInspector
 
 from .models import Post
 
-from .serializers import *
+from .serializers import PostsSerializer
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
-@swagger_auto_schema(method="get",tags=['posts'])
-@swagger_auto_schema(method="post",tags=['posts'])
+@swagger_auto_schema(method="get",tags=['Posts'],
+                     operation_summary="Get posts of an author",
+                     operation_description="Get posts of author, with page & size pagination option. Request with no pagination to get all",
+                     field_inspectors=[NoSchemaTitleInspector],
+                     responses={200: PostsSerializer(many=True),
+                                400: "Bad pagination format",
+                                404: "Author or post not found"
+                                }, 
+                     )
+                     
+@swagger_auto_schema(method="post",tags=['Posts'],
+                     operation_summary="Create a post",
+                      field_inspectors=[NoSchemaTitleInspector],
+                      responses={204: "Post Created Successfully.",
+                                 400: "Bad post creation json format.",
+                                 404: "Author not found."
+                                 },
+                      request_body=PostsSerializer
+                     )
 @api_view(["GET","POST"])
 def getAllPosts(request: Request, author_id):
     # if request.method == "GET":
@@ -50,27 +70,31 @@ def getAllPosts(request: Request, author_id):
                         paginator.page(int(params["page"])), many=True
                     )  # get requested page and serialize
                 except (ValueError, EmptyPage, PageNotAnInteger) as e:
-                    return Response(str(e), status=status.HTTP_404_NOT_FOUND)
+                    return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
             else:
                 s = PostsSerializer(post, context={"request": request}, many=True)
-            return Response(s.data)  
+            return Response(s.data, status=status.HTTP_200_OK)
         except Post.DoesNotExist:
 
             return Response(status=status.HTTP_404_NOT_FOUND)
     elif request.method == "POST":
+        
         try:
             author = Author.objects.get(pk = author_id)
+        except Author.DoesNotExist:
+            return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
 
+        try:   
             new_post = Post.objects.create(
-               author_id= author,
-               title=request.data['title'],
-               visibility= request.data['visibility'],
-               description= request.data['description'],
-               content= request.data['content'],
-               contentType= request.data['contentType']
+            author_id= author,
+            title=request.data.get("title",""),
+            visibility= request.data.get("visibility", "PU"),
+            description= request.data.get("description", ""),
+            content= request.data.get("content", ""),
+            contentType= request.data.get("contentType", "plain")
             )
-            # author.sender.add(follower)
             new_post.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except Post.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

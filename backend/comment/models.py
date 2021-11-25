@@ -1,12 +1,13 @@
 from django.db import models
 
 # Create your models here.
-from author.models import Author
+
 import uuid
 
 Content_choices = {("P", "text/plain"), ("M", "text/markdown")}
 
 from posts.models import Post
+
 
 class Comment(models.Model):
 
@@ -16,9 +17,9 @@ class Comment(models.Model):
         Post, on_delete=models.CASCADE, related_name="post_comments"
     )
 
-    author = models.ForeignKey(
-        Author, related_name="+", on_delete=models.DO_NOTHING
-    )  # related_name='+' means the reverse relation is not made
+    author = models.CharField(
+        "id to local or foreign author", max_length=100, blank=True, null=False
+    )
 
     comment = models.TextField(
         "comment", max_length=360, blank=True, null=False, default=""

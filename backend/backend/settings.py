@@ -28,8 +28,21 @@ SECRET_KEY = "django-insecure-nmsf4&i=j%!w8-l137x7+6#iavae*qb387-moy75wesu^1manm
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
 AUTH_USER_MODEL = "author.Author"
+
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
+
 
 # Application definition
 
@@ -50,9 +63,24 @@ INSTALLED_APPS = [
     "Followers",
     "posts",
     "comment",
+    "inbox",
+    'likes',
+    'nodes',
+    'globalSetting'
+
 ]
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        'author.token.TokenAuth',
+        'author.token.NodeBasicAuth'
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        'rest_framework.permissions.IsAuthenticated'
+    ]
+}
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -60,7 +88,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
+    
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -90,7 +118,7 @@ WSGI_APPLICATION = "backend.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": str(os.path.join(BASE_DIR , "db.sqlite3")),
     }
 }
 
@@ -113,6 +141,14 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
 ]
 
+#caching
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cache_table',
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

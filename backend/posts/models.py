@@ -19,13 +19,13 @@ class Post(models.Model):
         Author, on_delete=models.CASCADE, related_name="post_author"
     )
     title = models.CharField(
-        "title", max_length=100, unique=False, null=False, blank=False
+        "title", max_length=100, unique=False, null=False, blank=False, default= ""
     )
     visibility = models.CharField(
         choices=visibility_choice, max_length=8, null=False, blank=False, default="PU"
     )
     description = models.CharField("description", max_length=100, blank=True)
-    content = models.TextField("content", max_length=200, blank=True)
+    content = models.TextField("content", max_length=400, blank=True)
     contentType = models.CharField(
         choices=content_choice, max_length= 20, null=False, default="plain"
     )
