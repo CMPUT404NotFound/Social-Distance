@@ -6,11 +6,12 @@ from comment.serializers import ChoiceField
 
 class PostsSerializer(serializers.ModelSerializer):
 
+    post_id = serializers.SerializerMethodField()
     type = serializers.SerializerMethodField()
 
     author = serializers.SerializerMethodField()
 
-    # host = serializers.SerializerMethodField()
+    source = serializers.SerializerMethodField()
 
     # url = serializers.SerializerMethodField()
     contentType = ChoiceField(choices=content_choice)
@@ -26,4 +27,5 @@ class PostsSerializer(serializers.ModelSerializer):
         return "post"
     def get_author(self, obj):
         return AuthorSerializer(obj.author_id).data
-
+    def get_post_id(self, obj):
+        return f"{SITE_ADDRESS}/author/{obj.author.id}/posts/{obj.post.id}"
