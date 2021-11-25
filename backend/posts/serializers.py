@@ -8,12 +8,9 @@ class PostsSerializer(serializers.ModelSerializer):
 
     post_id = serializers.SerializerMethodField()
     type = serializers.SerializerMethodField()
-
     author = serializers.SerializerMethodField()
-
-    source = serializers.SerializerMethodField()
-
-    # url = serializers.SerializerMethodField()
+    source = serializers.SerializerMethodField('get_source_id')
+    origin = serializers.SerializerMethodField('get_origin_id')
     contentType = ChoiceField(choices=content_choice)
     visibility = ChoiceField(choices=visibility_choice)
 
@@ -29,3 +26,13 @@ class PostsSerializer(serializers.ModelSerializer):
         return AuthorSerializer(obj.author_id).data
     def get_post_id(self, obj):
         return f"{SITE_ADDRESS}/author/{obj.author.id}/posts/{obj.post.id}"
+    def get_origin_id(self, obj):
+        if obj.origin:
+            return obj.origin
+        else:    
+            return f"{SITE_ADDRESS}/author/{obj.author.id}/posts/{obj.post.id}"
+    def get_source_id(self,obj):
+        if obj.source:
+            return obj.source
+        else:
+            return f"{SITE_ADDRESS}/author/{obj.author.id}/posts/{obj.post.id}"
