@@ -90,7 +90,14 @@ def getAllPosts(request: Request, author_id):
             visibility= request.data.get("visibility", "PU"),
             description= request.data.get("description", ""),
             content= request.data.get("content", ""),
-            contentType= request.data.get("contentType", "plain")
+            contentType= request.data.get("contentType", "plain"),
+            source = request.data.get("source",""),
+            origin = request.data.get("origin",""),
+            unlisted = request.data.get("unlisted","False"),
+            published = request.data.get("published",""),
+            categories = request.data.get("categories",""),
+            count = request.data.get("count","0"),
+            comments = request.data.get("comments","")
             )
             new_post.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
