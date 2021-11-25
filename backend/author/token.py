@@ -62,7 +62,7 @@ class TokenAuth(TokenAuthentication):
     def __init__(self, needAuthorCheck: List[str] = None, bypassEntirely: List[str] = None):
         
         self.needAuthorCheck = needAuthorCheck if needAuthorCheck else []
-        self.byEntirely = bypassEntirely if bypassEntirely else []
+        self.bypassEntirely = bypassEntirely if bypassEntirely else []
 
     def __call__(self):
         return self  # a bit of a hack, to allow initial tokenAuth with initialized params
@@ -73,9 +73,9 @@ class TokenAuth(TokenAuthentication):
 
         Ensures that request has a valid token
         """
-
-        if request.method in self.byEntirely:
-            return ("", None)
+        print(request.method, self.bypassEntirely)
+        if request.method in self.bypassEntirely:
+            return (DummyAuthObject(True, True),None)
 
         auth = get_authorization_header(request).split()
 

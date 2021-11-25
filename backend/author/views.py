@@ -21,7 +21,7 @@ from .documentations import *
 
 from django.db.utils import IntegrityError
 import django.utils.timezone as timezone
-
+from globalSetting.models import Setting
 
 
 # Create your views here.
@@ -137,6 +137,7 @@ def getAllAuthors(request: Request):
     operation_summary="Sign up with username and password. author personal info optional",
     responses={
         201: "author created",
+        204: "author created, but need server admin to activate in order to login.",
         400: "bad sign up information",
         409: "username already exist",
     },
@@ -149,13 +150,19 @@ def getAllAuthors(request: Request):
 def signUp(request: Request):
     data = request.data
     try:
+        
+        setting :Setting = Setting.getSettings()
+        
         Author.objects.create_user(
             data["userName"],
             data.get("displayName", data["userName"]),
             data.get("github", ""),
             data.get("profileImage", ""),
             data["password"],
+            is_active=not setting.newUserRequireActivation
         )
+        if setting.newUserRequireActivation:
+            return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_201_CREATED)
     except (ValueError, AttributeError) as error:
         return Response(error, status=status.HTTP_400_BAD_REQUEST)
@@ -170,8 +177,11 @@ def signUp(request: Request):
         200: openapi.Response(
             "Successful login, with author info and token", LoginSuccessSerializer
         ),
-        404: "Invalid login",
+        
         400: "bad login request format",
+        
+        401: "Invalid login credentials",
+        403: "Account not yet activated by admin",
     },
     field_inspectors=[NoSchemaTitleInspector],
     request_body=LoginSerializer,
@@ -188,14 +198,16 @@ def login(request: Request) -> Response:
 
     if not s.is_valid():
         return Response(s.errors, status=status.HTTP_400_BAD_REQUEST)
-    print(s.data)
+
     user = authenticate(username=s.data["userName"], password=s.data["password"])
 
     if not user:
         return Response(
-            {"error": "Invalid login info. Or account not activated by server admin"},
-            status=status.HTTP_404_NOT_FOUND,
+            {"error": "Invalid login info."},
+            status=status.HTTP_403_FORBIDDEN,
         )
+    if not user.is_active:
+        return Response({"error": "this account has not yet been activated by the admin"})
 
     token, created = Token.objects.get_or_create(user=user)
 
