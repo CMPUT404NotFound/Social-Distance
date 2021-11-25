@@ -1,6 +1,8 @@
 from django.db import models
 import uuid
 from author.models import Author
+from django.utils import timezone
+
 
 # Create your models here.
 
@@ -10,7 +12,6 @@ content_choice = {("markdown","text/markdown"),("plain","text/plain"),("app","ap
 
 class postsManager(models.Model):
     pass
-
 
 class Post(models.Model):
     
@@ -29,6 +30,14 @@ class Post(models.Model):
     contentType = models.CharField(
         choices=content_choice, max_length= 20, null=False, default="plain"
     )
+    comments =  models.TextField(editable = False)
+    source = models.URLField(editable = False)
+    origin = models.URLField(editable = False)
+    unlisted = models.BooleanField(default = False)
+    # https://www.geeksforgeeks.org/datetimefield-django-models/
+    published = models.DateTimeField(default = timezone.now)
+    count = models.IntegerField(default=0)
+    categories = models.JSONField()
 
     def __str__(self):
         return f"post:{self.post_id}"
