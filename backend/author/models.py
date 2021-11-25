@@ -13,6 +13,7 @@ class AuthorManager(BaseUserManager):
         github="",
         profileImage="",
         password=None,
+        is_active = False
     ):
         
         if not userName:
@@ -27,6 +28,7 @@ class AuthorManager(BaseUserManager):
             displayName=displayName if displayName else userName,
             github=github,
             profileImage=profileImage,
+            is_active = is_active
         )
         user.set_password(password )
         user.save(using=self._db)
@@ -35,7 +37,7 @@ class AuthorManager(BaseUserManager):
     def create_superuser(
         self, userName, displayName="", github="", profileImage="", password=None
     ):
-        user = self.create_user(userName, displayName, github, profileImage, password)
+        user = self.create_user(userName, displayName, github, profileImage, password, True)
         user.is_admin = True
         user.save(using=self._db)
         return user
@@ -68,7 +70,8 @@ class Author(AbstractBaseUser):
 
     is_admin = models.BooleanField(default=False)
 
- 
+    is_active = models.BooleanField(default=False)
+
     def __str__(self):
         return f"author: {self.displayName}, id: {self.id}"
 

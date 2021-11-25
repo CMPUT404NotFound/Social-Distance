@@ -20,3 +20,4 @@ def getNodes(request: Union[Request, HttpRequest]) -> Response:
     if request.method == "GET":
         return Response(NodeSerializer(Node.objects.all(), many = True).data, status=200)
     
+    
