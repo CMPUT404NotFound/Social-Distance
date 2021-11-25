@@ -21,7 +21,7 @@ class PostsSerializer(serializers.ModelSerializer):
         model = Post
         fields = ("type", "post_id", "author", "title", 
         "visibility","description","content", "contentType",
-        "source", "origin","counts","categories","comments","unlisted","published")
+        "source", "origin","count","categories","comments","unlisted","published")
 
     def get_type(self, obj):
         return "post"
@@ -29,3 +29,6 @@ class PostsSerializer(serializers.ModelSerializer):
         return AuthorSerializer(obj.author_id).data
     def get_post_id(self, obj):
         return f"{SITE_ADDRESS}/author/{obj.author.id}/posts/{obj.post.id}"
+
+    def get_source(self, obj):
+        return "stuff" # TODO fix this

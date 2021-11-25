@@ -3,12 +3,6 @@ from django.db import models
 # Create your models here.
 
 
-
-
-
-        
-
-
 class Setting(models.Model):
     '''
     global settings goes here  
@@ -16,7 +10,7 @@ class Setting(models.Model):
     '''
     newUserRequireActivation = models.BooleanField("New User Require Activation",default=False)
     
-    def getSettings():
+    def settings():
         return Setting.objects.all().first()
     
     def __str__(self) -> str:
