@@ -8,8 +8,13 @@ def handleImage(img_req):
     type = img_req["contentType"]
     #https://www.w3schools.com/python/ref_string_startswith.asp
     if (type.startswith("image/")):
-        pass
-    
+        post_content = img_req["content"]
+        if post_content.startswith("decoded:image/"):
+            pass
+        else:
+            base64Image = base64.b64encode(requests.get(post_content).content).decode('utf-8')
+            img_req["content"] = "decoded:" + type + "," + base64Image
+    return img_req
 
 def saveImage(base64Image, fileName):
     """
