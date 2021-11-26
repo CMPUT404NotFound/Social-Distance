@@ -45,7 +45,7 @@ def getAllFollowers(request: Request, id):
 @swagger_auto_schema(method="get", tags=['followers'])
 @swagger_auto_schema(method="put", tags=['followers'])
 @swagger_auto_schema(method="delete", tags=['followers'])
-@api_view(["GET", "PUT", "DELETE"])
+@api_view(["GET", "DELETE"]) #.TODO add speicial authentication for put
 # @permission_classes([IsAuthenticatedOrReadOnly])
 # # @authentication_classes([TokenAuthentication])
 @authentication_classes([TokenAuth(needAuthorCheck=["PUT", "DELETE"])])
