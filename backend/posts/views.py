@@ -53,14 +53,27 @@ def managePost(request: Request, author_id, post_id):
 
     elif request.method == "POST":
         try:  
-            post = Post.objects.filter(pk = post_id).first()
+            post : Post = Post.objects.filter(pk = post_id)
         except:  
             return Response(status=status.HTTP_404_NOT_FOUND)
         s = PostsSerializer(instance=post, data=request.data)
 
         if s.is_valid():
-            s.save()
-            return Response("Post updated",status=status.HTTP_200_OK)
+            
+            post.visibility = s.visibility
+            post.title = s.title
+            post.description = s.description
+            post.content = s.content
+            post.contentType = s.contentType
+            post.source = s.source
+            post.unlisted = s.unlisted
+            post.published = s.published
+            post.count = s.count
+            post.categories = s.categories
+            
+            post.save()
+            
+            return Response("Post updated",s.data, status=status.HTTP_200_OK)
         return Response("Post not updated", status=status.HTTP_400_BAD_REQUEST)
 
 
