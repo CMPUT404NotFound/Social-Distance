@@ -60,16 +60,16 @@ def managePost(request: Request, author_id, post_id):
 
         if s.is_valid():
             
-            post.visibility = s.visibility
-            post.title = s.title
-            post.description = s.description
-            post.content = s.content
-            post.contentType = s.contentType
-            post.source = s.source
-            post.unlisted = s.unlisted
-            post.published = s.published
-            post.count = s.count
-            post.categories = s.categories
+            # post.visibility = s.visibility
+            # post.title = s.title
+            # post.description = s.description
+            # post.content = s.content
+            # post.contentType = s.contentType
+            # post.source = s.source
+            # post.unlisted = s.unlisted
+            # post.published = s.published
+            # post.count = s.count
+            # post.categories = s.categories
             
             post.save()
             
