@@ -79,7 +79,7 @@ class TokenAuth(TokenAuthentication):
         auth = get_authorization_header(request).split()
 
         if not auth or (auth[0].lower() != "token".lower().encode() and auth[0].lower() != "bearer".encode()):
-            raise AuthenticationFailed("Credentials is not Token or Bearer")
+            return None #when None is returned, the request is passed to the next auth class
         
         if not auth or len(auth) == 1:
             raise AuthenticationFailed("Invalid token header. No credentials provided.")
