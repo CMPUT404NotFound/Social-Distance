@@ -21,7 +21,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Respons
 
     parsed = urlparse(url)
     
-    if parsed.scheme != 'http' or parsed.scheme != 'https':
+    if not parsed.scheme or  parsed.scheme != 'http' or parsed.scheme != 'https':
         return Response({"error": "invalid url"}, status=400)
 
 
