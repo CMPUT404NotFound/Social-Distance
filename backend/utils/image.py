@@ -4,6 +4,8 @@ from PIL import Image, ImageColor
 from os import path
 import requests
 
+def handleImage(body):
+    
 
 def saveImage(base64Image, fileName):
 

@@ -30,7 +30,6 @@ class Post(models.Model):
     contentType = models.CharField(
         choices=content_choice, max_length= 20, null=False, default="plain"
     )
-    comments =  models.TextField(editable = False)
     source = models.URLField(editable = False)
     origin = models.URLField(editable = False)
     unlisted = models.BooleanField(default = False)
