@@ -14,13 +14,15 @@ from comment.models import Comment
 
 from urllib.parse import urlparse
 
-def makeRequest(method: str, url: str, data: Union[dict, None] =None):
+def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Response :
     
     if (method, url) in cache: #if the request has recently been gotten, just return the cached version
         return cache.get((method, url))
 
     parsed = urlparse(url)
     
+    if parsed.scheme != 'http' or parsed.scheme != 'https':
+        return Response({"error": "invalid url"}, status=400)
 
 
     try:
