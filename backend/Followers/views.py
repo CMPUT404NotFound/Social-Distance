@@ -41,14 +41,12 @@ def getAllFollowers(request: Request, id):
         except Author.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-
+#.TODO add speicial authentication for put
 @swagger_auto_schema(method="get", tags=['followers'])
 @swagger_auto_schema(method="put", tags=['followers'])
 @swagger_auto_schema(method="delete", tags=['followers'])
-@api_view(["GET", "DELETE"]) #.TODO add speicial authentication for put
-# @permission_classes([IsAuthenticatedOrReadOnly])
-# # @authentication_classes([TokenAuthentication])
-@authentication_classes([TokenAuth(needAuthorCheck=["PUT", "DELETE"])])
+@authentication_classes([TokenAuth(needAuthorCheck=["DELETE"])])
+@api_view(["GET", "DELETE", "PUT"])
 def addFollower(request: Request, author_id, follower_id):
     if request.method == "PUT":
         try:
