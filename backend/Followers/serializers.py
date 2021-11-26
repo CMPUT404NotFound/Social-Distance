@@ -1,6 +1,7 @@
 
 from rest_framework import serializers
 from author.models import *
+from backend.settings import SITE_ADDRESS
 
 
 class FollowerSerializer(serializers.ModelSerializer):
@@ -20,7 +21,8 @@ class FollowerSerializer(serializers.ModelSerializer):
         return "Follower"
 
     def get_host(self, obj):
-        return "temp place holder host name"
+        # return "temp place holder host name"
+        return SITE_ADDRESS
 
     def get_url(self, obj: Author):
         return "placeholderserice/author/" + str(obj.id)
