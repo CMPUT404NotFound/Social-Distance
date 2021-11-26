@@ -165,9 +165,9 @@ def signUp(request: Request):
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_201_CREATED)
     except (ValueError, AttributeError) as error:
-        return Response(error, status=status.HTTP_400_BAD_REQUEST)
+        return Response(str(error), status=status.HTTP_400_BAD_REQUEST)
     except IntegrityError as error:
-        return Response(error, status=status.HTTP_409_CONFLICT)
+        return Response(str(error), status=status.HTTP_409_CONFLICT)
 
 
 @swagger_auto_schema(
