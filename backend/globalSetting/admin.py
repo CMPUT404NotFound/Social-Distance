@@ -9,12 +9,13 @@ class GlobalSettingAdmin(admin.ModelAdmin):
     
     fields = ('newUserRequireActivation',)
     
-    def __init__(self, model, admin_site) -> None:
-        super().__init__(model, admin_site)
+    def get_list_display(self, request):
+
         if not Setting.objects.all().exists():
             print('adding 1st setting')
             Setting.objects.create()
-    
+        return super().get_list_display(request)
+
     
     def has_add_permission(self, request) -> bool:
         return False
