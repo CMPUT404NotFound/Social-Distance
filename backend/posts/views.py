@@ -49,7 +49,7 @@ def managePost(request: Request, author_id, post_id):
         s = PostsSerializer(request.data)
         if s.is_valid():
             s.save(author, post_id)
-        return Response("Post created",s.data},status=status.HTTP_201_CREATED)
+        return Response("Post created",s.data,status=status.HTTP_201_CREATED)
 
     elif request.method == "POST":
         try:  
