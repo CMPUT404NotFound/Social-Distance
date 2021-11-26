@@ -60,7 +60,7 @@ def managePost(request: Request, author_id, post_id):
 
         if s.is_valid():
             s.save()
-            return Response("Post updated",s.data}, status=status.HTTP_200_OK)
+            return Response("Post updated",s.data, status=status.HTTP_200_OK)
 
 
     elif request.method == "DELETE":

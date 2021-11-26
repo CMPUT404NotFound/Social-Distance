@@ -23,7 +23,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Respons
     
     if not parsed.scheme or  parsed.scheme != 'http' or parsed.scheme != 'https':
         return Response({"error": "invalid url"}, status=400)
-
+    
 
     try:
         result = requests.request(method, url, data=data)
