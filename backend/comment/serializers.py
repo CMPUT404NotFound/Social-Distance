@@ -9,6 +9,7 @@ from utils.request import checkIsLocal,ClassType
 
 # stolen from here https://newbedev.com/django-rest-framework-with-choicefield
 class ChoiceField(serializers.ChoiceField):
+    
     def to_representation(self, obj):
         if obj == "" and self.allow_blank:
             return obj
