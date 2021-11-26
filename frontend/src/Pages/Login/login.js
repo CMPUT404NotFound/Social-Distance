@@ -72,14 +72,7 @@ const Login = () => {
 				<h1>Log In</h1>
 
 				{error && (
-					<Alert
-						message="Error"
-						// description="Either your username or your password is incorrect. Please try again or contact the server administrator."
-						description={error}
-						type="error"
-						className="error"
-						showIcon
-					/>
+					<Alert message="Error" description={error} type="error" className="error" showIcon />
 				)}
 
 				<Form

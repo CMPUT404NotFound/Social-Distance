@@ -12,12 +12,14 @@ const Explore = () => {
 	useEffect(() => {
 		const url = `https://project-api-404.herokuapp.com/api/authors`;
 
-		const data = {};
-
-		let config = {};
+		let config = {
+			headers: {
+				Authorization: `Token ${user.token}`,
+			},
+		};
 
 		axios
-			.get(url, data, config)
+			.get(url, config)
 			.then(function (response) {
 				console.log(response);
 				setPeople(response.data);

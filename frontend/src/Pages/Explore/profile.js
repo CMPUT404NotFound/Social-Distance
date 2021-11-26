@@ -14,11 +14,17 @@ const Profile = ({ person }) => {
 		person.id
 	)}/followers/${user.id}`;
 
+	const config = {
+		headers: {
+			Authorization: `Token ${user.token}`,
+		},
+	};
+
 	const check_following = () => {
 		if (getIDfromURL(person.id) === user.id) return;
 
 		axios
-			.get(url)
+			.get(url, config)
 			.then(function (response) {
 				console.log(response);
 				setFollowing(true);
@@ -34,8 +40,9 @@ const Profile = ({ person }) => {
 	});
 
 	const follow = () => {
+		const data = {};
 		axios
-			.put(url)
+			.put(url, data, config)
 			.then(function (response) {
 				console.log(response);
 				setFollowing(true);
@@ -47,7 +54,7 @@ const Profile = ({ person }) => {
 
 	const unfollow = () => {
 		axios
-			.delete(url)
+			.delete(url, config)
 			.then(function (response) {
 				console.log(response);
 				setFollowing(false);

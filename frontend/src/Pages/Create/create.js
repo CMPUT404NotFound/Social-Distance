@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
-import { Row, Col, Upload, Button, message, Radio, Space, Checkbox, Tabs, Input } from "antd";
-import { UploadOutlined, SendOutlined } from "@ant-design/icons";
+import { Row, Col, Button, Radio, Space, Checkbox, Tabs, Input, Alert } from "antd";
+import { SendOutlined } from "@ant-design/icons";
 import TextArea from "rc-textarea";
 import "./create.css";
 import axios from "axios";
@@ -10,68 +10,16 @@ import UserContext from "../../userContext";
 const { TabPane } = Tabs;
 let ReactCommonmark = require("react-commonmark");
 
-// To verify only PNG files are uploaded
-const Uploader = () => {
-	const props = {
-		beforeUpload: (file) => {
-			if (file.type !== "image/png") {
-				message.error(`${file.name} is not a png file`);
-			}
-			return file.type === "image/png" ? true : Upload.LIST_IGNORE;
-		},
-		onChange: (info) => {
-			console.log(info.fileList);
-		},
-	};
-
-	return (
-		<Upload {...props}>
-			<Button icon={<UploadOutlined />}>Upload PNGs only</Button>
-		</Upload>
-	);
-};
-
-// For Radio selection of who to share post to
-// class ShareTo extends React.Component {
-// 	state = {
-// 		value: 1,
-// 	};
-
-// 	onChange = (e) => {
-// 		console.log("radio checked", e.target.value);
-// 		this.setState({
-// 			value: e.target.value,
-// 		});
-// 	};
-
-// 	render() {
-// 		const { value } = this.state;
-// 		return (
-// 			<Radio.Group onChange={this.onChange} value={value}>
-// 				<Space direction="vertical">
-// 					<Radio value={"PUBLIC"}>Public</Radio>
-// 					<Radio value={"FRIENDS"}>Friends Only</Radio>
-// 					<Radio value={3}>
-// 						<Space direction="vertical">
-// 							Specific Authors Only
-// 							{value === 3 ? <Checkbox.Group options={authors} onChange={onChange} /> : null}
-// 						</Space>
-// 					</Radio>
-// 					<Radio value={4}>Unlisted</Radio>
-// 				</Space>
-// 			</Radio.Group>
-// 		);
-// 	}
-// }
-
 // Main Create Post Page
 const CreatePost = () => {
 	const { user } = useContext(UserContext);
 
-	const [content, setContent] = useState("# Type your heart out~");
+	const [content, setContent] = useState("");
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [visibility, setVisibility] = useState("PUBLIC");
+	const [image, setImage] = useState(null);
+	const [error, setError] = useState("");
 
 	const submitPost = () => {
 		const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/posts/`;
@@ -84,8 +32,14 @@ const CreatePost = () => {
 			contentType: "text/plain",
 		};
 
+		const config = {
+			headers: {
+				Authorization: `Token ${user.token}`,
+			},
+		};
+
 		axios
-			.post(url, data)
+			.post(url, data, config)
 			.then(function (response) {
 				console.log(response);
 
@@ -97,11 +51,62 @@ const CreatePost = () => {
 			});
 	};
 
-	const authors = [
+	const submitImage = () => {
+		const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/posts/`;
+
+		const data = {
+			title,
+			content: image,
+			visibility,
+			description,
+			contentType: "image/png;base64",
+		};
+
+		const config = {
+			headers: {
+				Authorization: `Token ${user.token}`,
+			},
+		};
+
+		axios
+			.post(url, data, config)
+			.then(function (response) {
+				console.log(response);
+
+				// redirect to inbox
+				history.push("inbox");
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	};
+
+	const getBase64 = (file) => {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = () => resolve(reader.result);
+			reader.onerror = (error) => reject(error);
+		});
+	};
+
+	const handleImage = async (event) => {
+		const imageFile = await getBase64(event.target.files[0]);
+		setImage(imageFile);
+		console.log(imageFile);
+	};
+
+	const friends = [
 		{ label: "Lee Seokmin", value: "dokyeom" },
 		{ label: "Joshua Hong", value: "joshua" },
 		{ label: "Wen Junhui", value: "jun" },
 	];
+
+	const handleSubmit = () => {
+		if (content) submitPost();
+		if (image) submitImage();
+		if (!content && !image) setError("You must have post content and/or an image");
+	};
 
 	return (
 		<div className="create_page">
@@ -112,6 +117,10 @@ const CreatePost = () => {
 			</Row>
 
 			<Row justify="center" className="editor">
+				{error && (
+					<Alert message="Error" description={error} type="error" className="error" showIcon />
+				)}
+
 				<Col flex={1} type="flex" align="middle">
 					<Tabs defaultActiveKey="1" centered className="tabs">
 						<TabPane tab="Edit Text" key="1">
@@ -130,6 +139,7 @@ const CreatePost = () => {
 						</TabPane>
 					</Tabs>
 				</Col>
+
 				<Col className="options">
 					<Space direction="vertical">
 						<label>Title</label>
@@ -154,7 +164,8 @@ const CreatePost = () => {
 						/>
 
 						{/* Image Upload */}
-						<Uploader />
+						{/* <Uploader /> */}
+						<input type="file" accept="image/png" name="image" onChange={handleImage} />
 
 						{/* Visibility */}
 						<h2>Share your post to: </h2>
@@ -171,7 +182,7 @@ const CreatePost = () => {
 									<Space direction="vertical">
 										Specific Authors Only
 										{visibility === "SPECIFIC AUTHORS" ? (
-											<Checkbox.Group options={authors} />
+											<Checkbox.Group options={friends} />
 										) : null}
 									</Space>
 								</Radio>
@@ -180,7 +191,7 @@ const CreatePost = () => {
 						</Radio.Group>
 
 						{/* Submit Button */}
-						<Button type="primary" shape="round" icon={<SendOutlined />} onClick={submitPost}>
+						<Button type="primary" shape="round" icon={<SendOutlined />} onClick={handleSubmit}>
 							Send Post
 						</Button>
 					</Space>
