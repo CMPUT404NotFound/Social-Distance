@@ -6,9 +6,9 @@ from globalSetting.models import Setting
 
 
 class GlobalSettingAdmin(admin.ModelAdmin):
-
+    
     fields = ('newUserRequireActivation',)
-
+    
     def get_list_display(self, request):
 
         if not Setting.objects.all().exists():
@@ -16,11 +16,14 @@ class GlobalSettingAdmin(admin.ModelAdmin):
             Setting.objects.create()
         return super().get_list_display(request)
 
+    
     def has_add_permission(self, request) -> bool:
         return False
-
-    def has_delete_permission(self, request, obj=False) -> bool:
+    
+    def has_delete_permission(self, request , obj = False) -> bool:
         return False
-
+    
+    
 
 admin.site.register(Setting, GlobalSettingAdmin)
+
