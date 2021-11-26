@@ -14,6 +14,10 @@ from comment.models import Comment
 
 from urllib.parse import urlparse
 
+
+from requests import request
+from nodes.models import Node
+import base64
 def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Response :
     
     if (method, url) in cache: #if the request has recently been gotten, just return the cached version
@@ -23,10 +27,21 @@ def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Respons
     
     if not parsed.scheme or  parsed.scheme != 'http' or parsed.scheme != 'https':
         return Response({"error": "invalid url"}, status=400)
+
+    if not Node.objects.filter(netloc = parsed.netloc).exists():
+        return Response({"error": "requested domain is not registered"}, status=400)
+    
+    #node the request is refering to definitely exists
+    node : Node= Node.objects.get(netloc = parsed.netloc)
+    
+    if not node.allowOutgoing:
+        return Response({"error": "outgoing request to this node is blocked by admin"}, status=400)
+    
     
 
     try:
-        result = requests.request(method, url, data=data)
+        s = f"{node.outgoingName}:{node.outgoingPassword}".encode('utf-8')
+        result = requests.request(method, url,  data=data, headers=({"Authorization": f"Basic {base64.b64encode(s).decode('utf-8')}"} if node.authRequiredOutgoing else {}))
     except RequestException as e:
         result = requests.Response(str(e))
         print("execption occured in utils.request", str(e))

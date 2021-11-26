@@ -26,9 +26,9 @@ from rest_framework.authentication import TokenAuthentication
 from author.token import expires_in, refreshToken, TokenAuth
 
 @swagger_auto_schema(method="get", tags=['Posts'])
-@swagger_auto_schema(method="post", tags=['Posts'])
-@swagger_auto_schema(method="delete", tags=['Posts'])
-@swagger_auto_schema(method="put", tags=['Posts'])
+@swagger_auto_schema(method="post", tags=['Posts'],field_inspectors=[NoSchemaTitleInspector],request_body=PostsSerializer)
+@swagger_auto_schema(method="delete", tags=['Posts'],)
+@swagger_auto_schema(method="put", tags=['Posts'],field_inspectors=[NoSchemaTitleInspector],request_body=PostsSerializer)
 @authentication_classes([TokenAuth(needAuthorCheck=["POST","PUT", "DELETE"])])
 @api_view(["GET","POST","DELETE","PUT"])
 def managePost(request: Request, author_id, post_id):
@@ -61,6 +61,7 @@ def managePost(request: Request, author_id, post_id):
         if s.is_valid():
             s.save()
             return Response("Post updated",s.data, status=status.HTTP_200_OK)
+        return Response("Post not updated", status=status.HTTP_400_BAD_REQUEST)
 
 
     elif request.method == "DELETE":
@@ -146,10 +147,8 @@ def getAllPosts(request: Request, author_id):
             source = request.data.get("source",""),
             origin = request.data.get("origin",""),
             unlisted = request.data.get("unlisted","False"),
-            published = request.data.get("published",""),
             categories = request.data.get("categories",""),
             count = request.data.get("count","0"),
-            comments = request.data.get("comments","")
             )
             new_post.save()
             return Response(status=status.HTTP_204_NO_CONTENT)

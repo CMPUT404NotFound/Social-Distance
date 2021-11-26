@@ -63,7 +63,7 @@ urlpatterns = [
     path("api/author/<uuid:authorId>/posts/<uuid:postId>/likes/", likeviews.getPostLikes),
     path("api/author/<uuid:authorId>/posts/<uuid:postId>/comments/<uuid:commentId>/likes/", likeviews.getCommentLikes),
     
-    path("api/nodes", nodeViews.getNodes),
+    path("api/nodes/", nodeViews.getNodes),
 
     #api paths
     path(
@@ -72,6 +72,6 @@ urlpatterns = [
         name="schema-swagger-ui",
     ),
     path(
-        "api/redoc", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
+        "api/redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
     ),
 ]
