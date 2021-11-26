@@ -20,7 +20,7 @@ const Signup = () => {
 	const onFinish = (values) => {
 		setLoading(true);
 
-		const url = "https://project-api-404.herokuapp.com/api/signup";
+		const url = "https://project-api-404.herokuapp.com/api/signup/";
 
 		const data = {
 			userName: values.username,
@@ -46,11 +46,12 @@ const Signup = () => {
 						token: response.data.token,
 					});
 
-					history.push("login");
+					history.push("inbox");
 				} else if (response && response.status === 204) {
 					setError(
 						"Your account has been created but not approved by an administrator yet. Try logging in with your credentials at a later date, or contact the administrator to approve your account."
 					);
+					history.push("login");
 				}
 			})
 			.catch(function (error) {

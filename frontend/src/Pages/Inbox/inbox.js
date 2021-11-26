@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 const Inbox = () => {
 	const { user } = useContext(UserContext);
 
+	/*
 	const examplepost = {
 		type: "post",
 		title: "A post title about a post about web dev",
@@ -62,34 +63,85 @@ const Inbox = () => {
 	};
 
 	const [posts, setPosts] = useState([examplepost]);
+	*/
 
-	// const [posts, setPosts] = useState(null);
+	const [posts, setPosts] = useState([]);
+	/*
 
-	// useEffect(() => {
-	// 	const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/inbox/`;
+	useEffect(() => {
+		const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/inbox/`;
 
-	// 	let config = {
-	// 		headers: {
-	// 			Authorization: `Token ${user.token}`,
-	// 		},
-	// 	};
+		let config = {
+			headers: {
+				Authorization: `Token ${user.token}`,
+			},
+		};
 
-	// 	axios
-	// 		.get(url, config)
-	// 		.then(function (response) {
-	// 			console.log(response);
-	// 			setPosts(response.data.items);
-	// 		})
-	// 		.catch(function (error) {
-	// 			console.log(error);
-	// 		});
-	// }, [user]);
+		axios
+			.get(url, config)
+			.then(function (response) {
+				console.log(response);
+				setPosts(response.data.items);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, [user]);
+	*/
+
+	useEffect(() => {
+		const url = `https://plurr.herokuapp.com/service/author/48409866-0811-4ad8-a1d9-29014b4d316d/posts/`;
+
+		let config = {
+			headers: {
+				Authorization: `Token ${user.token}`,
+			},
+			auth: {
+				username: "team23",
+				password: "password",
+			},
+		};
+
+		axios
+			.get(url, config)
+			.then(function (response) {
+				console.log(response);
+				setPosts((oldposts) => [...oldposts, ...response.data.items]);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, [user]);
+
+	useEffect(() => {
+		const url = `https://cmput404f21t17.herokuapp.com/service/connect/public/`;
+
+		let config = {
+			headers: {
+				Authorization: `Token ${user.token}`,
+			},
+			auth: {
+				username: "1802fb2b-e473-4078-ace3-c205897accf7",
+				password: "123456",
+			},
+		};
+
+		axios
+			.get(url, config)
+			.then(function (response) {
+				console.log(response);
+				setPosts((oldposts) => [...oldposts, ...response.data.items]);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, [user]);
 
 	return (
 		<div className="inbox_page">
 			{posts &&
 				posts.map((post, i) => (
-					<Link to={{ pathname: "/post", state: post }}>
+					<Link to={{ pathname: "/post", state: post }} key={i}>
 						<InboxPost post={post} key={i} />
 					</Link>
 				))}

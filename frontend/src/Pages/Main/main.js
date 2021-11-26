@@ -77,6 +77,7 @@ const Main = ({ children }) => {
 				onCancel={() => {
 					setPostModalVisible(false);
 				}}
+				destroyOnClose
 			>
 				<CreatePost
 					cancel={() => {

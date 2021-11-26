@@ -1,10 +1,12 @@
 import { ShareAltOutlined } from "@ant-design/icons";
 import UserContext from "../../userContext";
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { Button } from "antd";
 
 const Share = ({ post }) => {
 	const { user } = useContext(UserContext);
+	const [shared, setShared] = useState(false);
 
 	const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/posts/`;
 
@@ -30,7 +32,7 @@ const Share = ({ post }) => {
 			});
 	};
 
-	return <ShareAltOutlined style={{ fontSize: "2rem", color: "red" }} />;
+	return <Button type="primary" shape="circle" icon={<ShareAltOutlined />}></Button>;
 };
 
 export default Share;

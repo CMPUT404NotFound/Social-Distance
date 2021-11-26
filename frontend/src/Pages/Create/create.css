@@ -32,3 +32,8 @@
 .create_page .options {
 	padding: 2rem;
 }
+
+.create_page .submitButton {
+	display: block;
+	margin-left: auto;
+}

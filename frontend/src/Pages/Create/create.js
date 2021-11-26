@@ -4,14 +4,13 @@ import { SendOutlined } from "@ant-design/icons";
 import TextArea from "rc-textarea";
 import "./create.css";
 import axios from "axios";
-import history from "./../../history";
 import UserContext from "../../userContext";
 
 const { TabPane } = Tabs;
 let ReactCommonmark = require("react-commonmark");
 
 // Main Create Post Page
-const CreatePost = () => {
+const CreatePost = ({ cancel }) => {
 	const { user } = useContext(UserContext);
 
 	const [content, setContent] = useState("");
@@ -20,6 +19,7 @@ const CreatePost = () => {
 	const [visibility, setVisibility] = useState("PUBLIC");
 	const [image, setImage] = useState(null);
 	const [error, setError] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/posts/`;
 
@@ -36,6 +36,7 @@ const CreatePost = () => {
 			visibility,
 			description,
 			contentType: "text/plain",
+			unlisted: visibility === "UNLISTED",
 		};
 
 		axios
@@ -43,11 +44,13 @@ const CreatePost = () => {
 			.then(function (response) {
 				console.log(response);
 
-				// redirect to inbox
-				history.push("inbox");
+				// close the modal
+				cancel();
 			})
 			.catch(function (error) {
 				console.log(error);
+				setError("There was an error sharing your post. Please try again later.");
+				setLoading(false);
 			});
 	};
 
@@ -71,11 +74,13 @@ const CreatePost = () => {
 			.then(function (response) {
 				console.log(response);
 
-				// redirect to inbox
-				history.push("inbox");
+				// close the modal
+				cancel();
 			})
 			.catch(function (error) {
 				console.log(error);
+				setError("There was an error sharing your post. Please try again later.");
+				setLoading(false);
 			});
 	};
 
@@ -102,9 +107,13 @@ const CreatePost = () => {
 
 	const handleSubmit = () => {
 		setError("");
+		setLoading(true);
 		if (content) submitPost();
 		if (image) submitImage();
-		if (!content && !image) setError("You must have post content and/or an image");
+		if (!content && !image) {
+			setError("You must have post content and/or an image");
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -163,7 +172,7 @@ const CreatePost = () => {
 				}}
 				value={visibility}
 			>
-				<Space direction="vertical">
+				<Space align="center" wrap>
 					<Radio value="PUBLIC">Public</Radio>
 					<Radio value="FRIENDS">Friends Only</Radio>
 					<Radio value="SPECIFIC AUTHORS">
@@ -179,7 +188,13 @@ const CreatePost = () => {
 			<Divider />
 
 			{/* Submit Button */}
-			<Button type="primary" shape="round" icon={<SendOutlined />} onClick={handleSubmit}>
+			<Button
+				type="primary"
+				icon={<SendOutlined />}
+				onClick={handleSubmit}
+				loading={loading}
+				className="submitButton"
+			>
 				Send Post
 			</Button>
 		</div>

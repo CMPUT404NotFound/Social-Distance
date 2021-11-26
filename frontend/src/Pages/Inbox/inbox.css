@@ -4,6 +4,7 @@
 	border-radius: 1rem;
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
 	cursor: pointer;
+	margin-block: 1rem;
 }
 
 .inbox_page .post_container p,

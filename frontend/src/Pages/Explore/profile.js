@@ -5,14 +5,20 @@ import UserContext from "../../userContext";
 import axios from "axios";
 import { getIDfromURL } from "../../utils";
 
-const Profile = ({ person }) => {
+const Profile = ({ person, remoteUser }) => {
 	const { user } = useContext(UserContext);
 
 	const [following, setFollowing] = useState(false);
 
-	const url = `https://project-api-404.herokuapp.com/api/author/${getIDfromURL(
-		person.id
-	)}/followers/${user.id}/`;
+	let url;
+
+	if (remoteUser) {
+		url = "";
+	} else {
+		url = `https://project-api-404.herokuapp.com/api/author/${getIDfromURL(person.id)}/followers/${
+			user.id
+		}/`;
+	}
 
 	const config = {
 		headers: {
@@ -30,7 +36,9 @@ const Profile = ({ person }) => {
 				setFollowing(true);
 			})
 			.catch(function (error) {
-				console.log(error);
+				if (error.response.status === 404) {
+					Promise.resolve(error);
+				} else console.log(error);
 			});
 	};
 
@@ -48,7 +56,9 @@ const Profile = ({ person }) => {
 				setFollowing(true);
 			})
 			.catch(function (error) {
-				console.log(error);
+				if (error.response.status === 404) {
+					Promise.resolve(error);
+				} else console.log(error);
 			});
 	};
 

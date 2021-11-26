@@ -1,6 +1,6 @@
 // import React, { createElement, useState } from "react";
-import { Row, Col, Avatar, Comment } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Row, Col, Avatar, Comment, Button, Tooltip, Popover } from "antd";
+import { UserOutlined, LikeOutlined } from "@ant-design/icons";
 // import { Link } from "react-router-dom";
 import ReactCommonmark from "react-commonmark";
 import { useLocation } from "react-router";
@@ -8,10 +8,63 @@ import "./post.css";
 import Share from "./share";
 import Like from "./like";
 import PostComment from "./comment";
+import { useContext } from "react";
+import axios from "axios";
+import UserContext from "../../userContext";
 
 const Post = () => {
 	const location = useLocation();
 	const post = location.state;
+
+	const { user } = useContext(UserContext);
+
+	const likeComment = (comment) => {
+		// Send to comment author's inbox
+		const url = `${comment.author.url}/inbox/`;
+
+		const config = {
+			headers: {
+				Authorization: `Token ${user.token}`,
+			},
+		};
+
+		const data = {
+			type: "Like",
+			summary: `${user.displayName} likes your comment`,
+			author: user,
+			object: comment.id,
+		};
+
+		axios
+			.post(url, data, config)
+			.then(function (response) {
+				console.log(response);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	};
+
+	// Get list of people who liked the comment
+	const getCommentLikes = (comment) => {
+		const url = `${comment.url}/likes/`;
+
+		const config = {
+			headers: {
+				Authorization: `Token ${user.token}`,
+			},
+		};
+
+		axios
+			.get(url, config)
+			.then(function (response) {
+				console.log(response);
+				return response.data;
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	};
 
 	return (
 		<div className="post_page">
@@ -36,7 +89,7 @@ const Post = () => {
 					{/* Share Button */}
 					<Share post={post} />
 					{/* Like Button */}
-					<Like post={post} />
+					{/* <Like post={post} /> */}
 				</Row>
 			</div>
 
@@ -57,7 +110,22 @@ const Post = () => {
 								<Avatar icon={<UserOutlined />} size={64} />
 							)
 						}
-						content={comment.comment}
+						content={
+							<>
+								comment.comment
+								<Tooltip key="comment-basic-like" title="Like">
+									<Button
+										shape="circle"
+										icon={<LikeOutlined />}
+										danger
+										onClick={() => {
+											likeComment(comment);
+										}}
+										style={{ display: "block", marginLeft: "auto" }}
+									/>
+								</Tooltip>
+							</>
+						}
 						key={i}
 					/>
 				))}
