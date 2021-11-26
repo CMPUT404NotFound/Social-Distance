@@ -155,17 +155,17 @@ class NodeBasicAuth(BasicAuthentication):
 
         username, password = auth_parts[0], auth_parts[2]
         
-        try:
-            #origin is used to later varify if this requester is trusted
-            origin = request.headers['Origin']
-        except KeyError:
-            raise exceptions.AuthenticationFailed("Origin header not provided")
+        # try:
+        #     #origin is used to later varify if this requester is trusted
+        #     origin = request.headers['Origin']
+        # except KeyError:
+        #     raise exceptions.AuthenticationFailed("Origin header not provided")
     
         try:
-            node : Node= Node.objects.get(url = origin)
+            node : Node= Node.objects.get(incomingName = username)
             
             if not node.allowIncoming:
-                raise exceptions.AuthenticationFailed("The origin provided is not allowed to access this server")
+                raise exceptions.AuthenticationFailed("This is not allowed to access this server")
 
             
             if node.authRequiredIncoming:
