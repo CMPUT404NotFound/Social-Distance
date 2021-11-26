@@ -11,6 +11,8 @@ class Setting(models.Model):
     newUserRequireActivation = models.BooleanField("New User Require Activation",default=False)
     
     def settings():
+        if not Setting.objects.all().exists():
+            Setting.objects.create()
         return Setting.objects.all().first()
     
     def __str__(self) -> str:
