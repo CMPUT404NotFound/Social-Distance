@@ -1,10 +1,13 @@
 // import React, { createElement, useState } from "react";
 import { Row, Col, Avatar, Comment } from "antd";
-import { UserOutlined, HeartOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 // import { Link } from "react-router-dom";
 import ReactCommonmark from "react-commonmark";
 import { useLocation } from "react-router";
 import "./post.css";
+import Share from "./share";
+import Like from "./like";
+import PostComment from "./comment";
 
 const Post = () => {
 	const location = useLocation();
@@ -30,9 +33,15 @@ const Post = () => {
 					</Col>
 				</Row>
 				<Row justify="end">
-					<HeartOutlined style={{ fontSize: "2rem" }} />
+					{/* Share Button */}
+					<Share post={post} />
+					{/* Like Button */}
+					<Like post={post} />
 				</Row>
 			</div>
+
+			{/* Display option to comment */}
+			<PostComment post={post} />
 
 			{/* Display comments */}
 			{post.commentsSrc &&
@@ -52,8 +61,6 @@ const Post = () => {
 						key={i}
 					/>
 				))}
-
-			{/* Display option to comment */}
 		</div>
 	);
 };

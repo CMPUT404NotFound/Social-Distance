@@ -20,7 +20,7 @@ const Login = () => {
 	const onFinish = (values) => {
 		setLoading(true);
 
-		const url = "https://project-api-404.herokuapp.com/api/login";
+		const url = "https://project-api-404.herokuapp.com/api/login/";
 		const data = {
 			userName: values.username,
 			password: values.password,

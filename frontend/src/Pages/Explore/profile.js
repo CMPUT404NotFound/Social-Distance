@@ -12,7 +12,7 @@ const Profile = ({ person }) => {
 
 	const url = `https://project-api-404.herokuapp.com/api/author/${getIDfromURL(
 		person.id
-	)}/followers/${user.id}`;
+	)}/followers/${user.id}/`;
 
 	const config = {
 		headers: {

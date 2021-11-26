@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Row, Col, Button, Radio, Space, Checkbox, Tabs, Input, Alert } from "antd";
+import { Button, Radio, Space, Checkbox, Tabs, Input, Alert, Divider } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import TextArea from "rc-textarea";
 import "./create.css";
@@ -21,21 +21,21 @@ const CreatePost = () => {
 	const [image, setImage] = useState(null);
 	const [error, setError] = useState("");
 
-	const submitPost = () => {
-		const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/posts/`;
+	const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/posts/`;
 
+	const config = {
+		headers: {
+			Authorization: `Token ${user.token}`,
+		},
+	};
+
+	const submitPost = () => {
 		const data = {
 			title,
 			content,
 			visibility,
 			description,
 			contentType: "text/plain",
-		};
-
-		const config = {
-			headers: {
-				Authorization: `Token ${user.token}`,
-			},
 		};
 
 		axios
@@ -52,8 +52,6 @@ const CreatePost = () => {
 	};
 
 	const submitImage = () => {
-		const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/posts/`;
-
 		const data = {
 			title,
 			content: image,
@@ -103,6 +101,7 @@ const CreatePost = () => {
 	];
 
 	const handleSubmit = () => {
+		setError("");
 		if (content) submitPost();
 		if (image) submitImage();
 		if (!content && !image) setError("You must have post content and/or an image");
@@ -110,93 +109,79 @@ const CreatePost = () => {
 
 	return (
 		<div className="create_page">
-			<Row justify="center">
-				<Col className="title" type="flex" align="middle">
-					<h1>Create a Post</h1>
-				</Col>
-			</Row>
+			{error && (
+				<Alert message="Error" description={error} type="error" className="error" showIcon />
+			)}
 
-			<Row justify="center" className="editor">
-				{error && (
-					<Alert message="Error" description={error} type="error" className="error" showIcon />
-				)}
+			<label>Title</label>
+			<Input
+				placeholder="Post Title"
+				allowClear
+				onChange={(e) => {
+					setTitle(e.target.value);
+				}}
+				value={title}
+			/>
 
-				<Col flex={1} type="flex" align="middle">
-					<Tabs defaultActiveKey="1" centered className="tabs">
-						<TabPane tab="Edit Text" key="1">
-							{/* Edit Text */}
-							<TextArea
-								className="textfield"
-								value={content}
-								onChange={(e) => {
-									setContent(e.target.value);
-								}}
-							></TextArea>
-						</TabPane>
-						<TabPane tab="Preview" key="2">
-							{/* Text Preview */}
-							<ReactCommonmark className="preview" source={content} />
-						</TabPane>
-					</Tabs>
-				</Col>
+			<label>Description</label>
+			<Input.TextArea
+				placeholder="Post Description"
+				allowClear
+				onChange={(e) => {
+					setDescription(e.target.value);
+				}}
+				value={description}
+				showCount
+			/>
 
-				<Col className="options">
-					<Space direction="vertical">
-						<label>Title</label>
-						<Input
-							placeholder="Post Title"
-							allowClear
-							onChange={(e) => {
-								setTitle(e.target.value);
-							}}
-							value={title}
-						/>
+			<Tabs defaultActiveKey="1" centered className="tabs">
+				<TabPane tab="Edit Text" key="1">
+					{/* Edit Text */}
+					<TextArea
+						className="textfield"
+						value={content}
+						onChange={(e) => {
+							setContent(e.target.value);
+						}}
+					></TextArea>
+				</TabPane>
+				<TabPane tab="Preview" key="2">
+					{/* Text Preview */}
+					<ReactCommonmark className="preview" source={content} />
+				</TabPane>
+			</Tabs>
 
-						<label>Description</label>
-						<Input.TextArea
-							placeholder="Post Description"
-							allowClear
-							onChange={(e) => {
-								setDescription(e.target.value);
-							}}
-							value={description}
-							showCount
-						/>
+			{/* Image Upload */}
+			<Divider>Upload Image</Divider>
+			<input type="file" accept="image/png" name="image" onChange={handleImage} />
 
-						{/* Image Upload */}
-						{/* <Uploader /> */}
-						<input type="file" accept="image/png" name="image" onChange={handleImage} />
+			{/* Visibility */}
+			<Divider>Visibility Settings</Divider>
+			<Radio.Group
+				onChange={(e) => {
+					setVisibility(e.target.value);
+				}}
+				value={visibility}
+			>
+				<Space direction="vertical">
+					<Radio value="PUBLIC">Public</Radio>
+					<Radio value="FRIENDS">Friends Only</Radio>
+					<Radio value="SPECIFIC AUTHORS">
+						<Space direction="vertical">
+							Specific Authors Only
+							{visibility === "SPECIFIC AUTHORS" ? <Checkbox.Group options={friends} /> : null}
+						</Space>
+					</Radio>
+					<Radio value="UNLISTED">Unlisted</Radio>
+				</Space>
+			</Radio.Group>
 
-						{/* Visibility */}
-						<h2>Share your post to: </h2>
-						<Radio.Group
-							onChange={(e) => {
-								setVisibility(e.target.value);
-							}}
-							value={visibility}
-						>
-							<Space direction="vertical">
-								<Radio value="PUBLIC">Public</Radio>
-								<Radio value="FRIENDS">Friends Only</Radio>
-								<Radio value="SPECIFIC AUTHORS">
-									<Space direction="vertical">
-										Specific Authors Only
-										{visibility === "SPECIFIC AUTHORS" ? (
-											<Checkbox.Group options={friends} />
-										) : null}
-									</Space>
-								</Radio>
-								<Radio value="UNLISTED">Unlisted</Radio>
-							</Space>
-						</Radio.Group>
+			<Divider />
 
-						{/* Submit Button */}
-						<Button type="primary" shape="round" icon={<SendOutlined />} onClick={handleSubmit}>
-							Send Post
-						</Button>
-					</Space>
-				</Col>
-			</Row>
+			{/* Submit Button */}
+			<Button type="primary" shape="round" icon={<SendOutlined />} onClick={handleSubmit}>
+				Send Post
+			</Button>
 		</div>
 	);
 };

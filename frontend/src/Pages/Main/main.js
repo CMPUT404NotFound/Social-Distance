@@ -5,18 +5,22 @@ import {
 	LogoutOutlined,
 	PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu } from "antd";
+import { Button, Layout, Menu, Modal } from "antd";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import UserContext from "../../userContext";
 import history from "./../../history";
 import "./main.css";
+import { useState } from "react";
+import CreatePost from "../Create/create";
 
 const { Sider } = Layout;
 
 const Main = ({ children }) => {
 	const { setUser } = useContext(UserContext);
+
+	const [postModalVisible, setPostModalVisible] = useState(false);
 
 	const logout = () => {
 		setUser(null);
@@ -53,10 +57,33 @@ const Main = ({ children }) => {
 					</Menu.Item>
 				</Menu>
 			</Sider>
+
 			<main className="content">{children}</main>
-			<Link to="/createpost">
-				<Button className="create_button" shape="circle" icon={<PlusOutlined />} size="large" />
-			</Link>
+
+			<Button
+				className="create_button"
+				shape="circle"
+				icon={<PlusOutlined />}
+				size="large"
+				onClick={() => setPostModalVisible(true)}
+			/>
+
+			<Modal
+				title="Create a Post"
+				visible={postModalVisible}
+				style={{ top: 20 }}
+				width="80vw"
+				footer={null}
+				onCancel={() => {
+					setPostModalVisible(false);
+				}}
+			>
+				<CreatePost
+					cancel={() => {
+						setPostModalVisible(false);
+					}}
+				/>
+			</Modal>
 		</div>
 	);
 };
