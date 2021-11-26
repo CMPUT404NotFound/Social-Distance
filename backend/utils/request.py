@@ -66,10 +66,7 @@ def checkIsLocal(fullId:str, type : ClassType = None) -> IsLocalResponse:
     items = fullId.split('/') 
     
     
-    if len(items) < 2:
-        print("at request.py checkislocal. type is not provided and fullid is not either")
-        return None
-    else:
+    if len(items) > 1:
         try:
             if 'comments' in items:
                 shortId = items[items.index('comments') + 1]
@@ -86,7 +83,10 @@ def checkIsLocal(fullId:str, type : ClassType = None) -> IsLocalResponse:
         except Exception as e:
             print("error occured converting types in uti.request.checkislocal", e)
             return None
-
+    elif type is None:
+        print("type is None and only short id is provided in utils.request.checkIsLocal")
+        return None 
+    
 
     # if has isolate id of the item, and know the type of the item, then just lookup in the respective table to chech for existance.
     isLocal = {0: Author, 1: Post, 2: Comment}[type].objects.filter(pk = shortId if len(items) > 2 else fullId).exists()
