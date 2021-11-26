@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import "./inbox.css";
+import "./feed.css";
 import axios from "axios";
 import Post from "./post";
 
-const Inbox = ({ user }) => {
+const Feed = ({ user }) => {
 	const [posts, setPosts] = useState([]);
 
 	useEffect(() => {
@@ -28,7 +28,7 @@ const Inbox = ({ user }) => {
 	}, [user]);
 
 	return (
-		<div className="inbox_page">
+		<div className= "feed_page">
 			{posts.map((post) => (
 				<Post post={post} />
 			))}
@@ -36,4 +36,4 @@ const Inbox = ({ user }) => {
 	);
 };
 
-export default Inbox;
+export default Feed;
