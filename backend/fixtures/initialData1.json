@@ -1,0 +1,189 @@
+[
+    {
+        "model": "author.author",
+        "pk": "0c39ed11-cf47-4cea-8139-b3e2d62ae98b",
+        "fields": {
+            "password": "pbkdf2_sha256$260000$QCGtRpTCoIxV7YbEH1yRb8$gTNShzXOEizdIIKrfk8ulsuBb5sASRzNK0oSV26Tm+4=",
+            "last_login": "2021-11-26T00:26:14.446Z",
+            "displayName": "admin",
+            "userName": "admin",
+            "github": "",
+            "profileImage": "",
+            "is_admin": true,
+            "is_active": true
+        }
+    },
+    {
+        "model": "author.author",
+        "pk": "0df509b3-2eae-4575-8141-9393f2f51ad6",
+        "fields": {
+            "password": "pbkdf2_sha256$260000$1zQCr0L0WITLdtM4jLGrdr$CL7cfTbQWVZP7dhyuL4jD83/k+otWCBeblYQN2F+9z0=",
+            "last_login": null,
+            "displayName": "Phousanak!",
+            "userName": "Phousanak",
+            "github": "",
+            "profileImage": "",
+            "is_admin": false,
+            "is_active": true
+        }
+    },
+    {
+        "model": "author.author",
+        "pk": "111988c1-4809-4ee0-bd6d-9cf1790383fc",
+        "fields": {
+            "password": "pbkdf2_sha256$260000$lmRLzmUdtihEcJfnligOFt$+X6bZBpC0Pa+D19OkN4U2zjYZf/ws5Ac/5NEsKIJTEI=",
+            "last_login": null,
+            "displayName": "Golden Ratio !?",
+            "userName": "aniket",
+            "github": "",
+            "profileImage": "",
+            "is_admin": false,
+            "is_active": true
+        }
+    },
+    {
+        "model": "author.author",
+        "pk": "21dc2ea2-4626-4215-a8ed-12d3937e6b6d",
+        "fields": {
+            "password": "pbkdf2_sha256$260000$Bo24XCKPVkfquoDmRp0CHI$F1GgQrYtf0ONfZFmXvfld0LbVkReWfqeMmuJvkR3W9k=",
+            "last_login": null,
+            "displayName": "goldentoaste",
+            "userName": "goldentoaste",
+            "github": "https://github.com/goldentoaste",
+            "profileImage": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/twitter/282/bread_1f35e.png",
+            "is_admin": true,
+            "is_active": true
+        }
+    },
+    {
+        "model": "author.author",
+        "pk": "a75ef35f-f915-4951-9e0c-fdc29005b50c",
+        "fields": {
+            "password": "pbkdf2_sha256$260000$IGLjnaccUUWtV4cwcIQRYo$Wz0KJ+P+1H2Ef+dXeKHPZBsqsvnJAywqtaJ8jHd1BQU=",
+            "last_login": null,
+            "displayName": "Nadeen",
+            "userName": "Nadeen",
+            "github": "",
+            "profileImage": "",
+            "is_admin": false,
+            "is_active": true
+        }
+    },
+    {
+        "model": "author.author",
+        "pk": "b05371b5-8b9e-4adf-95e8-fdfb27d1f87b",
+        "fields": {
+            "password": "pbkdf2_sha256$260000$lqUBEn4PqU7AoplJpNGyxq$2lr+oiYN1EyxMoOhRHH0HwYKGz8zfXdg0RtBRbXhWVY=",
+            "last_login": null,
+            "displayName": "inactive test user",
+            "userName": "Inactive",
+            "github": "",
+            "profileImage": "",
+            "is_admin": false,
+            "is_active": false
+        }
+    },
+    {
+        "model": "author.author",
+        "pk": "be92323c-d84b-417e-a78e-361818fa5309",
+        "fields": {
+            "password": "pbkdf2_sha256$260000$Gf4OHegRzU9fvCG57hPlsv$GCN5GD6i1z1n9TaeYQLBSyVvN/SBEwjJu86GfES2qhs=",
+            "last_login": null,
+            "displayName": "Helen",
+            "userName": "Helen",
+            "github": "",
+            "profileImage": "",
+            "is_admin": false,
+            "is_active": true
+        }
+    },
+    {
+        "model": "posts.post",
+        "pk": "35758021-7c9c-43ae-91e9-110046e09e3f",
+        "fields": {
+            "author_id": "111988c1-4809-4ee0-bd6d-9cf1790383fc",
+            "title": "another post about ratios",
+            "visibility": "PU",
+            "description": "asdasdasdasdasdasdasd",
+            "content": "#asdasdasadasdddad\r\n\r\n+ stuff\r\n+ woah\r\n    +sub item",
+            "contentType": "markdown",
+            "comments": "",
+            "source": "",
+            "origin": "",
+            "unlisted": false,
+            "published": "2021-11-26T02:06:24.617Z",
+            "count": 0,
+            "categories": ""
+        }
+    },
+    {
+        "model": "posts.post",
+        "pk": "668d452a-6971-4eeb-9f5c-e5d27d53f437",
+        "fields": {
+            "author_id": "111988c1-4809-4ee0-bd6d-9cf1790383fc",
+            "title": "some thing about golden ratio",
+            "visibility": "PU",
+            "description": "asdasd",
+            "content": "woah dude!!!",
+            "contentType": "plain",
+            "comments": "",
+            "source": "",
+            "origin": "",
+            "unlisted": false,
+            "published": "2021-11-26T02:05:34.613Z",
+            "count": 0,
+            "categories": ""
+        }
+    },
+    {
+        "model": "comment.comment",
+        "pk": "c0b613fe-1374-46e9-b46e-ebd0c019d74d",
+        "fields": {
+            "post": "668d452a-6971-4eeb-9f5c-e5d27d53f437",
+            "author": "21dc2ea2-4626-4215-a8ed-12d3937e6b6d",
+            "comment": "just a comment from goldentoaste",
+            "contentType": "P",
+            "published": "2021-11-26T02:07:57.817Z"
+        }
+    },
+    {
+        "model": "inbox.inboxitem",
+        "pk": 1,
+        "fields": {
+            "author": "21dc2ea2-4626-4215-a8ed-12d3937e6b6d",
+            "type": "P",
+            "contentId": "35758021-7c9c-43ae-91e9-110046e09e3f"
+        }
+    },
+    {
+        "model": "likes.like",
+        "pk": 1,
+        "fields": {
+            "author": "be92323c-d84b-417e-a78e-361818fa5309",
+            "parentId": "668d452a-6971-4eeb-9f5c-e5d27d53f437"
+        }
+    },
+    {
+        "model": "nodes.node",
+        "pk": 1,
+        "fields": {
+            "url": "https://cmput404f21t17.herokuapp.com/service/",
+            "allowIncoming": true,
+            "allowOutgoing": true,
+            "authRequiredIncoming": true,
+            "authRequiredOutgoing": true,
+            "incomingName": "team17",
+            "outgoingName": "d8ccbe46-b41e-4a5a-a1b0-55c18663d9e1",
+            "incomingPassword": "password17",
+            "outgoingPassword": "123456",
+            "description": "False"
+        }
+    },
+    {
+        "model": "globalSetting.setting",
+        "pk": 1,
+        "fields": {
+            "newUserRequireActivation": false
+        }
+    }
+]

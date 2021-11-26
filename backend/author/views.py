@@ -66,9 +66,8 @@ def handleAuthorById(request: Request, id):
         """
         Author Updates, auth needed
         """
-        print("post")
+
         try:
-            print("test", id)
             a: Author = Author.objects.get(pk=id)
             data = request.data
             a.displayName = data.get("displayName", a.displayName)

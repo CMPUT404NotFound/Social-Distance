@@ -25,7 +25,6 @@ from utils.request import makeRequest
 
 
 def getAuthorId(request, authorId):
-    print(request.data.get("author", "xd"))
     authorid = request.data.get("author", None)
     if authorId is None:
         authorid = request.data.get("actor")["id"]
