@@ -46,8 +46,8 @@ def getAllFollowers(request: Request, id):
 @swagger_auto_schema(method="put", tags=['followers'])
 @swagger_auto_schema(method="delete", tags=['followers'])
 @api_view(["GET", "PUT", "DELETE"])
-@permission_classes([IsAuthenticatedOrReadOnly])
-# @authentication_classes([TokenAuthentication])
+# @permission_classes([IsAuthenticatedOrReadOnly])
+# # @authentication_classes([TokenAuthentication])
 @authentication_classes([TokenAuth(needAuthorCheck=["PUT", "DELETE"])])
 def addFollower(request: Request, author_id, follower_id):
     if request.method == "PUT":
