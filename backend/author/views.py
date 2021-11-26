@@ -203,10 +203,10 @@ def login(request: Request) -> Response:
     if not user:
         return Response(
             {"error": "Invalid login info."},
-            status=status.HTTP_403_FORBIDDEN,
+            status=status.HTTP_401_UNAUTHORIZED,
         )
     if not user.is_active:
-        return Response({"error": "this account has not yet been activated by the admin"})
+        return Response({"error": "this account has not yet been activated by the admin"}, status=status.HTTP_403_FORBIDDEN)
 
     token, created = Token.objects.get_or_create(user=user)
 
