@@ -46,7 +46,12 @@ def managePost(request: Request, author_id, post_id):
         return Response(s.data, status=status.HTTP_200_OK)
 
     elif request.method == "DELETE":
-        pass
+        try: 
+            post = Post.objects.filter(pk = post_id)
+        except: 
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        post.delete()
+        return Response("Post deleted", status=status.HTTP_204_NO_CONTENT)
 
 
 # Create your views here.
