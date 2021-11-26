@@ -12,13 +12,11 @@ def handleImage(img_req):
     
 
 def saveImage(base64Image, fileName):
-
     """
     save the image to the static folder
     """
     img = Image.open(base64.b64decode(base64Image))
     img.save(path.join("static", "images", f"{fileName}.png"), "PNG")
-
 
 def getImage(fileName):
     """
