@@ -28,7 +28,7 @@ SECRET_KEY = "django-insecure-nmsf4&i=j%!w8-l137x7+6#iavae*qb387-moy75wesu^1manm
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True
 AUTH_USER_MODEL = "author.Author"
 
 
