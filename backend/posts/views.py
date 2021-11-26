@@ -26,11 +26,11 @@ from rest_framework.authentication import TokenAuthentication
 from author.token import expires_in, refreshToken, TokenAuth
 
 @swagger_auto_schema(method="get", tags=['Posts'])
-@swagger_auto_schema(method="post", tags=['Posts'])
-@swagger_auto_schema(method="delete", tags=['Posts'])
-@swagger_auto_schema(method="put", tags=['Posts'])
-@api_view(["GET","POST","DELETE","PUT"])
+@swagger_auto_schema(method="post", tags=['Posts'],field_inspectors=[NoSchemaTitleInspector],)
+@swagger_auto_schema(method="delete", tags=['Posts'],)
+@swagger_auto_schema(method="put", tags=['Posts'],field_inspectors=[NoSchemaTitleInspector],)
 @authentication_classes([TokenAuth(needAuthorCheck=["POST","PUT", "DELETE"])])
+@api_view(["GET","POST","DELETE","PUT"])
 def managePost(request: Request, author_id, post_id):
     try:
         author = Author.objects.get(pk = author_id)
@@ -44,6 +44,24 @@ def managePost(request: Request, author_id, post_id):
             return Response(status=status.HTTP_404_NOT_FOUND)
         s = PostsSerializer(post,context={"request": request}, many=True)
         return Response(s.data, status=status.HTTP_200_OK)
+
+    elif request.method == "PUT":
+        s = PostsSerializer(request.data)
+        if s.is_valid():
+            s.save(author, post_id)
+        return Response("Post created",s.data,status=status.HTTP_201_CREATED)
+
+    elif request.method == "POST":
+        try:  
+            post = Post.objects.filter(pk = post_id)
+        except:  
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        s = PostsSerializer(instance=post, data=request.data)
+
+        if s.is_valid():
+            s.save()
+            return Response("Post updated",s.data, status=status.HTTP_200_OK)
+
 
     elif request.method == "DELETE":
         try: 
