@@ -43,8 +43,8 @@ class PostsSerializer(serializers.ModelSerializer):
         else:
             return f"{SITE_ADDRESS}author/{obj.author_id.pk}/posts/{obj.post_id}"
     def get_comments(self,obj):
-
-            return f"{SITE_ADDRESS}author/{obj.author_id.pk}/posts/{obj.post_id}/comments"
+        post = Post.objects.get(pk=obj.post_id).post_comments.all()
+        return CommentSerializer(post, many = True).data
     
     def get_count(slef,obj):
         return Post.objects.get(pk=obj.post_id).post_comments.all().count()
