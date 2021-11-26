@@ -73,7 +73,6 @@ class TokenAuth(TokenAuthentication):
 
         Ensures that request has a valid token
         """
-        print(request.method, self.bypassEntirely, "asdasd")
         if request.method in self.bypassEntirely:
             return (DummyAuthObject(True, True),None)
 
@@ -83,7 +82,7 @@ class TokenAuth(TokenAuthentication):
             raise AuthenticationFailed("Invalid token header. No credentials provided.")
         elif len(auth) > 2:
             raise AuthenticationFailed("Invalid token header. Token string should not contain spaces.")
-        print('formal valid')
+      
         try:
     
             token = Token.objects.get(pk=auth[1].decode())
@@ -92,8 +91,7 @@ class TokenAuth(TokenAuthentication):
         except Token.DoesNotExist:
             raise AuthenticationFailed("Invalid token")
         
-        
-        print('token found')
+
         try:
             author2: Author = Token.objects.get(key=token).user
         except Token.DoesNotExist as e:
