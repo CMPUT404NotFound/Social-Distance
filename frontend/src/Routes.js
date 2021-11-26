@@ -25,6 +25,7 @@ const Routes = () => {
 	return (
 		<UserContext.Provider value={{ user, setUser }}>
 			{user ? (
+				// If the User is logged in
 				<Switch>
 					<Route exact path="/createpost">
 						<CreatePost />
@@ -57,6 +58,7 @@ const Routes = () => {
 					<Route component={Error404} />
 				</Switch>
 			) : (
+				// If the User is not logged in
 				<Switch>
 					<Route exact path="/signup">
 						<Signup />

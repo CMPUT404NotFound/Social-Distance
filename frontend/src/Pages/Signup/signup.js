@@ -6,6 +6,7 @@ import logo from "../../assets/logo.png";
 import history from "./../../history";
 import "./signup.css";
 import UserContext from "../../userContext";
+import { getIDfromURL } from "../../utils";
 
 const Signup = () => {
 	// Inspired by AntD docs
@@ -36,15 +37,32 @@ const Signup = () => {
 			.then(function (response) {
 				console.log(response);
 
-				// TODO: get author from signup
-				setUser(true); // if successful, confirm that we're logged in
-				// redirect to inbox
-				history.push("inbox");
+				if (response && response.status === 201) {
+					const user = response.data.author;
+					setUser({
+						...user,
+						id: getIDfromURL(user.id),
+						idURL: user.id,
+						token: response.data.token,
+					});
+
+					history.push("login");
+				} else if (response && response.status === 204) {
+					setError(
+						"Your account has been created but not approved by an administrator yet. Try logging in with your credentials at a later date, or contact the administrator to approve your account."
+					);
+				}
 			})
 			.catch(function (error) {
-				console.log(error);
+				if (error.response && error.response.status === 400) {
+					setError("The signup information you used is invalid. Please check and try again.");
+				} else if (error.response && error.response.status === 409) {
+					setError("This username already exists. Please try again with a different username.");
+				} else {
+					setError("There was an error signing you up.");
+				}
+
 				setLoading(false);
-				setError("There was an error logging you in.");
 			});
 	};
 

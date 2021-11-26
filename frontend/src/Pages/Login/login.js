@@ -25,6 +25,7 @@ const Login = () => {
 			userName: values.username,
 			password: values.password,
 		};
+
 		let config = {};
 
 		axios
@@ -33,16 +34,21 @@ const Login = () => {
 				console.log(response);
 
 				const user = response.data.author;
-				setUser({ ...user, id: getIDfromURL(user.id), idURL: user.id });
-
-				// const token = response.data.token;
+				setUser({ ...user, id: getIDfromURL(user.id), idURL: user.id, token: response.data.token });
 
 				// redirect to inbox
 				history.push("inbox");
 			})
 			.catch(function (error) {
-				console.log(error);
-				setError("There was an error logging you in.");
+				if (error.response && error.response.status === 403) {
+					// Haven't been accepted yet
+					setError("Your account has not been activated yet by the server admin.");
+				} else if (error.response && error.response.status === 401) {
+					// Incorrect credentials
+					setError("Either your username or password were incorrect. Please try again.");
+				} else {
+					setError("There was an error logging you in.");
+				}
 				setLoading(false);
 			});
 	};

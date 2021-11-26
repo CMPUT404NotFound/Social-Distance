@@ -62,20 +62,23 @@ const Inbox = () => {
 	// };
 
 	// const [posts, setPosts] = useState([examplepost]);
+
 	const [posts, setPosts] = useState(null);
 
 	useEffect(() => {
-		const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/posts/`;
+		const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/inbox`;
 
-		const data = {};
-
-		let config = {};
+		let config = {
+			headers: {
+				Authorization: `Token ${user.token}`,
+			},
+		};
 
 		axios
-			.get(url, data, config)
+			.get(url, config)
 			.then(function (response) {
 				console.log(response);
-				setPosts(response.data);
+				setPosts(response.data.items);
 			})
 			.catch(function (error) {
 				console.log(error);
