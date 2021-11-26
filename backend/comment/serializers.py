@@ -29,7 +29,7 @@ class CommentSerializer(serializers.Serializer):
 
     type = serializers.SerializerMethodField()
 
-    author = AuthorSerializer(read_only=True, many=False)
+    author = serializers.SerializerMethodField()
 
     comment = serializers.CharField(max_length=500)
 
@@ -42,7 +42,10 @@ class CommentSerializer(serializers.Serializer):
     class Meta:
         fields = ("type", "author", "comment", "contentType", "published", "id")
         ordering = ["published"]
-
+    
+    def get_author(self, obj :Comment):
+        return "PLACE HOLDER FIXME" #/ FIXME
+    
     def get_id(self, obj: Comment):
         return f"{SITE_ADDRESS}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.id}"
 
