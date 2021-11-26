@@ -54,11 +54,14 @@ class CommentSerializer(serializers.Serializer):
             return AuthorSerializer(Author.objects.get(pk = data.id)).data
         else:
             
-            result = makeRequest("GET", data.longId, )
+            result = makeRequest("GET", data.longId)
             
+            if result.status_code < 300:
+                return result.content
+            else: 
+                return AuthorSerializer().data
             
-            #.TODO fix this when request is done
-            return "WOAHHH PLACE HOLDER " 
+          
         
 
     def get_id(self, obj: Comment):
