@@ -141,8 +141,17 @@ class NodeBasicAuth(BasicAuthentication):
             raise exceptions.AuthenticationFailed(msg)
 
 
-        partion = auth[1].decode().split(':')
-        username, password = partion[0], partion[1]
+        try:
+            try:
+                auth_decoded = base64.b64decode(auth[1]).decode('utf-8')
+            except UnicodeDecodeError:
+                auth_decoded = base64.b64decode(auth[1]).decode('latin-1')
+            auth_parts = auth_decoded.partition(':')
+        except (TypeError, UnicodeDecodeError, binascii.Error):
+            msg = 'Invalid basic header. Credentials not correctly base64 encoded.'
+            raise exceptions.AuthenticationFailed(msg)
+
+        username, password = auth_parts[0], auth_parts[2]
         
         try:
             #origin is used to later varify if this requester is trusted
