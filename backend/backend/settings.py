@@ -17,7 +17,7 @@ import django_on_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TOKEN_EXPIRE_TIME = 60 * 60 * 3
-SITE_ADDRESS = "http://localhost:8000"  # todo temp address
+SITE_ADDRESS = "https://project-api-404.herokuapp.com/api/"  # todo temp address
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -31,6 +31,10 @@ ALLOWED_HOSTS = ['*']
 # CORS_ORIGIN_ALLOW_ALL = True
 AUTH_USER_MODEL = "author.Author"
 
+
+FIXTURE_DIRS = [
+    "/fixture"
+]
 
 
 SWAGGER_SETTINGS = {
