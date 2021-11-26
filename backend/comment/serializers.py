@@ -4,7 +4,7 @@ from rest_framework import serializers
 from author.serializers import AuthorSerializer
 from backend.settings import SITE_ADDRESS
 
-from utils.request import checkIsLocal,ClassType
+from utils.request import checkIsLocal,ClassType, makeRequest
 
 
 # stolen from here https://newbedev.com/django-rest-framework-with-choicefield
@@ -53,6 +53,10 @@ class CommentSerializer(serializers.Serializer):
         if data.isLocal:
             return AuthorSerializer(Author.objects.get(pk = data.id)).data
         else:
+            
+            result = makeRequest("GET", data.longId, )
+            
+            
             #.TODO fix this when request is done
             return "WOAHHH PLACE HOLDER " 
         
