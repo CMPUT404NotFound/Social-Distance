@@ -108,7 +108,6 @@ def getAllAuthors(request: Request):
     """
     GET to get a list of all authors, with pagination options\n
     """
-
     # TODO add ordering to authors
     if request.method == "GET":
         params: dict = request.query_params
@@ -144,6 +143,21 @@ def getAllAuthors(request: Request):
     request_body=SignUpSerializer,
     tags=["Authentications"],
 )
+
+def returnToken(user : Author):
+    token, created = Token.objects.get_or_create(user=user)
+
+    if not created:
+        token = refreshToken(token)
+
+    user.last_login = timezone.now()
+    user.save()
+
+    return {"token": token.key,
+            "expires_in": expires_in(token),
+            "author": AuthorSerializer(user).data, }
+
+
 @api_view(["POST"])
 @authentication_classes([TokenAuth(bypassEntirely=["POST"])])
 def signUp(request: Request):
@@ -152,7 +166,7 @@ def signUp(request: Request):
         
         setting :Setting = Setting.settings()
         
-        Author.objects.create_user(
+        user = Author.objects.create_user(
             data["userName"],
             data.get("displayName", data["userName"]),
             data.get("github", ""),
@@ -162,7 +176,10 @@ def signUp(request: Request):
         )
         if setting.newUserRequireActivation:
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_201_CREATED)
+        
+        #successful account creation, return login token
+        
+        return Response(returnToken(user), status=status.HTTP_201_CREATED)
     except (ValueError, AttributeError) as error:
         return Response(str(error), status=status.HTTP_400_BAD_REQUEST)
     except IntegrityError as error:
@@ -206,27 +223,12 @@ def login(request: Request) -> Response:
     if not user:
         return Response(
             {"error": "Invalid login info."},
-            status=status.HTTP_403_FORBIDDEN,
+            status=status.HTTP_401_UNAUTHORIZED,
         )
     if not user.is_active:
-        return Response({"error": "this account has not yet been activated by the admin"})
+        return Response({"error": "this account has not yet been activated by the admin"}, status=status.HTTP_403_FORBIDDEN)
 
-    token, created = Token.objects.get_or_create(user=user)
-
-    if not created:
-        token = refreshToken(token)
-
-    user.last_login = timezone.now()
-    user.save()
-
-    return Response(
-        {
-            "token": token.key,
-            "expires_in": expires_in(token),
-            "author": AuthorSerializer(user).data,
-        },
-        status=status.HTTP_200_OK,
-    )
+    return Response(returnToken(user), status= 200)
 
 
 # todo make logout api

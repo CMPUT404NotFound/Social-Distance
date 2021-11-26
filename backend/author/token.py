@@ -85,7 +85,7 @@ class TokenAuth(TokenAuthentication):
             raise AuthenticationFailed("Invalid token header. No credentials provided.")
         elif len(auth) > 2:
             raise AuthenticationFailed("Invalid token header. Token string should not contain spaces.")
-      
+        
         try:
             token = Token.objects.get(pk=auth[1].decode())
         except UnicodeError:

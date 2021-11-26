@@ -4,6 +4,12 @@ from PIL import Image, ImageColor
 from os import path
 import requests
 
+def handleImage(img_req):
+    type = img_req["contentType"]
+    #https://www.w3schools.com/python/ref_string_startswith.asp
+    if (type.startswith("image/")):
+        pass
+    
 
 def saveImage(base64Image, fileName):
 

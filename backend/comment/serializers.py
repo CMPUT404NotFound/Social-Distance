@@ -1,7 +1,10 @@
+from author.models import Author
 from .models import Comment, Content_choices
 from rest_framework import serializers
 from author.serializers import AuthorSerializer
 from backend.settings import SITE_ADDRESS
+
+from utils.request import checkIsLocal,ClassType
 
 
 # stolen from here https://newbedev.com/django-rest-framework-with-choicefield
@@ -29,7 +32,7 @@ class CommentSerializer(serializers.Serializer):
 
     type = serializers.SerializerMethodField()
 
-    author = AuthorSerializer(read_only=True, many=False)
+    author = serializers.SerializerMethodField()
 
     comment = serializers.CharField(max_length=500)
 
@@ -42,9 +45,22 @@ class CommentSerializer(serializers.Serializer):
     class Meta:
         fields = ("type", "author", "comment", "contentType", "published", "id")
         ordering = ["published"]
+    
+    def get_author(self, obj :Comment):
+        data = checkIsLocal(obj.author, ClassType.author)
+        
+        if data.isLocal:
+            return AuthorSerializer(Author.objects.get(pk = data.id)).data
+        else:
+            #.TODO fix this when request is done
+            return "WOAHHH PLACE HOLDER " 
+        
 
     def get_id(self, obj: Comment):
-        return f"{SITE_ADDRESS}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.id}"
+        data = checkIsLocal(obj.author, ClassType.author)
+        return f"{SITE_ADDRESS}/author/{data.id}/posts/{obj.post.id}/comments/{obj.id}"
 
     def get_type(self, obj: Comment):
         return "comment"
+
+

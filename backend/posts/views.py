@@ -1,9 +1,11 @@
+from os import stat
 from django.utils.functional import empty
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework.request import Empty, Request
 from rest_framework.decorators import (
     api_view,
+    authentication_classes
 )
 from rest_framework import status
 from rest_framework.permissions import (
@@ -19,6 +21,38 @@ from .models import Post
 
 from .serializers import PostsSerializer
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from rest_framework.authtoken.models import Token
+from rest_framework.authentication import TokenAuthentication
+from author.token import expires_in, refreshToken, TokenAuth
+
+@swagger_auto_schema(method="get", tags=['Posts'])
+@swagger_auto_schema(method="post", tags=['Posts'])
+@swagger_auto_schema(method="delete", tags=['Posts'])
+@swagger_auto_schema(method="put", tags=['Posts'])
+@api_view(["GET","POST","DELETE","PUT"])
+@authentication_classes([TokenAuth(needAuthorCheck=["POST","PUT", "DELETE"])])
+def managePost(request: Request, author_id, post_id):
+    try:
+        author = Author.objects.get(pk = author_id)
+    except Author.DoesNotExist:
+        return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+        try:
+            post = Post.objects.filter(pk = post_id)
+        except: 
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        s = PostsSerializer(post,context={"request": request}, many=True)
+        return Response(s.data, status=status.HTTP_200_OK)
+
+    elif request.method == "DELETE":
+        try: 
+            post = Post.objects.filter(pk = post_id)
+        except: 
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        post.delete()
+        return Response("Post deleted", status=status.HTTP_204_NO_CONTENT)
+
 
 # Create your views here.
 @swagger_auto_schema(method="get",tags=['Posts'],
@@ -30,7 +64,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
                                 404: "Author or post not found"
                                 }, 
                      )
-                     
+                    
 @swagger_auto_schema(method="post",tags=['Posts'],
                      operation_summary="Create a post",
                       field_inspectors=[NoSchemaTitleInspector],

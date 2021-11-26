@@ -47,20 +47,21 @@ from django.views.generic.base import RedirectView
 urlpatterns = [
     path("", RedirectView.as_view(url = 'https://cmput404project.netlify.app/', permanent = False)),
     path("admin/", admin.site.urls),
-    path("api/author/<slug:id>", authorViews.handleAuthorById),
-    path("api/author/<uuid:author_id>/posts", postsViews.getAllPosts),
-    path("api/authors", authorViews.getAllAuthors),
-    path("api/login", authorViews.login),
-    path("api/signup", authorViews.signUp),
-    path("api/author/<slug:authorId>/post/<slug:postId>/comments", commentViews.handleComments),
+    path("api/author/<slug:id>/", authorViews.handleAuthorById),
+    path("api/author/<uuid:author_id>/posts/", postsViews.getAllPosts),
+    path("api/author/<uuid:author_id>/posts/<uuid:post_id>", postsViews.managePost),
+    path("api/authors/", authorViews.getAllAuthors),
+    path("api/login/", authorViews.login),
+    path("api/signup/", authorViews.signUp),
+    path("api/author/<slug:authorId>/post/<slug:postId>/comments/", commentViews.handleComments),
     
-    path("api/author/<uuid:id>/followers", followerViews.getAllFollowers),
-    path("api/author/<uuid:author_id>/followers/<uuid:follower_id>", followerViews.addFollower),
+    path("api/author/<uuid:id>/followers/", followerViews.getAllFollowers),
+    path("api/author/<uuid:author_id>/followers/<uuid:follower_id>/", followerViews.addFollower),
     
-    path("api/author/<uuid:authorId>/inbox", inboxViews.handleInbox),
-    path('api/author/<uuid:authorId>/liked', likeviews.getLiked ),
-    path("api/author/<uuid:authorId>/posts/<uuid:postId>/likes", likeviews.getPostLikes),
-    path("api/author/<uuid:authorId>/posts/<uuid:postId>/comments/<uuid:commentId>/likes", likeviews.getCommentLikes),
+    path("api/author/<uuid:authorId>/inbox/", inboxViews.handleInbox),
+    path('api/author/<uuid:authorId>/liked/', likeviews.getLiked ),
+    path("api/author/<uuid:authorId>/posts/<uuid:postId>/likes/", likeviews.getPostLikes),
+    path("api/author/<uuid:authorId>/posts/<uuid:postId>/comments/<uuid:commentId>/likes/", likeviews.getCommentLikes),
     
     path("api/nodes", nodeViews.getNodes),
 
