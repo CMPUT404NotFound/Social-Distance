@@ -187,6 +187,9 @@ def signUp(request: Request):
     request_body=LoginSerializer,
     tags=["Authentications"],
 )
+
+
+
 @api_view(["POST"])
 @authentication_classes([TokenAuth(bypassEntirely=["POST"])])
 def login(request: Request) -> Response:
