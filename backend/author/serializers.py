@@ -26,7 +26,7 @@ class AuthorSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         stuff = super().to_representation(instance)
-        stuff["id"] = f"{SITE_ADDRESS}/author/{stuff['id'] }"
+        stuff["id"] = f"{SITE_ADDRESS}author/{stuff['id'] }"
         return stuff
 
 
