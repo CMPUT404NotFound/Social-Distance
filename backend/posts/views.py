@@ -26,9 +26,9 @@ from rest_framework.authentication import TokenAuthentication
 from author.token import expires_in, refreshToken, TokenAuth
 
 @swagger_auto_schema(method="get", tags=['Posts'])
-@swagger_auto_schema(method="post", tags=['Posts'])
-@swagger_auto_schema(method="delete", tags=['Posts'])
-@swagger_auto_schema(method="put", tags=['Posts'])
+@swagger_auto_schema(method="post", tags=['Posts'],field_inspectors=[NoSchemaTitleInspector],)
+@swagger_auto_schema(method="delete", tags=['Posts'],)
+@swagger_auto_schema(method="put", tags=['Posts'],field_inspectors=[NoSchemaTitleInspector],)
 @authentication_classes([TokenAuth(needAuthorCheck=["POST","PUT", "DELETE"])])
 @api_view(["GET","POST","DELETE","PUT"])
 def managePost(request: Request, author_id, post_id):
@@ -49,7 +49,7 @@ def managePost(request: Request, author_id, post_id):
         s = PostsSerializer(request.data)
         if s.is_valid():
             s.save(author, post_id)
-        return Response("Post created",s.data},status=status.HTTP_201_CREATED)
+        return Response("Post created",s.data,status=status.HTTP_201_CREATED)
 
     elif request.method == "POST":
         try:  
@@ -60,7 +60,7 @@ def managePost(request: Request, author_id, post_id):
 
         if s.is_valid():
             s.save()
-            return Response("Post updated",s.data}, status=status.HTTP_200_OK)
+            return Response("Post updated",s.data, status=status.HTTP_200_OK)
 
 
     elif request.method == "DELETE":
