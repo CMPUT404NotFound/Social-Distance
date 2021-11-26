@@ -73,16 +73,13 @@ class TokenAuth(TokenAuthentication):
 
         Ensures that request has a valid token
         """
-        print(request.method, self.bypassEntirely)
+        print(request.method, self.bypassEntirely, "asdasd")
         if request.method in self.bypassEntirely:
             return (DummyAuthObject(True, True),None)
 
         auth = get_authorization_header(request).split()
 
-        if not auth or auth[0].lower() != self.keyword.lower().encode():
-            return None
-
-        if len(auth) == 1:
+        if not auth or len(auth) == 1:
             raise AuthenticationFailed("Invalid token header. No credentials provided.")
         elif len(auth) > 2:
             raise AuthenticationFailed("Invalid token header. Token string should not contain spaces.")

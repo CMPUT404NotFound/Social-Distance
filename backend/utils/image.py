@@ -27,5 +27,5 @@ def getImage(fileName):
     if response.ok:
         return base64.b64encode(response.content)
 
-    print("given file not found")
+
     return base64.b64encode(Image.new("RGB", [100, 100], ImageColor.getcolor("red")))
