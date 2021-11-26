@@ -61,6 +61,7 @@ def managePost(request: Request, author_id, post_id):
         if s.is_valid():
             s.save()
             return Response("Post updated",s.data, status=status.HTTP_200_OK)
+        return Response("Post not updated", status=status.HTTP_400_BAD_REQUEST)
 
 
     elif request.method == "DELETE":
