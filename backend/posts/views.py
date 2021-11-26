@@ -1,3 +1,4 @@
+from os import stat
 from django.utils.functional import empty
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
@@ -40,6 +41,25 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
                                  },
                       request_body=PostsSerializer
                      )
+
+
+@api_view(["GET","POST","DELETE","PUT"])
+def managePost(request: Request, author_id, post_id):
+    try:
+        author = Author.objects.get(pk = author_id)
+    except Author.DoesNotExist:
+        return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+        try:
+            post = Post.objects.get(author_id, post_id)
+        except: 
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        s = PostsSerializer(post,context={"request": request}, many=True)
+        return Response(s.data, status=status.HTTP_200_OK)
+
+
+    pass
 @api_view(["GET","POST"])
 def getAllPosts(request: Request, author_id):
     # if request.method == "GET":

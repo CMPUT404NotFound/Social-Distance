@@ -49,6 +49,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/author/<slug:id>/", authorViews.handleAuthorById),
     path("api/author/<uuid:author_id>/posts/", postsViews.getAllPosts),
+    path("api/author/<uuid:author_id>/posts/<uuid:post_id>", postsViews.managePost),
     path("api/authors/", authorViews.getAllAuthors),
     path("api/login/", authorViews.login),
     path("api/signup/", authorViews.signUp),
