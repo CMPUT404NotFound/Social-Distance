@@ -26,9 +26,9 @@ from rest_framework.authentication import TokenAuthentication
 from author.token import expires_in, refreshToken, TokenAuth
 
 @swagger_auto_schema(method="get", tags=['Posts'])
-@swagger_auto_schema(method="post", tags=['Posts'],field_inspectors=[NoSchemaTitleInspector],)
+@swagger_auto_schema(method="post", tags=['Posts'],field_inspectors=[NoSchemaTitleInspector],request_body=PostsSerializer)
 @swagger_auto_schema(method="delete", tags=['Posts'],)
-@swagger_auto_schema(method="put", tags=['Posts'],field_inspectors=[NoSchemaTitleInspector],)
+@swagger_auto_schema(method="put", tags=['Posts'],field_inspectors=[NoSchemaTitleInspector],request_body=PostsSerializer)
 @authentication_classes([TokenAuth(needAuthorCheck=["POST","PUT", "DELETE"])])
 @api_view(["GET","POST","DELETE","PUT"])
 def managePost(request: Request, author_id, post_id):
