@@ -34,7 +34,7 @@ class Post(models.Model):
     origin = models.URLField(editable = False)
     unlisted = models.BooleanField(default = False)
     # https://www.geeksforgeeks.org/datetimefield-django-models/
-    published = models.DateTimeField(default = timezone.now)
+    published = models.DateTimeField(default = timezone.now, editable= False)
     count = models.IntegerField(default=0)
     categories = models.CharField(max_length=200)
 
