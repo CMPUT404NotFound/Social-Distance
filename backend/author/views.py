@@ -130,20 +130,6 @@ def getAllAuthors(request: Request):
         return Response(s.data)
 
 
-@swagger_auto_schema(
-    method="post",
-    operation_summary="Sign up with username and password. author personal info optional",
-    responses={
-        201: "author created",
-        204: "author created, but need server admin to activate in order to login.",
-        400: "bad sign up information",
-        409: "username already exist",
-    },
-    field_inspectors=[NoSchemaTitleInspector],
-    request_body=SignUpSerializer,
-    tags=["Authentications"],
-)
-
 def returnToken(user : Author):
     token, created = Token.objects.get_or_create(user=user)
 
@@ -158,6 +144,19 @@ def returnToken(user : Author):
             "author": AuthorSerializer(user).data, }
 
 
+@swagger_auto_schema(
+    method="post",
+    operation_summary="Sign up with username and password. author personal info optional",
+    responses={
+        201: "author created",
+        204: "author created, but need server admin to activate in order to login.",
+        400: "bad sign up information",
+        409: "username already exist",
+    },
+    field_inspectors=[NoSchemaTitleInspector],
+    request_body=SignUpSerializer,
+    tags=["Authentications"],
+)
 @api_view(["POST"])
 @authentication_classes([TokenAuth(bypassEntirely=["POST"])])
 def signUp(request: Request):
