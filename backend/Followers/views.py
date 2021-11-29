@@ -134,7 +134,7 @@ def addFollower(request: Request, author_id, follower_id):
     elif request.method == "GET":
         try:
             author = Author.objects.get(pk=author_id)
-            follower = Author.objects.get(pk=follower_id)
+            #follower = Author.objects.get(pk=follower_id)
             follow = Follower.objects.get(sender=follower_id, receiver=author)
             if follow:
                 return Response(status=status.HTTP_200_OK)
