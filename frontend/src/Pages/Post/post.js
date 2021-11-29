@@ -1,4 +1,5 @@
 // import React, { createElement, useState } from "react";
+// eslint-disable-next-line
 import { Row, Col, Avatar, Comment, Button, Tooltip, Popover } from "antd";
 import { UserOutlined, LikeOutlined } from "@ant-design/icons";
 // import { Link } from "react-router-dom";
@@ -6,7 +7,7 @@ import ReactCommonmark from "react-commonmark";
 import { useLocation } from "react-router";
 import "./post.css";
 import Share from "./share";
-import Like from "./like";
+// import Like from "./like";
 import PostComment from "./comment";
 import { useContext } from "react";
 import axios from "axios";
@@ -46,6 +47,7 @@ const Post = () => {
 	};
 
 	// Get list of people who liked the comment
+	// eslint-disable-next-line
 	const getCommentLikes = (comment) => {
 		const url = `${comment.url}/likes/`;
 

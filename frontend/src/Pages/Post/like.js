@@ -1,5 +1,5 @@
 import { LikeOutlined } from "@ant-design/icons";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useCallback } from "react";
 import { Button, Tooltip, Popover } from "antd";
 import UserContext from "../../userContext";
 import axios from "axios";
@@ -8,12 +8,8 @@ const Like = ({ post }) => {
 	const { user } = useContext(UserContext);
 	const [likes, setLikes] = useState([]);
 
-	useEffect(() => {
-		getLikes();
-	}, [likes]);
-
 	// Get list of people who liked the post
-	const getLikes = () => {
+	const getLikes = useCallback(() => {
 		const url = `${post.id}/likes/`;
 
 		const config = {
@@ -32,7 +28,7 @@ const Like = ({ post }) => {
 			.catch(function (error) {
 				console.log(error);
 			});
-	};
+	}, [post.id, user.token]);
 
 	// Like the post
 	const like = () => {
@@ -61,6 +57,10 @@ const Like = ({ post }) => {
 				console.log(error);
 			});
 	};
+
+	useEffect(() => {
+		getLikes();
+	}, [getLikes]);
 
 	const content = <div>{likes && likes.map((like, i) => <p>{like.author.displayName}</p>)}</div>;
 

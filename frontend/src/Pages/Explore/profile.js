@@ -13,7 +13,9 @@ const Profile = ({ person, remoteUser }) => {
 	let url;
 
 	if (remoteUser) {
-		url = "";
+		url = `https://project-api-404.herokuapp.com/api/author/${getIDfromURL(person.id)}/followers/${
+			user.id
+		}/`;
 	} else {
 		url = `https://project-api-404.herokuapp.com/api/author/${getIDfromURL(person.id)}/followers/${
 			user.id
@@ -24,6 +26,10 @@ const Profile = ({ person, remoteUser }) => {
 		headers: {
 			Authorization: `Token ${user.token}`,
 		},
+		// auth: {
+		// 	username: "1802fb2b-e473-4078-ace3-c205897accf7",
+		// 	password: "123456",
+		// },
 	};
 
 	const check_following = () => {
@@ -60,6 +66,8 @@ const Profile = ({ person, remoteUser }) => {
 					Promise.resolve(error);
 				} else console.log(error);
 			});
+
+		// TODO: send follow request to their inbox
 	};
 
 	const unfollow = () => {

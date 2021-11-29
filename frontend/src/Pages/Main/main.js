@@ -1,9 +1,9 @@
 import {
-	BellOutlined,
 	CompassOutlined,
 	InboxOutlined,
 	LogoutOutlined,
 	PlusOutlined,
+	GlobalOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, Modal } from "antd";
 import { useContext } from "react";
@@ -46,8 +46,8 @@ const Main = ({ children }) => {
 					<Menu.Item key="1" icon={<InboxOutlined />}>
 						<Link to="/inbox">Inbox</Link>
 					</Menu.Item>
-					<Menu.Item key="2" icon={<BellOutlined />}>
-						<Link to="/notifications">Notifications</Link>
+					<Menu.Item key="2" icon={<GlobalOutlined />}>
+						<Link to="/feed">Feed</Link>
 					</Menu.Item>
 					<Menu.Item key="3" icon={<CompassOutlined />}>
 						<Link to="/explore">Explore</Link>

@@ -7,7 +7,7 @@ import CreatePost from "./Pages/Create/create";
 import Main from "./Pages/Main/main";
 import Inbox from "./Pages/Inbox/inbox";
 import Signup from "./Pages/Signup/signup";
-import Notifications from "./Pages/Notifications/notifications";
+import Feed from "./Pages/Feed/feed";
 import Explore from "./Pages/Explore/explore";
 import Post from "./Pages/Post/post";
 
@@ -35,9 +35,9 @@ const Routes = () => {
 							<Inbox />
 						</Main>
 					</Route>
-					<Route exact path="/notifications">
+					<Route exact path="/feed">
 						<Main>
-							<Notifications />
+							<Feed />
 						</Main>
 					</Route>
 					<Route exact path="/explore">
