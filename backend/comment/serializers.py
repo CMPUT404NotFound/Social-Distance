@@ -6,7 +6,7 @@ from backend.settings import SITE_ADDRESS
 
 from utils.request import checkIsLocal,ClassType, makeRequest
 
-
+import json 
 # stolen from here https://newbedev.com/django-rest-framework-with-choicefield
 class ChoiceField(serializers.ChoiceField):
     
@@ -53,16 +53,14 @@ class CommentSerializer(serializers.Serializer):
         if data.isLocal:
             return AuthorSerializer(Author.objects.get(pk = data.id)).data
         else:
-            print(data.longId)
+        
             result = makeRequest("GET", data.longId)
-            print(result[1], result[0])
+ 
             if result[1] < 300:
-                return result[0]
+                return json.loads(result[0])
             else: 
                 return AuthorSerializer().data
             
-
-        
 
     def get_id(self, obj: Comment):
         data = checkIsLocal(obj.author, ClassType.author)

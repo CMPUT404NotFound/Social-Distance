@@ -32,3 +32,5 @@ class LikeSerializer(serializers.ModelSerializer):
         repr = super().to_representation(obj)
         repr["@context"] = "https://www.w3.org/ns/activitystreams"
         return repr
+
+        
