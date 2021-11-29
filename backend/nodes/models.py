@@ -11,6 +11,10 @@ class NodeManager(models.Manager):
         node :Node =  super().create(*args, **kwargs)
         node.netloc = urlparse(node.url).netloc
         return node
+    
+    
+    
+  
 
 
 class Node(models.Model):
@@ -36,3 +40,10 @@ class Node(models.Model):
     
     def __str__(self) -> str:
         return str(self.url)
+    
+    def save(self, *args, **kwargs) -> None:
+        self.netloc =  urlparse(self.url).netloc
+      
+        super().save(*args, **kwargs)
+        
+        return None

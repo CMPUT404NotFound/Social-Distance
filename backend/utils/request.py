@@ -18,24 +18,27 @@ from urllib.parse import urlparse
 from requests import request
 from nodes.models import Node
 import base64
-def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Response :
+
+def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Tuple :
     
     if (method, url) in cache: #if the request has recently been gotten, just return the cached version
         return cache.get((method, url))
 
     parsed = urlparse(url)
-    
-    if not parsed.scheme or  parsed.scheme != 'http' or parsed.scheme != 'https':
-        return Response({"error": "invalid url"}, status=400)
 
-    if not Node.objects.filter(netloc = parsed.netloc).exists():
-        return Response({"error": "requested domain is not registered"}, status=400)
+    if not parsed.scheme or ( parsed.scheme != 'http' and parsed.scheme != 'https'):
+        return ({"error": "invalid url"}, 400)
+        
+
+    #. TODO varifying netloc is pointless :?
+    # if not Node.objects.filter(netloc = parsed.netloc).exists():
+    #     return Response({"error": "requested domain is not registered"}, status=400)
     
     #node the request is refering to definitely exists
     node : Node= Node.objects.get(netloc = parsed.netloc)
     
     if not node.allowOutgoing:
-        return Response({"error": "outgoing request to this node is blocked by admin"}, status=400)
+        return ({"error": "outgoing request to this node is blocked by admin"}, 400)
     
     
 
@@ -43,15 +46,14 @@ def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Respons
         s = f"{node.outgoingName}:{node.outgoingPassword}".encode('utf-8')
         result = requests.request(method, url,  data=data, headers=({"Authorization": f"Basic {base64.b64encode(s).decode('utf-8')}"} if node.authRequiredOutgoing else {}))
     except RequestException as e:
-        result = requests.Response(str(e))
+        return (str(e), 400)
         print("execption occured in utils.request", str(e))
     
-    response = Response(result.content, result.status_code)
+    response = (result.content, result.status_code)
 
-    if response.status_code == 200:
+    if result.status_code == 200:
         cache.set((method, url), response)
     return response
-
 
 
 
@@ -82,7 +84,6 @@ def checkIsLocal(fullId:str, type : ClassType = None) -> IsLocalResponse:
     shortId = None
     items = fullId.split('/') 
     
-    
     if len(items) > 1:
         try:
             if 'comments' in items:
@@ -109,4 +110,3 @@ def checkIsLocal(fullId:str, type : ClassType = None) -> IsLocalResponse:
     isLocal = {ClassType.author: Author, ClassType.post: Post, ClassType.comment: Comment}[type].objects.filter(pk = (shortId if len(items) > 2 else fullId)).exists()
     
     return IsLocalResponse(isLocal, type, shortId if len(items) > 1 else fullId, fullId) 
-    

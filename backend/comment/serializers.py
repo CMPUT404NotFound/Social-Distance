@@ -53,20 +53,20 @@ class CommentSerializer(serializers.Serializer):
         if data.isLocal:
             return AuthorSerializer(Author.objects.get(pk = data.id)).data
         else:
-            
+            print(data.longId)
             result = makeRequest("GET", data.longId)
-            
-            if result.status_code < 300:
-                return result.content
+            print(result[1], result[0])
+            if result[1] < 300:
+                return result[0]
             else: 
                 return AuthorSerializer().data
             
-          
+
         
 
     def get_id(self, obj: Comment):
         data = checkIsLocal(obj.author, ClassType.author)
-        return f"{SITE_ADDRESS}/author/{data.id}/posts/{obj.post.id}/comments/{obj.id}"
+        return f"{SITE_ADDRESS}/author/{data.id}/posts/{obj.post.post_id}/comments/{obj.id}"
 
     def get_type(self, obj: Comment):
         return "comment"
