@@ -15,14 +15,13 @@ from comment.models import Comment
 from urllib.parse import urlparse
 
 
-from requests import request
 from nodes.models import Node
 import base64
 
 def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Tuple :
     
-    if (method, url) in cache: #if the request has recently been gotten, just return the cached version
-        return cache.get((method, url))
+    # if (method, url) in cache: #if the request has recently been gotten, just return the cached version
+    #     return cache.get((method, url))
 
     parsed = urlparse(url)
 
@@ -40,19 +39,21 @@ def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Tuple :
     if not node.allowOutgoing:
         return ({"error": "outgoing request to this node is blocked by admin"}, 400)
     
-    
+    fixedurl = f"{node.url}{url[url.find('author'):]}"
+    print(fixedurl)
 
     try:
         s = f"{node.outgoingName}:{node.outgoingPassword}".encode('utf-8')
-        result = requests.request(method, url,  data=data, headers=({"Authorization": f"Basic {base64.b64encode(s).decode('utf-8')}"} if node.authRequiredOutgoing else {}))
+        result = requests.request(method, fixedurl,  data=data, headers=({"Authorization": f"Basic {base64.b64encode(s).decode('utf-8')}"} if node.authRequiredOutgoing else {}))
     except RequestException as e:
-        return (str(e), 400)
         print("execption occured in utils.request", str(e))
+        return (str(e), 400)
+        
     
     response = (result.content, result.status_code)
 
-    if result.status_code == 200:
-        cache.set((method, url), response)
+    # if result.status_code == 200:
+    #     cache.set((method, url), response)
     return response
 
 

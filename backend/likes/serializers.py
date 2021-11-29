@@ -4,7 +4,7 @@ from author.models import Author
 from author.serializers import AuthorSerializer
 from .models import Like
 from utils.request import makeRequest
-
+import json
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,7 +20,7 @@ class LikeSerializer(serializers.ModelSerializer):
             author = Author.objects.get(pk=obj.author)
             return AuthorSerializer(author).data
         except Author.DoesNotExist:
-            return makeRequest("GET", obj.author)
+            return json.loads( makeRequest("GET", obj.author)[0])
 
     def get_type(self, obj):
         return "Like"

@@ -21,6 +21,7 @@ from likes.serializers import LikeSerializer
 from posts.serializers import PostsSerializer
 from utils.request import makeRequest
 
+import json
 # Create your views here.
 
 
@@ -148,7 +149,7 @@ def getInboxItems(request, authorId):
                 if {"L": Like.objects.filter, "P": Post.objects.filter, "F": Follower.objects.filter,}[
                     item.type
                 ](**{"pk": item.contentId}).exists()
-                else makeRequest(method="GET", url=item.contentId).data
+                else json.loads(makeRequest(method="GET", url=item.contentId)[0])
             )
             for item in items
         ],
@@ -207,3 +208,5 @@ def handleInbox(request, authorId: str):
         return clearInbox(request, authorId)
     elif request.method == "GET":
         return getInboxItems(request, authorId)
+
+
