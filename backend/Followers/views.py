@@ -28,6 +28,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 from utils.request import checkIsLocal, ClassType, makeRequest
 import json
+import requests
 
 
 @swagger_auto_schema(method="get", tags=['followers'])
@@ -43,23 +44,33 @@ def getAllFollowers(request: Request, id):
             #print("follower_object: ", follower_object)
             for follower in follower_object:
                 follower_id = follower.sender
-                print("follower_id:", follower_id.split('id')[1][2: ]) #follower_id:  ['author: Bob, ', ': 6098687c-11f9-43ab-afa0-484a18b72356']
-                just_id = follower_id.split('id')[1][2:]
+                #print("0follower_id:", follower_id)
+                #print("follower_id:", follower_id.split('id')[1][2: ]) #follower_id:  ['author: Bob, ', ': 6098687c-11f9-43ab-afa0-484a18b72356']
+                #just_id = follower_id.split('id')[1][2:]
+                just_id = follower_id
                 print("TYPE: ", type(follower_id))
                 object = checkIsLocal(just_id, ClassType.author)
-                print("HERE checkIsLocal(follower_id): ", object)
+                print("HERE checkIsLocal(follower_id)23: ", object.isLocal)
                 if not object.isLocal:
-                    response = makeRequest("GET", object.longId)
+                    #response = makeRequest("GET", object.longId)
+                    url = "https://cmput404f21t17.herokuapp.com/service/author/" + str(follower_id) + "/"
+                    response = requests.get(url) #c76413d1-00bc-4cb7-8ca6-282b0bfcb953/ <-- url
                     print("HERE response: ", response)
-                    if 100 < response[1] < 300:
-                        results.append(json.loads(response[0]))
+                    if 100 < response.status_code < 300:
+                        # author = Author.objects.get(pk=follower_id)
+                        # author.isLocal = True
+                        # author.save()
+                        # author_serializer = AuthorSerializer(author)
+                        # results.append(author_serializer.data)
+
+                        results.append(json.loads(response.content))
                     
 
 
 
 
-
-                results.append(AuthorSerializer(object).data)
+                else:
+                    results.append(AuthorSerializer(object).data)
             
 
             s = {
@@ -80,29 +91,41 @@ def getAllFollowers(request: Request, id):
 @authentication_classes([TokenAuth(needAuthorCheck=["DELETE"])])
 @api_view(["GET", "DELETE", "PUT"])
 def addFollower(request: Request, author_id, follower_id):
+    print("HELLO DELETE: ", request.method) #HELLO:  c76413d1-00bc-4cb7-8ca6-282b0bfcb953 <- FOREIGN!! USE ME AS EXAMPLE!
     if request.method == "PUT":
         try:
             receiver = Author.objects.get(pk=author_id)
-            sender = Author.objects.get(pk=follower_id)
+            #sender = Author.objects.get(pk=follower_id)
+            print("receiver: ", receiver)
+            print("12follower_id:", type(follower_id))
+            isLocal_var = checkIsLocal(str(follower_id), ClassType.author)
+            #if isLocal_var.isLocal == False:
+                #try getting from foreign server
+                #url = "https://cmput404f21t17.herokuapp.com/service/author/" + str(follower_id) + "/"
+                #response = requests.get(url) #c76413d1-00bc-4cb7-8ca6-282b0bfcb953/ <-- url
+                #print("response: ", response.json(), " ")
+                #print("response serializer: ", AuthorSerializer(json.loads(response.text())))
             try:
                 follower_exist = Follower.objects.get(
-                    sender=follower_id, receiver=author_id)
+                    sender=follower_id, receiver=receiver)
                 if follower_exist:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
             except:
                 pass
-            follow = Follower.objects.create(sender=follower_id, receiver=follower_id)
-            # author.sender.add(follower)
+            follow = Follower.objects.create(sender=follower_id, receiver=receiver)
+            # author.sender.add(follower).
             follow.save()
             return Response(status=status.HTTP_201_CREATED)
         except Author.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     elif request.method == "DELETE":
+        
         try:
+            receiver = Author.objects.get(pk=author_id)
             author = Author.objects.get(pk=author_id)
-            follower = Author.objects.get(pk=follower_id)
-            follow = Follower.objects.get(sender=follower_id, receiver=follower_id)
+            #follower = Author.objects.get(pk=follower_id)
+            follow = Follower.objects.get(sender=follower_id, receiver=receiver)
             follow.delete()
             return Response(status=status.HTTP_200_OK)
         except Author.DoesNotExist:
@@ -112,7 +135,7 @@ def addFollower(request: Request, author_id, follower_id):
         try:
             author = Author.objects.get(pk=author_id)
             follower = Author.objects.get(pk=follower_id)
-            follow = Follower.objects.get(sender=follower_id, receiver=follower_id)
+            follow = Follower.objects.get(sender=follower_id, receiver=author)
             if follow:
                 return Response(status=status.HTTP_200_OK)
         except Follower.DoesNotExist:
