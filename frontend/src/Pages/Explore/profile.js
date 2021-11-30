@@ -4,6 +4,7 @@ import { UserOutlined, PlusOutlined } from "@ant-design/icons";
 import UserContext from "../../userContext";
 import axios from "axios";
 import { getIDfromURL } from "../../utils";
+import { Link } from "react-router-dom";
 
 const Profile = ({ person, remoteUser }) => {
 	const { user } = useContext(UserContext);
@@ -92,8 +93,7 @@ const Profile = ({ person, remoteUser }) => {
 				)}
 			</Col>
 			<Col flex={1}>
-				{/* TODO: add a link to profile page */}
-				<a href={person.url}>{person.displayName}</a>
+				<Link to={{ pathname: "/profile", state: person }}>{person.displayName}</Link>
 			</Col>
 			<Col>
 				{following ? (

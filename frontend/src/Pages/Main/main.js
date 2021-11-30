@@ -4,6 +4,7 @@ import {
 	LogoutOutlined,
 	PlusOutlined,
 	GlobalOutlined,
+	UserOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, Modal } from "antd";
 import { useContext } from "react";
@@ -18,7 +19,7 @@ import CreatePost from "../Create/create";
 const { Sider } = Layout;
 
 const Main = ({ children }) => {
-	const { setUser } = useContext(UserContext);
+	const { user, setUser } = useContext(UserContext);
 
 	const [postModalVisible, setPostModalVisible] = useState(false);
 
@@ -52,7 +53,10 @@ const Main = ({ children }) => {
 					<Menu.Item key="3" icon={<CompassOutlined />}>
 						<Link to="/explore">Explore</Link>
 					</Menu.Item>
-					<Menu.Item key="4" icon={<LogoutOutlined />} onClick={logout}>
+					<Menu.Item key="4" icon={<UserOutlined />}>
+						<Link to={{ pathname: "/profile", state: user }}>Profile</Link>
+					</Menu.Item>
+					<Menu.Item key="5" icon={<LogoutOutlined />} onClick={logout}>
 						LogOut
 					</Menu.Item>
 				</Menu>

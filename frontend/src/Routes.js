@@ -14,6 +14,7 @@ import Post from "./Pages/Post/post";
 // Get Error Pages
 import Error404 from "./Error/error404";
 import UserContext from "./userContext";
+import Profile from "./Pages/Profile/profile";
 
 // User context tutorial resource
 // https://www.youtube.com/watch?v=lhMKvyLRWo0
@@ -48,6 +49,11 @@ const Routes = () => {
 					<Route exact path="/post">
 						<Main>
 							<Post />
+						</Main>
+					</Route>
+					<Route exact path="/profile">
+						<Main>
+							<Profile />
 						</Main>
 					</Route>
 					<Route exact path="/">

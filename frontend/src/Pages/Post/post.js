@@ -12,6 +12,7 @@ import PostComment from "./comment";
 import { useContext } from "react";
 import axios from "axios";
 import UserContext from "../../userContext";
+import { Link } from "react-router-dom";
 
 const Post = () => {
 	const location = useLocation();
@@ -81,7 +82,7 @@ const Post = () => {
 						)}
 					</Col>
 					<Col>
-						<p>{post.author.displayName}</p>
+						<Link to={{ pathname: "/profile", state: post.author }}>{post.author.displayName}</Link>
 						<h3>{post.title}</h3>
 						<p className="post_description">{post.description}</p>
 						<ReactCommonmark source={post.content} className="post_description" />
