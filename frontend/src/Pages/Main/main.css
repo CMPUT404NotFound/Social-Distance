@@ -1,3 +1,8 @@
+.main_page {
+	background: white;
+	min-height: 100vh;
+}
+
 .main_page .content {
 	margin-left: 200px;
 	padding: 1rem;

@@ -1,14 +1,17 @@
 import { Form, Input, Button, Checkbox, Alert } from "antd";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import "./login.css";
 import axios from "axios";
 import history from "./../../history";
+import UserContext from "../../userContext";
+import { getIDfromURL } from "../../utils";
 
-const Login = ({ setLoggedIn, setUser }) => {
+const Login = () => {
 	// Inspired by AntD docs
 	// https://ant.design/components/form/
+	const { setUser } = useContext(UserContext);
 
 	// states
 	const [error, setError] = useState("");
@@ -17,11 +20,12 @@ const Login = ({ setLoggedIn, setUser }) => {
 	const onFinish = (values) => {
 		setLoading(true);
 
-		const url = "https://project-api-404.herokuapp.com/api/login";
+		const url = "https://project-api-404.herokuapp.com/api/login/";
 		const data = {
 			userName: values.username,
 			password: values.password,
 		};
+
 		let config = {};
 
 		axios
@@ -29,15 +33,22 @@ const Login = ({ setLoggedIn, setUser }) => {
 			.then(function (response) {
 				console.log(response);
 
-				setLoggedIn(true); // if successful, confirm that we're logged in
-				setUser(response.data.author);
+				const user = response.data.author;
+				setUser({ ...user, id: getIDfromURL(user.id), idURL: user.id, token: response.data.token });
 
 				// redirect to inbox
 				history.push("inbox");
 			})
 			.catch(function (error) {
-				console.log(error);
-				setError("There was an error logging you in.");
+				if (error.response && error.response.status === 403) {
+					// Haven't been accepted yet
+					setError("Your account has not been activated yet by the server admin.");
+				} else if (error.response && error.response.status === 401) {
+					// Incorrect credentials
+					setError("Either your username or password were incorrect. Please try again.");
+				} else {
+					setError("There was an error logging you in.");
+				}
 				setLoading(false);
 			});
 	};
@@ -61,14 +72,7 @@ const Login = ({ setLoggedIn, setUser }) => {
 				<h1>Log In</h1>
 
 				{error && (
-					<Alert
-						message="Error"
-						// description="Either your username or your password is incorrect. Please try again or contact the server administrator."
-						description={error}
-						type="error"
-						className="error"
-						showIcon
-					/>
+					<Alert message="Error" description={error} type="error" className="error" showIcon />
 				)}
 
 				<Form

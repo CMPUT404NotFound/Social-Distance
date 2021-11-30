@@ -1,0 +1,39 @@
+.create_page {
+	max-width: 1000px;
+	margin: auto;
+}
+
+.create_page .title {
+	padding: 25px;
+}
+
+.create_page .textfield,
+.create_page .preview {
+	height: 50vh;
+	width: 100%;
+	display: block;
+	padding: 10px;
+	border-radius: 1rem;
+}
+
+.create_page .preview {
+	border: 1px solid rgb(43, 43, 43);
+}
+
+.create_page .tabs {
+	margin: 0 1rem;
+}
+
+.create_page .editor {
+	align-items: center;
+	gap: 1rem;
+}
+
+.create_page .options {
+	padding: 2rem;
+}
+
+.create_page .submitButton {
+	display: block;
+	margin-left: auto;
+}
