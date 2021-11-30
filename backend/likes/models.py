@@ -10,4 +10,4 @@ class Like(models.Model):
     
 
     def __str__(self) -> str:
-        return self.pk
+        return f"{str(self.pk)}, {self.author}"
