@@ -24,8 +24,9 @@ def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Tuple :
     #     return cache.get((method, url))
 
     parsed = urlparse(url)
-
+    print(parsed)
     if not parsed.scheme or ( parsed.scheme != 'http' and parsed.scheme != 'https'):
+        print( ({"error": "invalid url"}, 400))
         return ({"error": "invalid url"}, 400)
         
 
@@ -37,6 +38,8 @@ def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Tuple :
     node : Node= Node.objects.get(netloc = parsed.netloc)
     
     if not node.allowOutgoing:
+        print(({"error": "outgoing request to this node is blocked by admin"}, 400)
+    )
         return ({"error": "outgoing request to this node is blocked by admin"}, 400)
     
     fixedurl = f"{node.url}{url[url.find('author'):]}"
@@ -50,6 +53,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Tuple :
         return (str(e), 400)
         
     
+    print("hey hey hey\n\n",result.content)
     response = (result.content, result.status_code)
 
     # if result.status_code == 200:
