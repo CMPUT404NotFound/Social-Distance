@@ -15,4 +15,4 @@ class InboxItem(models.Model):
         max_length=1, choices=typeChoices, default="P", null=False, blank=False
     )
 
-    contentId = models.CharField(max_length=100, null=False, blank=False, default="")
+    contentId = models.CharField(max_length=300, null=False, blank=False, default="")

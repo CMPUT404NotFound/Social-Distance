@@ -15,7 +15,7 @@ class postsManager(models.Model):
 
 class Post(models.Model):
     
-    post_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    post_id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False, max_length=100)
     author_id = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="post_author"
     )

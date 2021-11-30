@@ -4,9 +4,9 @@ from rest_framework import serializers
 from author.serializers import AuthorSerializer
 from backend.settings import SITE_ADDRESS
 
-from utils.request import checkIsLocal,ClassType
+from utils.request import checkIsLocal,ClassType, makeRequest
 
-
+import json 
 # stolen from here https://newbedev.com/django-rest-framework-with-choicefield
 class ChoiceField(serializers.ChoiceField):
     
@@ -53,13 +53,18 @@ class CommentSerializer(serializers.Serializer):
         if data.isLocal:
             return AuthorSerializer(Author.objects.get(pk = data.id)).data
         else:
-            #.TODO fix this when request is done
-            return "WOAHHH PLACE HOLDER " 
         
+            result = makeRequest("GET", data.longId)
+ 
+            if result[1] < 300:
+                return json.loads(result[0])
+            else: 
+                return AuthorSerializer().data
+            
 
     def get_id(self, obj: Comment):
         data = checkIsLocal(obj.author, ClassType.author)
-        return f"{SITE_ADDRESS}/author/{data.id}/posts/{obj.post.id}/comments/{obj.id}"
+        return f"{SITE_ADDRESS}/author/{data.id}/posts/{obj.post.post_id}/comments/{obj.id}"
 
     def get_type(self, obj: Comment):
         return "comment"

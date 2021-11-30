@@ -98,6 +98,8 @@ def getCommentLikes(request, authorId, postId, commentId):
     },
     request_body= AddLike
 )
+
+
 @api_view(["GET", "POST"])
 @authentication_classes([TokenAuth(needAuthorCheck=["POST"])])
 def getLiked(request : Request, authorId):
