@@ -20,8 +20,8 @@ from nodes.models import Node
 import base64
 def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Response :
     
-    if (method, url) in cache: #if the request has recently been gotten, just return the cached version
-        return cache.get((method, url))
+    # if (method, url) in cache: #if the request has recently been gotten, just return the cached version
+    #     return cache.get((method, url))
 
     parsed = urlparse(url)
     
@@ -48,8 +48,8 @@ def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Respons
     
     response = Response(result.content, result.status_code)
 
-    if response.status_code == 200:
-        cache.set((method, url), response)
+    # if response.status_code == 200:
+    #     cache.set((method, url), response)
     return response
 
 
