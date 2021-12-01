@@ -3,7 +3,7 @@ from typing import  Tuple, Union
 import requests
 from requests.exceptions import RequestException
 from django.core.cache import cache
-from rest_framework.fields import NOT_READ_ONLY_WRITE_ONLY
+
 
 from rest_framework.response import Response
 
@@ -43,7 +43,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Tuple :
         return ({"error": "outgoing request to this node is blocked by admin"}, 400)
     
     fixedurl = f"{node.url}{url[url.find('author'):]}"
-    print(fixedurl)
+
 
     try:
         s = f"{node.outgoingName}:{node.outgoingPassword}".encode('utf-8')
@@ -53,7 +53,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] =None) -> Tuple :
         return (str(e), 400)
         
     
-    print("hey hey hey\n\n",result.content)
+
     response = (result.content, result.status_code)
 
     # if result.status_code == 200:
@@ -109,7 +109,7 @@ def checkIsLocal(fullId:str, type : ClassType = None) -> IsLocalResponse:
     elif type is None:
         print("type is None and only short id is provided in utils.request.checkIsLocal")
         return None 
-    print(shortId, fullId)
+
 
     # if has isolate id of the item, and know the type of the item, then just lookup in the respective table to chech for existance.
     isLocal = {ClassType.author: Author, ClassType.post: Post, ClassType.comment: Comment}[type].objects.filter(pk = (shortId if len(items) > 2 else fullId)).exists()
