@@ -12,7 +12,7 @@ class NodeAdmin(admin.ModelAdmin):
               'authRequiredOutgoing', )
     
     
-    fields = ['url', 'allowIncoming', 'allowOutgoing',
+    fields = ['url','netloc', 'allowIncoming', 'allowOutgoing',
               'authRequiredIncoming',
               'authRequiredOutgoing',
               'incomingName',
