@@ -1,5 +1,7 @@
 no more base64 encoding, just unnecessary work. replace id: link's "/" with "-" so its url safe. 
 (URL length is somewhat unlimited in this context i think)
+
+
 foreign data needed:
 ## Author
 + fetch all foreign authors of a paricular node, api/nodes/otherNodeName/authors
