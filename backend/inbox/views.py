@@ -14,7 +14,7 @@ from posts.models import Post
 from inbox.models import InboxItem
 from likes.models import Like
 
-from utils.permission import CustomPermissionFilter
+
 
 from Followers.serializers import FollowerSerializer
 from likes.serializers import LikeSerializer
