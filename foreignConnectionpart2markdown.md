@@ -25,12 +25,12 @@ foreign data needed:
 + when our own PUT is called, push an inbox item indicating the follow
 
 ## Post
-+ POST/PUT/DELETE should be called normally, ie, just POST api/author/<id>/posts/<postid\>/. Since we can't create/update otherservers
++ POST/PUT/DELETE should be called normally, ie, just POST api/author/\<id>/posts/\<postid\>/. Since we can't create/update otherservers
 + GET(hack in coming)
     + Gets the a particular post from either our server or a foreign server
     + Lets stuff the link in like so?
-        GET api/author/<some_id>/posts/{server.com-service-author-<author_id>-posts-<post_id>}/
-        (<some_id> - this id should only be checked if post id not a link)
+        GET api/author/\<some_id>/posts/{server.com-service-author-\<author_id>-posts-\<post_id>}/
+        (\<some_id> - this id should only be checked if post id not a link)
     
     - parsing:
         parse the item after posts with urllib.parse
@@ -43,10 +43,10 @@ foreign data needed:
     + Get author/id/posts/ should not return any unlisted posts
     + Get author/id/posts/ can return any posts, including unlisted ones.
     
-+ On creating post via POST /posts/ or PUT /posts/<postid>
++ On creating post via POST /posts/ or PUT /posts/\<postid>
     if the post is friends only, push this post to every friends' inbox, including foreign author that are friends.
 ## Comments
-+ For both GET and POST, api/author/<authorId>/posts/{server.com-service-author-<authorID>-posts-<postId>}/comments 
++ For both GET and POST, api/author/\<authorId>/posts/{server.com-service-author-\<authorID>-posts-\<postId>}/comments 
 should GET and POST to both local and foreign server.   
 (the first authorId only needs to be correct if the post id points to local site)
     
@@ -54,13 +54,13 @@ should GET and POST to both local and foreign server.
     
 ## Likes
 + to like another comment/posts, regardless foreign or local, attach the like json body described as the docs,
-do POST api/author/{site.com-service-author-<authorId>-inbox}
+do POST api/author/{site.com-service-author-\<authorId>-inbox}
 - parsing: parse the same way as Author
-GET list of likes for post:  GET api/author/<some_id>/posts/{server.com-service-author-<author_id>-posts-<post_id>}/likes
+GET list of likes for post:  GET api/author/\<some_id>/posts/{server.com-service-author-\<author_id>-posts-\<post_id>}/likes
 similar to posts
-GET list of for comment: GET api/author/<some_id>/posts/<some_id>/commments/{server.com-service-author-<author_id>-posts-<post_id>-comments-<commentId>}/likes
+GET list of for comment: GET api/author/\<some_id>/posts/\<some_id>/commments/{server.com-service-author-\<author_id>-posts-\<post_id>-comments-\<commentId>}/likes
 author and post id are only checked if the comment id is for our site
-GET api/author/<id>/likes, see Author.
+GET api/author/\<id>/likes, see Author.
 ## Inbox
 + only DELETE and POST likes should be called by front end
     + DELETE should be called normally
