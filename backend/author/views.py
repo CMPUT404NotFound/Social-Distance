@@ -58,7 +58,6 @@ import json
 @api_view(["GET", "POST"])
 @authentication_classes([TokenAuth(needAuthorCheck=["POST"])])
 @parseIncomingRequest(methodToCheck=["GET"], type= ClassType.AUTHOR)
-
 def handleAuthorById(request: Union[ParsedRequest, HttpRequest], authorId):
     
     print(request.method, request.islocal, request.id)
