@@ -34,7 +34,8 @@ class ParsedRequest(Request):
         self.id = id
         self.islocal = islocal
 
-def getId(link: str, type : ClassType):
+
+def getId(link: str, type: ClassType):
     items = link.split("/")
     if type == ClassType.AUTHOR:
         target = items[items.index("author") + 1]
@@ -50,36 +51,45 @@ def getId(link: str, type : ClassType):
 def parseIncomingRequest(methodToCheck: List[str] = None, type: ClassType = ClassType.AUTHOR):
     def decorateFunc(func):
         def inner(request: Union[Request, HttpRequest], *args, **kwargs):
-
-            url = request.get_full_path()
             
-            target = getId(url, type).replace("-", "/") #link id has / replaced with - to make them url safe
-            parsed = parse.urlparse(target)
-            
-            if parsed.netloc == "":
-                parsedRequest = ParsedRequest(request, islocal=True, id = target) #the id provided dont seem like a valid url, treat as normal id instead. good luck.
-                func(parsedRequest, *args, **kwargs) 
-                return
-            
-            if parsed.netloc == NETLOC:
-                #the netloc found is our domain, parse for real id.
+            if request.method not in methodToCheck:
+                #this method dont need parsing
+                return func(request, *args, **kwargs)
                 
-                realId = getId(target, type) #getting the id for author, post, or comment
-                parsedRequest = ParsedRequest(request, islocal=True, id = realId) #is local is true and id is author id provided by frontend
-                func(parsedRequest, *args, **kwargs)
-                return 
             
-            #now we know the netloc is neither blank nor our domain, lets check if we have the domain in our nodes db
-            
-            if not Node.object.filter(netloc = parsed.netloc).exists():
-                #the domain requested is not registered
-                return ParsedRequest(request, islocal=False, id = None) 
-            
-            target = f"http://{target}"
-            
-            parsedRequest = ParsedRequest(request, islocal=False, id = target)
-            func(parsedRequest, *args, **kwargs)
-            
+            url = request.get_full_path()
+
+            target = f'http://{getId(url, type).replace("~", "/")}' # link id has / replaced with - to make them url safe
+            parsed = parse.urlparse(target)
+
+            print(parsed, NETLOC)
+            if parsed.netloc == "":
+                parsedRequest = ParsedRequest(
+                    request, islocal=True, id=target
+                )  # the id provided dont seem like a valid url, treat as normal id instead. good luck.
+                return func(parsedRequest, *args, **kwargs)
+                
+
+            if parsed.netloc == NETLOC:
+                # the netloc found is our domain, parse for real id.
+
+                realId = getId(target, type)  # getting the id for author, post, or comment
+                print("realid", realId)
+                parsedRequest = ParsedRequest(request, islocal=True, id=realId)  # is local is true and id is author id provided by frontend
+                return func(parsedRequest, *args, **kwargs)
+                
+
+            # now we know the netloc is neither blank nor our domain, lets check if we have the domain in our nodes db
+
+            if not Node.objects.filter(netloc=parsed.netloc).exists():
+                # the domain requested is not registered
+                return ParsedRequest(request, islocal=False, id=None)
+
+            if target[-1] != "/":
+                target += "/"
+            parsedRequest = ParsedRequest(request, islocal=False, id=target)
+            return func(parsedRequest, *args, **kwargs)
+
         return inner
 
     return decorateFunc

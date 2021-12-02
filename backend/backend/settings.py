@@ -19,6 +19,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TOKEN_EXPIRE_TIME = 60 * 60 * 3
 SITE_ADDRESS = "https://project-api-404.herokuapp.com/api/"  # todo temp address
 NETLOC = parse.urlparse(SITE_ADDRESS).netloc
+
+APPEND_SLASH = False #django can't append slash to post request while appending slash automatically. And i can't be bothered to write a work around.
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 

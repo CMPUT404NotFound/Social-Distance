@@ -7,7 +7,7 @@
 
 
 '''
-no more base64 encoding, just unnecessary work. replace id: link's "/" with "-" so its url safe. 
+no more base64 encoding, just unnecessary work. replace id: link's "/" with "~" so its url safe. 
 (URL length is somewhat unlimited in this context i think)
 
 foreign data needed:
@@ -17,7 +17,7 @@ foreign data needed:
 + fetch all foreign authors of all known nodes, api/ndoes/authors
 
 ## Following
-+ follow a foreign user PUT api/author/{otherserver.com-service-author-foreignAuthorId}/followers/ouruserId
++ follow a foreign user PUT api/author/{otherserver.com~service~author~foreignAuthorId}/followers/ouruserId
     + sends request to other if the first id's domain isn't ours.
     + just added it to our database otherwise
     + !!! regardless who's server it belongs to, also add to "Following" model, for querying who our user is following.
@@ -44,7 +44,7 @@ foreign data needed:
 + GET(hack in coming)
     + Gets the a particular post from either our server or a foreign server
     + Lets stuff the link in like so?
-        GET api/author/<some_id>/posts/{server.com-service-author-<author_id>-posts-<post_id>}/
+        GET api/author/<some_id>/posts/{server.com~service~author~<author_id>~posts~<post_id>}/
         (<some_id> - this id should only be checked if post id not a link)
     
     - parsing:
@@ -62,7 +62,7 @@ foreign data needed:
     if the post is friends only, push this post to every friends' inbox, including foreign author that are friends.
 
 ## Comments
-+ For both GET and POST, api/author/<authorId>/posts/{server.com-service-author-<authorID>-posts-<postId>}/comments 
++ For both GET and POST, api/author/<authorId>/posts/{server.com~service~author~<authorID>~posts~<postId>}/comments 
 should GET and POST to both local and foreign server.   
 (the first authorId only needs to be correct if the post id points to local site)
     
@@ -72,14 +72,14 @@ should GET and POST to both local and foreign server.
 ## Likes
 
 + to like another comment/posts, regardless foreign or local, attach the like json body described as the docs,
-do POST api/author/{site.com-service-author-<authorId>-inbox}
+do POST api/author/{site.com~service~author~<authorId>~inbox}
 
 - parsing: parse the same way as Author
 
-GET list of likes for post:  GET api/author/<some_id>/posts/{server.com-service-author-<author_id>-posts-<post_id>}/likes
+GET list of likes for post:  GET api/author/<some_id>/posts/{server.com~service~author~<author_id>~posts~<post_id>}/likes
 similar to posts
 
-GET list of for comment: GET api/author/<some_id>/posts/<some_id>/commments/{server.com-service-author-<author_id>-posts-<post_id>-comments-<commentId>}/likes
+GET list of for comment: GET api/author/<some_id>/posts/<some_id>/commments/{server.com~service~author~<author_id>~posts~<post_id>~comments~<commentId>}/likes
 author and post id are only checked if the comment id is for our site
 
 GET api/author/<id>/likes, see Author.

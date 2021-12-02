@@ -1,4 +1,6 @@
+from typing import Union
 from django.contrib.auth import authenticate
+from django.http.request import HttpRequest
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authtoken.models import Token
 
@@ -12,6 +14,7 @@ from rest_framework.decorators import (
 from rest_framework import status
 
 
+
 from .token import TokenAuth, expires_in, refreshToken
 
 from .models import Author
@@ -23,7 +26,8 @@ from django.db.utils import IntegrityError
 import django.utils.timezone as timezone
 from globalSetting.models import Setting
 
-
+from utils.request import parseIncomingRequest, ParsedRequest, ClassType, makeRequest
+import json
 # Create your views here.
 
 
@@ -53,20 +57,34 @@ from globalSetting.models import Setting
 )
 @api_view(["GET", "POST"])
 @authentication_classes([TokenAuth(needAuthorCheck=["POST"])])
-def handleAuthorById(request: Request, id):
-    if request.method == "GET":
-        try:
-            author = Author.objects.get(pk=id)
-            s = AuthorSerializer(author)
-            return Response(s.data)
+@parseIncomingRequest(methodToCheck=["GET"], type= ClassType.AUTHOR)
 
-        except Author.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+def handleAuthorById(request: Union[ParsedRequest, HttpRequest], authorId):
+    
+    print(request.method, request.islocal, request.id)
+    if request.method == "GET":
+        if request.islocal:
+            print("im in islocal!")
+            try: 
+                author = Author.objects.get(pk=request.id)
+                
+                s = AuthorSerializer(author)
+                return Response(s.data, status=200)
+
+            except Author.DoesNotExist:
+            
+                return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            result = makeRequest("GET", request.id)
+            if 100 < result[1] < 300:# TIL chain comparison exist in python
+                return Response(json.loads(result[0]), status=200)
+            else:
+                return Response("foreign content not found.",status=404)
+                
     elif request.method == "POST":
         """
         Author Updates, auth needed
         """
-
         try:
             a: Author = Author.objects.get(pk=id)
             data = request.data
