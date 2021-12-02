@@ -13,11 +13,12 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 import django_on_heroku
-
+from urllib import parse
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TOKEN_EXPIRE_TIME = 60 * 60 * 3
 SITE_ADDRESS = "https://project-api-404.herokuapp.com/api/"  # todo temp address
+NETLOC = parse.urlparse(SITE_ADDRESS).netloc
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
