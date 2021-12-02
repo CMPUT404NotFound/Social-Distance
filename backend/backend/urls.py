@@ -55,7 +55,7 @@ urlpatterns = [
     path("api/authors/", authorViews.getAllAuthors),
     path("api/login/", authorViews.login),
     path("api/signup/", authorViews.signUp),
-    path("api/author/<slug:authorId>/post/<slug:postId>/comments/", commentViews.handleComments),
+    path("api/author/<slug:authorId>/posts/<slug:postId>/comments/", commentViews.handleComments),
     
     path("api/author/<slug:id>/followers/", followerViews.getAllFollowers),
     path("api/author/<slug:author_id>/followers/<slug:follower_id>/", followerViews.addFollower),
@@ -63,6 +63,7 @@ urlpatterns = [
     path("api/author/<slug:authorId>/inbox/", inboxViews.handleInbox),
     path('api/author/<slug:authorId>/liked/', likeviews.getLiked ),
     path("api/author/<slug:authorId>/posts/<slug:postId>/likes/", likeviews.getPostLikes),
+    # making it uniform /posts rather than /post
     path("api/author/<slug:authorId>/posts/<slug:postId>/comments/<slug:commentId>/likes/", likeviews.getCommentLikes),
     
     path("api/nodes/", nodeViews.getNodes),
