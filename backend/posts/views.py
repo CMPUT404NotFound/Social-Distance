@@ -123,7 +123,7 @@ def getAllPosts(request: Request, author_id):
 
             params: dict = request.query_params
 
-            post = Post.objects.filter(author_id=author_id).filter(visibility = "PU").exclude(unlisted = False)
+            post = Post.objects.filter(author_id=author_id).filter(visibility = "PU").exclude(unlisted = True)
             if (
                 "page" in params and "size" in params
             ):  # make sure param has both page and size in order to paginate
