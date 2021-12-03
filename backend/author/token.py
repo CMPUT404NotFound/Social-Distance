@@ -185,9 +185,9 @@ class NodeBasicAuth(BasicAuthentication):
                 raise exceptions.AuthenticationFailed("The origin provided is not allowed to access this server")
 
             
-            if node.authRequiredIncoming:
-                if not node.incomingPassword == password:
-                    raise exceptions.AuthenticationFailed("Basic auth credentials does not match.")
+            
+            if not node.incomingPassword == password:
+                raise exceptions.AuthenticationFailed("Basic auth credentials does not match.")
                 
         except Node.DoesNotExist:
             raise exceptions.AuthenticationFailed("The origin provided is not yet registered in this server")
