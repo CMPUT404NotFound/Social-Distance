@@ -16,9 +16,9 @@ from backend.settings import NETLOC
 
 from nodes.models import Node
 import base64
-
+import json
 import urllib.parse as parse
-
+from dataclasses import dataclass
 
 class ClassType(enum.Enum):
     AUTHOR = 0
@@ -58,14 +58,15 @@ def parseIncomingRequest(methodToCheck: List[str] = None, type: ClassType = Clas
                 
             
             url = request.get_full_path()
-
-            target = f'http://{getId(url, type).replace("~", "/")}' # link id has / replaced with - to make them url safe
+            parsedId = getId(url, type).replace("~", "/")
+            target = f'https://{parsedId}' # link id has / replaced with - to make them url safe
+            print(target)
             parsed = parse.urlparse(target)
 
             print(parsed, NETLOC)
-            if parsed.netloc == "":
+            if parsed.netloc == "" or parsed.path == "":
                 parsedRequest = ParsedRequest(
-                    request, islocal=True, id=target
+                    request, islocal=True, id=parsedId
                 )  # the id provided dont seem like a valid url, treat as normal id instead. good luck.
                 return func(parsedRequest, *args, **kwargs)
                 
@@ -73,9 +74,9 @@ def parseIncomingRequest(methodToCheck: List[str] = None, type: ClassType = Clas
             if parsed.netloc == NETLOC:
                 # the netloc found is our domain, parse for real id.
 
-                realId = getId(target, type)  # getting the id for author, post, or comment
-                print("realid", realId)
-                parsedRequest = ParsedRequest(request, islocal=True, id=realId)  # is local is true and id is author id provided by frontend
+                
+                print("realid", parsedId)
+                parsedRequest = ParsedRequest(request, islocal=True, id=parsedId)  # is local is true and id is author id provided by frontend
                 return func(parsedRequest, *args, **kwargs)
                 
 
@@ -83,7 +84,7 @@ def parseIncomingRequest(methodToCheck: List[str] = None, type: ClassType = Clas
 
             if not Node.objects.filter(netloc=parsed.netloc).exists():
                 # the domain requested is not registered
-                return ParsedRequest(request, islocal=False, id=None)
+                return func(ParsedRequest(request, islocal=False, id=None), *args, **kwargs)
 
             if target[-1] != "/":
                 target += "/"
@@ -94,8 +95,12 @@ def parseIncomingRequest(methodToCheck: List[str] = None, type: ClassType = Clas
 
     return decorateFunc
 
+@dataclass
+class QueryResponse:
+    content: str
+    status_code: int
 
-def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> Tuple:
+def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryResponse:
 
     cacheKey = str((method, url))
 
@@ -104,8 +109,8 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> Tuple:
 
     parsed = urlparse(url)
     if not parsed.scheme or (parsed.scheme != "http" and parsed.scheme != "https"):
-        print(({"error": "invalid url"}, 400))
-        return ({"error": "invalid url"}, 400)
+    
+        return QueryResponse("error, invalid url", 400) 
 
     # . TODO varifying netloc is pointless :?
     # if not Node.objects.filter(netloc = parsed.netloc).exists():
@@ -115,8 +120,8 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> Tuple:
     node: Node = Node.objects.get(netloc=parsed.netloc)
 
     if not node.allowOutgoing:
-        print(({"error": "outgoing request to this node is blocked by admin"}, 400))
-        return ({"error": "outgoing request to this node is blocked by admin"}, 400)
+        return QueryResponse("error, outgoing request to this node is blocked by admin", 400) 
+    
 
     fixedurl = f"{node.url}{url[url.find('author'):]}"
 
@@ -125,26 +130,28 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> Tuple:
         result = requests.request(
             method,
             fixedurl,
-            data=data,
+            data=json.dumps(data) if type(data) is dict else data,
             headers=({"Authorization": f"Basic {base64.b64encode(s).decode('utf-8')}"} if node.authRequiredOutgoing else {}),
         )
     except RequestException as e:
         print("execption occured in utils.request", str(e))
-        return (str(e), 400)
+        return QueryResponse(f"error {str(e)}", 400)
 
-    response = (result.content, result.status_code)
+    response = QueryResponse(result.content, result.status_code)
 
     if result.status_code == 200:
         cache.set(cacheKey, response)
     return response
 
-
+@dataclass
 class IsLocalResponse:
-    def __init__(self, isLocal: bool, type: ClassType, id: str, longId: str):
-        self.isLocal = isLocal
-        self.type = type
-        self.id = id  # just <postid>
-        self.longId = longId  # http://domain.com/authors/<id>/posts/<postid>
+    
+    isLocal: bool
+    type: ClassType
+    id: str # just <postid>
+    long:str # http://domain.com/authors/<id>/posts/<postid>
+    
+
 
 
 def checkIsLocal(fullId: str, type: ClassType = None) -> IsLocalResponse:
@@ -187,3 +194,30 @@ def checkIsLocal(fullId: str, type: ClassType = None) -> IsLocalResponse:
     )
 
     return IsLocalResponse(isLocal, type, shortId if len(items) > 1 else fullId, fullId)
+
+
+
+def returnGETRequest(url: str ) -> Response:
+    
+    
+    if url is None:
+        return Response("The requested address is not registered with this server yet.", status=404)
+
+    result = makeRequest("GET", url)
+    if 200 <= result.status_code < 300:
+        return Response(json.loads(result.content), status= 200)
+    else:
+        return Response("foreign content not found, or some error occured.")
+    
+    
+def returnPOSTRequest(url: str, data: Union[str, dict]) -> Response:
+    
+    if url is None:
+        return Response("The requested address is not registered with this server yet.", status=404)
+    
+    result = makeRequest("POST", url, data)
+    
+    if 200 <= result.status_code < 300:
+        return Response(json.loads(result.content), status= 200)
+    else:
+        return Response("foreign content not found, or some error occured.")
