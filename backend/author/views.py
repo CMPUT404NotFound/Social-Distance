@@ -1,7 +1,9 @@
+from os import stat
 from typing import Union
 from django.contrib.auth import authenticate
 from django.http.request import HttpRequest
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import response
 from rest_framework.authtoken.models import Token
 
 from rest_framework.response import Response
@@ -235,6 +237,27 @@ def login(request: Request) -> Response:
         return Response({"error": "this account has not yet been activated by the admin"}, status=status.HTTP_403_FORBIDDEN)
 
     return Response(returnToken(user), status=200)
+
+
+@swagger_auto_schema(
+    method="post",
+    operation_summary="if the request token matches author id, logout this user/delete the user's token",
+    responses={
+        200: "logout success",
+        401: "token mismatch or not provided, or some other auth related error."
+    },
+    tags=["Authentications"]
+)
+@api_view(["POST"])
+@authentication_classes([TokenAuth(needAuthorCheck=["POST"])])
+def logout(request: Union[Request, HttpRequest]):
+    
+    #author identity is already checked, just logout is safe
+    
+    Token.objects.filter(user = request.user).delete()
+    
+    return Response("logging out aka delete token success.", status=200)
+        
 
 
 # todo make logout api
