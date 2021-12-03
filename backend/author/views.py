@@ -60,6 +60,7 @@ import json
 @parseIncomingRequest(methodToCheck=["GET"], type= ClassType.AUTHOR)
 def handleAuthorById(request: Union[ParsedRequest, HttpRequest], authorId):
     
+    
     print(request.method, request.islocal, request.id, request.auth, request.user)
     if request.method == "GET":
         if request.islocal:
