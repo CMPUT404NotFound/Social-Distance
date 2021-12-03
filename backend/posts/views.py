@@ -32,6 +32,7 @@ from author.token import expires_in, refreshToken, TokenAuth
 @authentication_classes([TokenAuth(needAuthorCheck=["POST","PUT", "DELETE"])])
 @api_view(["GET","POST","DELETE","PUT"])
 def managePost(request: Request, author_id, post_id):
+    
     try:
         author = Author.objects.get(pk = author_id)
     except Author.DoesNotExist:

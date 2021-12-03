@@ -15,7 +15,7 @@ from rest_framework import status
 
 
 
-from .token import TokenAuth, expires_in, refreshToken
+from .token import TokenAuth, expires_in, refreshToken, NodeBasicAuth
 
 from .models import Author
 from .serializers import *
@@ -56,11 +56,11 @@ import json
     tags=["Author"],
 )
 @api_view(["GET", "POST"])
-@authentication_classes([TokenAuth(needAuthorCheck=["POST"])])
+@authentication_classes([TokenAuth(needAuthorCheck=["POST"]), NodeBasicAuth])
 @parseIncomingRequest(methodToCheck=["GET"], type= ClassType.AUTHOR)
 def handleAuthorById(request: Union[ParsedRequest, HttpRequest], authorId):
     
-    print(request.method, request.islocal, request.id)
+    print(request.method, request.islocal, request.id, request.auth, request.user)
     if request.method == "GET":
         if request.islocal:
             print("im in islocal!")

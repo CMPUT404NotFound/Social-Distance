@@ -58,14 +58,15 @@ def parseIncomingRequest(methodToCheck: List[str] = None, type: ClassType = Clas
                 
             
             url = request.get_full_path()
-
-            target = f'http://{getId(url, type).replace("~", "/")}' # link id has / replaced with - to make them url safe
+            parsedId = getId(url, type).replace("~", "/")
+            target = f'https://{parsedId}' # link id has / replaced with - to make them url safe
+            print(target)
             parsed = parse.urlparse(target)
 
             print(parsed, NETLOC)
-            if parsed.netloc == "":
+            if parsed.netloc == "" or parsed.path == "":
                 parsedRequest = ParsedRequest(
-                    request, islocal=True, id=target
+                    request, islocal=True, id=parsedId
                 )  # the id provided dont seem like a valid url, treat as normal id instead. good luck.
                 return func(parsedRequest, *args, **kwargs)
                 
@@ -73,9 +74,9 @@ def parseIncomingRequest(methodToCheck: List[str] = None, type: ClassType = Clas
             if parsed.netloc == NETLOC:
                 # the netloc found is our domain, parse for real id.
 
-                realId = getId(target, type)  # getting the id for author, post, or comment
-                print("realid", realId)
-                parsedRequest = ParsedRequest(request, islocal=True, id=realId)  # is local is true and id is author id provided by frontend
+                
+                print("realid", parsedId)
+                parsedRequest = ParsedRequest(request, islocal=True, id=parsedId)  # is local is true and id is author id provided by frontend
                 return func(parsedRequest, *args, **kwargs)
                 
 
@@ -83,7 +84,7 @@ def parseIncomingRequest(methodToCheck: List[str] = None, type: ClassType = Clas
 
             if not Node.objects.filter(netloc=parsed.netloc).exists():
                 # the domain requested is not registered
-                return ParsedRequest(request, islocal=False, id=None)
+                return func(ParsedRequest(request, islocal=False, id=None), *args, **kwargs)
 
             if target[-1] != "/":
                 target += "/"
