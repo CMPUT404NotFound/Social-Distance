@@ -57,8 +57,11 @@ urlpatterns = [
     path("api/signup/", authorViews.signUp),
     path("api/author/<slug:authorId>/post/<slug:postId>/comments/", commentViews.handleComments),
     
-    path("api/author/<slug:id>/followers/", followerViews.getAllFollowers),
-    path("api/author/<slug:author_id>/followers/<slug:follower_id>/", followerViews.addFollower),
+    # path("api/author/<slug:id>/followers/", followerViews.getAllFollowers),
+    re_path(r"^api/author/(?P<id>[A-Za-z0-9-~.]+)/followers/$", followerViews.getAllFollowers),
+    # path("api/author/<slug:author_id>/followers/<slug:follower_id>/", followerViews.addFollower),
+    re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/followers/(?P<follower_id>[A-Za-z0-9-~.]+)/$", followerViews.addFollower),
+
     
     path("api/author/<slug:authorId>/inbox/", inboxViews.handleInbox),
     path('api/author/<slug:authorId>/liked/', likeviews.getLiked ),
