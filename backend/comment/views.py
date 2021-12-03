@@ -16,7 +16,6 @@ from rest_framework.decorators import (
 )
 
 from author.token import TokenAuth
-from backend.utils.request import makeRequest
 
 
 from .models import Comment
@@ -32,7 +31,7 @@ from author.models import Author
 
 from backend.settings import SITE_ADDRESS
 
-from utils.request import parseIncomingRequest, ParsedRequest, ClassType, returnGETRequest, returnPOSTRequest
+from utils.request import parseIncomingRequest, ParsedRequest, ClassType, returnGETRequest, returnPOSTRequest, makeRequest
 from django.http import HttpRequest
 
 
@@ -40,7 +39,7 @@ def handleGET(request: Union[HttpRequest, ParsedRequest], authorId: str = "", po
     if request.islocal:
         # handle local stuff
         try:
-            post: Post = Post.objects.get(pk=request.id) #request.id is the parsed post short id, since islocal is true
+            post: Post = Post.objects.get(pk=request.id)  # request.id is the parsed post short id, since islocal is true
             comments = post.post_comments.all()
         except Post.DoesNotExist:
             return Response("no comments under this post", status=404)
@@ -70,14 +69,14 @@ def handleGET(request: Union[HttpRequest, ParsedRequest], authorId: str = "", po
         return Response(output, status=200)
     else:
         # sent foreign request.
-        
+
         return returnGETRequest(request.id)
-        
+
 
 def handlePOST(request: Union[HttpRequest, ParsedRequest], authorId: str = "", postId: str = ""):
-    
-    data = request.data #jsonified body
-    
+
+    data = request.data  # jsonified body
+
     if request.islocal:
         try:
             post = Post.objects.get(pk=request.id)
@@ -124,7 +123,7 @@ def handlePOST(request: Union[HttpRequest, ParsedRequest], authorId: str = "", p
     else:
         # make request to a foreign server, see utils.request.py
         return returnPOSTRequest(request.id, data)
-        
+
 
 @swagger_auto_schema(
     method="get",
@@ -178,5 +177,5 @@ def handleComments(request: Union[HttpRequest, ParsedRequest], authorId: str = "
         return handleGET(request, authorId, postId)
 
     elif request.method == "POST":
-        
+
         return handlePOST(request, authorId, postId)
