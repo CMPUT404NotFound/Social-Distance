@@ -56,7 +56,7 @@ class CommentSerializer(serializers.Serializer):
         
             result = makeRequest("GET", data.longId)
  
-            if result[1] < 300:
+            if 200 <=result.status_code < 300:
                 return json.loads(result[0])
             else: 
                 return AuthorSerializer().data

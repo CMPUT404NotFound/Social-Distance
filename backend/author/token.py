@@ -131,7 +131,7 @@ class NodeBasicAuth(BasicAuthentication):
     def __init__(self, blockedMethod: List[str] = None):
         
         self.blockedMethod = blockedMethod if blockedMethod else []
-       
+
 
     def __call__(self):
         return self  # a bit of a hack, to allow initial tokenAuth with initialized params

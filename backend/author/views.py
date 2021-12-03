@@ -9,7 +9,6 @@ from rest_framework.request import Request
 from rest_framework.decorators import (
     api_view,
     authentication_classes,
-    permission_classes,
 )
 from rest_framework import status
 
@@ -55,6 +54,8 @@ import json
     ],
     tags=["Author"],
 )
+
+
 @api_view(["GET", "POST"])
 @authentication_classes([TokenAuth(needAuthorCheck=["POST"]), NodeBasicAuth])
 @parseIncomingRequest(methodToCheck=["GET"], type= ClassType.AUTHOR)
@@ -64,7 +65,6 @@ def handleAuthorById(request: Union[ParsedRequest, HttpRequest], authorId):
     print(request.method, request.islocal, request.id, request.auth, request.user)
     if request.method == "GET":
         if request.islocal:
-            print("im in islocal!")
             try: 
                 author = Author.objects.get(pk=request.id)
                 
@@ -76,10 +76,10 @@ def handleAuthorById(request: Union[ParsedRequest, HttpRequest], authorId):
                 return Response(status=status.HTTP_404_NOT_FOUND)
         else:
             result = makeRequest("GET", request.id)
-            if 100 < result[1] < 300:# TIL chain comparison exist in python
-                return Response(json.loads(result[0]), status=200)
+            if 200 <= result.status_code < 300:# TIL chain comparison exist in python
+                return Response(json.loads(result.content), status=200)
             else:
-                return Response("foreign content not found.",status=404)
+                return Response("foreign content not found, or some error occured while fetching it",status=404)
                 
     elif request.method == "POST":
         """

@@ -18,7 +18,7 @@ from nodes.models import Node
 import base64
 
 import urllib.parse as parse
-
+from dataclasses import dataclass
 
 class ClassType(enum.Enum):
     AUTHOR = 0
@@ -95,8 +95,12 @@ def parseIncomingRequest(methodToCheck: List[str] = None, type: ClassType = Clas
 
     return decorateFunc
 
+@dataclass
+class QueryResponse:
+    content: str
+    status_code: int
 
-def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> Tuple:
+def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryResponse:
 
     cacheKey = str((method, url))
 
@@ -105,8 +109,8 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> Tuple:
 
     parsed = urlparse(url)
     if not parsed.scheme or (parsed.scheme != "http" and parsed.scheme != "https"):
-        print(({"error": "invalid url"}, 400))
-        return ({"error": "invalid url"}, 400)
+    
+        return QueryResponse("error, invalid url", 400) 
 
     # . TODO varifying netloc is pointless :?
     # if not Node.objects.filter(netloc = parsed.netloc).exists():
@@ -116,8 +120,8 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> Tuple:
     node: Node = Node.objects.get(netloc=parsed.netloc)
 
     if not node.allowOutgoing:
-        print(({"error": "outgoing request to this node is blocked by admin"}, 400))
-        return ({"error": "outgoing request to this node is blocked by admin"}, 400)
+        return QueryResponse("error, outgoing request to this node is blocked by admin", 400) 
+    
 
     fixedurl = f"{node.url}{url[url.find('author'):]}"
 
@@ -131,21 +135,23 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> Tuple:
         )
     except RequestException as e:
         print("execption occured in utils.request", str(e))
-        return (str(e), 400)
+        return QueryResponse(f"error {str(e)}", 400)
 
-    response = (result.content, result.status_code)
+    response = QueryResponse(result.content, result.status_code)
 
     if result.status_code == 200:
         cache.set(cacheKey, response)
     return response
 
-
+@dataclass
 class IsLocalResponse:
-    def __init__(self, isLocal: bool, type: ClassType, id: str, longId: str):
-        self.isLocal = isLocal
-        self.type = type
-        self.id = id  # just <postid>
-        self.longId = longId  # http://domain.com/authors/<id>/posts/<postid>
+    
+    isLocal: bool
+    type: ClassType
+    id: str # just <postid>
+    long:str # http://domain.com/authors/<id>/posts/<postid>
+    
+
 
 
 def checkIsLocal(fullId: str, type: ClassType = None) -> IsLocalResponse:
