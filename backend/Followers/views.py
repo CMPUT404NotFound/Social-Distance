@@ -82,17 +82,18 @@ def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
 @swagger_auto_schema(method="get", tags=['followers'])
 @swagger_auto_schema(method="put", tags=['followers'])
 @swagger_auto_schema(method="delete", tags=['followers'])
-@authentication_classes([TokenAuth(needAuthorCheck=["DELETE"])])
+# @authentication_classes([TokenAuth(needAuthorCheck=["DELETE"])])
 @api_view(["GET", "DELETE", "PUT"])
 @parseIncomingRequest(methodToCheck=["GET", "DELETE", "PUT"], type= ClassType.AUTHOR)
 # def addFollower(request: Request, author_id, follower_id):
 def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_id):
-    #print("union request1: ", request.id)
+    print("union request1: ", (request.id).split("/")[-1])
     # print("HELLO DELETE: ", request.method) #HELLO:  c76413d1-00bc-4cb7-8ca6-282b0bfcb953 <- FOREIGN!! USE ME AS EXAMPLE!
     if request.method == "PUT":
         try:
             # print("author_id: ", author_id)
-            receiver = Author.objects.get(pk=request.id) #will always be local
+            receiver = Author.objects.get(pk=(request.id).split("/")[-1]) #will always be local
+            print("receiver: ", receiver)
             # print("follower_id1: ", follower_id.split("~")[-1])
             follow_id_split = follower_id.split("~")[-1]
             # print("TYPE OF FOLLOW_ID_SPLIT: ", type(follow_id_split))
@@ -114,7 +115,7 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
     elif request.method == "DELETE":
         
         try:
-            receiver = Author.objects.get(pk=request.id)
+            receiver = Author.objects.get(pk=(request.id).split("/")[-1])
             #author = Author.objects.get(pk=author_id)
             #follower = Author.objects.get(pk=follower_id)
             follow = Follower.objects.get(sender=follower_id, receiver=receiver)
@@ -125,7 +126,7 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
 
     elif request.method == "GET":
         try:
-            author = Author.objects.get(pk=request.id)
+            author = Author.objects.get(pk=(request.id).split("/")[-1])
             #follower = Author.objects.get(pk=follower_id)
             follow = Follower.objects.get(sender=follower_id, receiver=author)
             if follow:
