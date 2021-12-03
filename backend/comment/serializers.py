@@ -53,7 +53,6 @@ class CommentSerializer(serializers.Serializer):
         if data.isLocal:
             return AuthorSerializer(Author.objects.get(pk = data.id)).data
         else:
-        
             result = makeRequest("GET", data.longId)
  
             if 200 <=result.status_code < 300:

@@ -16,7 +16,7 @@ from backend.settings import NETLOC
 
 from nodes.models import Node
 import base64
-
+import json
 import urllib.parse as parse
 from dataclasses import dataclass
 
@@ -130,7 +130,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryR
         result = requests.request(
             method,
             fixedurl,
-            data=data,
+            data=json.dumps(data) if type(data) is dict else data,
             headers=({"Authorization": f"Basic {base64.b64encode(s).decode('utf-8')}"} if node.authRequiredOutgoing else {}),
         )
     except RequestException as e:
@@ -194,3 +194,30 @@ def checkIsLocal(fullId: str, type: ClassType = None) -> IsLocalResponse:
     )
 
     return IsLocalResponse(isLocal, type, shortId if len(items) > 1 else fullId, fullId)
+
+
+
+def returnGETRequest(url: str ) -> Response:
+    
+    
+    if url is None:
+        return Response("The requested address is not registered with this server yet.", status=404)
+
+    result = makeRequest("GET", url)
+    if 200 <= result.status_code < 300:
+        return Response(json.loads(result.content), status= 200)
+    else:
+        return Response("foreign content not found, or some error occured.")
+    
+    
+def returnPOSTRequest(url: str, data: Union[str, dict]) -> Response:
+    
+    if url is None:
+        return Response("The requested address is not registered with this server yet.", status=404)
+    
+    result = makeRequest("POST", url, data)
+    
+    if 200 <= result.status_code < 300:
+        return Response(json.loads(result.content), status= 200)
+    else:
+        return Response("foreign content not found, or some error occured.")

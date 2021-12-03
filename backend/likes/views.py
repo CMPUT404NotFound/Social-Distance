@@ -1,11 +1,11 @@
-from typing import KeysView
+from typing import Union
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import response
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+
+from rest_framework.decorators import api_view, authentication_classes
 from author.models import Author
-from author.token import TokenAuth
+from author.token import TokenAuth, NodeBasicAuth
 from comment.documentation import NoSchemaTitleInspector
 from likes.models import Like
 from likes.serializers import LikeSerializer
@@ -13,9 +13,10 @@ from likes.serializers import LikeSerializer
 from posts.models import Post
 from rest_framework.response import Response
 from rest_framework.request import Empty, Request
+from django.http import HttpRequest
 
 from .documentation import AddLike, getLikesResponse
-from utils.request import checkIsLocal
+from utils.request import checkIsLocal, parseIncomingRequest, returnGETRequest, returnPOSTRequest, ClassType, ParsedRequest
 
 # Create your views here.
 
@@ -29,16 +30,20 @@ from utils.request import checkIsLocal
     tags=["Likes"],
 )
 @api_view(["GET"])
-def getPostLikes(request, authorId, postId):
+@parseIncomingRequest(["GET"], ClassType.POST)
+def getPostLikes(request: Union[HttpRequest, ParsedRequest], authorId, postId):
 
-    try:
-        post = Post.objects.get(pk=postId)
-    except Post.DoesNotExist:
-        return Response("post does not exist", status=404)
+    if request.islocal:
+        try:
+            post = Post.objects.get(pk=request.id)
+        except Post.DoesNotExist:
+            return Response("post does not exist", status=404)
 
-    likes = Like.objects.filter(parentId=postId)
+        likes = Like.objects.filter(parentId=request.id)
 
-    return Response(LikeSerializer(likes.all(), many=True).data, status=200)
+        return Response(LikeSerializer(likes.all(), many=True).data, status=200)
+    else:
+        return returnGETRequest(request.id)
 
 
 @swagger_auto_schema(
@@ -50,16 +55,20 @@ def getPostLikes(request, authorId, postId):
     tags=["Likes"],
 )
 @api_view(["GET"])
+@parseIncomingRequest(["GET"], ClassType.COMMENT)
 def getCommentLikes(request, authorId, postId, commentId):
 
-    try:
-        comment = Post.objects.get(pk=commentId)
-    except Post.DoesNotExist:
-        return Response("comment does not exist", status=404)
+    if request.islocal:
+        try:
+            comment = Post.objects.get(pk=request.id)
+        except Post.DoesNotExist:
+            return Response("comment does not exist", status=404)
 
-    likes = Like.objects.filter(parentId=commentId)
+        likes = Like.objects.filter(parentId=request.id)
 
-    return Response(LikeSerializer(likes.all(), many=True).data, status=200)
+        return Response(LikeSerializer(likes.all(), many=True).data, status=200)
+    else:
+        return returnGETRequest(request.id)
 
 
 # todo make api endpoint for adding a like, when a local author likes a local or foreign content
@@ -92,48 +101,52 @@ def getCommentLikes(request, authorId, postId, commentId):
     operation_summary="add a record of a local author liking a local or foreign media",
     field_inspectors=[NoSchemaTitleInspector],
     tags=["Likes"],
-    responses={
-        204: "like added",
-        400: "bad format"
-    },
-    request_body= AddLike
+    responses={204: "like added", 400: "bad format"},
+    request_body=AddLike,
 )
-
-
 @api_view(["GET", "POST"])
-@authentication_classes([TokenAuth(needAuthorCheck=["POST"])])
-def getLiked(request : Request, authorId):
+@authentication_classes([TokenAuth(needAuthorCheck=["POST"]), NodeBasicAuth])
+@parseIncomingRequest(["GET"])
+def getLiked(request: Union[ParsedRequest, HttpRequest], authorId):
 
-    try:
-        author = Author.objects.get(pk=authorId)
-    except Author.DoesNotExist:
-        return Response("author does not exist", status=404)
+    if request.islocal:
+        try:
+            author = Author.objects.get(pk=authorId)
+        except Author.DoesNotExist:
+            return Response("author does not exist", status=404)
 
     if request.method == "GET":
-        likes = Like.objects.filter(author=authorId).all()
-        
+
+        if not request.islocal:
+            return returnGETRequest(request.id)
+
+        likes = Like.objects.filter(author=request.id).all()
+
         params = request.query_params
-        
+
         if "page" in params and "size" in params:
-            try: 
-                pager = Paginator(likes, int(params['size']))
-                serial = LikeSerializer(pager.page(int(params["page"]), many = True))
+            try:
+                pager = Paginator(likes, int(params["size"]))
+                serial = LikeSerializer(pager.page(int(params["page"]), many=True))
             except (ValueError, EmptyPage, PageNotAnInteger) as e:
                 return Response(str(e), status=400)
         else:
             serial = LikeSerializer(likes, many=True)
         return Response({"type": "liked", "items": serial.data}, status=200)
+
     elif request.method == "POST":
+        # parse does not handle POST oops.
+        # if not request.islocal:
+        #     return Response("POSTing likes directly to other servers user is not allowed.", status=400)
+
         data = request.data
         try:
-            target = data['target']
-            if pair := checkIsLocal(target): 
-                Like.objects.create(author = authorId,  parentId = pair[0])
+            target = data["target"]
+            if pair := checkIsLocal(target):
+                Like.objects.create(author=authorId, parentId=pair[0])
             else:
-                Like.objects.create(author = authorId,  parentId = target)
+                Like.objects.create(author=authorId, parentId=target)
             return Response(status=204)
-        
+
         except KeyError as e:
-            return Response('bad request json format', status= 400)
-
-
+            return Response("bad request json format", status=400)

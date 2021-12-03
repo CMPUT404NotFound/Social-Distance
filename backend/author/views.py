@@ -13,7 +13,6 @@ from rest_framework.decorators import (
 from rest_framework import status
 
 
-
 from .token import TokenAuth, expires_in, refreshToken, NodeBasicAuth
 
 from .models import Author
@@ -27,6 +26,7 @@ from globalSetting.models import Setting
 
 from utils.request import parseIncomingRequest, ParsedRequest, ClassType, makeRequest
 import json
+
 # Create your views here.
 
 
@@ -54,33 +54,33 @@ import json
     ],
     tags=["Author"],
 )
-
-
 @api_view(["GET", "POST"])
 @authentication_classes([TokenAuth(needAuthorCheck=["POST"]), NodeBasicAuth])
-@parseIncomingRequest(methodToCheck=["GET"], type= ClassType.AUTHOR)
+@parseIncomingRequest(methodToCheck=["GET"], type=ClassType.AUTHOR)
 def handleAuthorById(request: Union[ParsedRequest, HttpRequest], authorId):
-    
-    
+
     print(request.method, request.islocal, request.id, request.auth, request.user)
     if request.method == "GET":
         if request.islocal:
-            try: 
+            try:
                 author = Author.objects.get(pk=request.id)
-                
+
                 s = AuthorSerializer(author)
                 return Response(s.data, status=200)
 
             except Author.DoesNotExist:
-            
+
                 return Response(status=status.HTTP_404_NOT_FOUND)
         else:
+            if request.id is None:
+                return Response("The requested address is not registered with this server yet.", status=404)
+            
             result = makeRequest("GET", request.id)
-            if 200 <= result.status_code < 300:# TIL chain comparison exist in python
+            if 200 <= result.status_code < 300:  # TIL chain comparison exist in python
                 return Response(json.loads(result.content), status=200)
             else:
-                return Response("foreign content not found, or some error occured while fetching it",status=404)
-                
+                return Response("foreign content not found, or some error occured while fetching it", status=404)
+
     elif request.method == "POST":
         """
         Author Updates, auth needed
@@ -131,16 +131,10 @@ def getAllAuthors(request: Request):
         params: dict = request.query_params
 
         authors = Author.objects.all()
-        if (
-            "page" in params and "size" in params
-        ):  # make sure param has both page and size in order to paginate
+        if "page" in params and "size" in params:  # make sure param has both page and size in order to paginate
             try:
-                paginator = Paginator(
-                    authors, int(params["size"]), allow_empty_first_page=True
-                )  # create paginator with size
-                s = AuthorSerializer(
-                    paginator.page(int(params["page"])), many=True
-                )  # get requested page and serialize
+                paginator = Paginator(authors, int(params["size"]), allow_empty_first_page=True)  # create paginator with size
+                s = AuthorSerializer(paginator.page(int(params["page"])), many=True)  # get requested page and serialize
             except (ValueError, EmptyPage, PageNotAnInteger) as e:
                 return Response(str(e), status=status.HTTP_404_NOT_FOUND)
         else:
@@ -148,7 +142,7 @@ def getAllAuthors(request: Request):
         return Response(s.data)
 
 
-def returnToken(user : Author):
+def returnToken(user: Author):
     token, created = Token.objects.get_or_create(user=user)
 
     if not created:
@@ -157,9 +151,11 @@ def returnToken(user : Author):
     user.last_login = timezone.now()
     user.save()
 
-    return {"token": token.key,
-            "expires_in": expires_in(token),
-            "author": AuthorSerializer(user).data, }
+    return {
+        "token": token.key,
+        "expires_in": expires_in(token),
+        "author": AuthorSerializer(user).data,
+    }
 
 
 @swagger_auto_schema(
@@ -180,22 +176,22 @@ def returnToken(user : Author):
 def signUp(request: Request):
     data = request.data
     try:
-        
-        setting :Setting = Setting.settings()
-        
+
+        setting: Setting = Setting.settings()
+
         user = Author.objects.create_user(
             data["userName"],
             data.get("displayName", data["userName"]),
             data.get("github", ""),
             data.get("profileImage", ""),
             data["password"],
-            is_active=not setting.newUserRequireActivation
+            is_active=not setting.newUserRequireActivation,
         )
         if setting.newUserRequireActivation:
             return Response(status=status.HTTP_204_NO_CONTENT)
-        
-        #successful account creation, return login token
-        
+
+        # successful account creation, return login token
+
         return Response(returnToken(user), status=status.HTTP_201_CREATED)
     except (ValueError, AttributeError) as error:
         return Response(str(error), status=status.HTTP_400_BAD_REQUEST)
@@ -207,12 +203,8 @@ def signUp(request: Request):
     method="post",
     operation_summary="login with username and password, returns a token for future authentications",
     responses={
-        200: openapi.Response(
-            "Successful login, with author info and token", LoginSuccessSerializer
-        ),
-        
+        200: openapi.Response("Successful login, with author info and token", LoginSuccessSerializer),
         400: "bad login request format",
-        
         401: "Invalid login credentials",
         403: "Account not yet activated by admin",
     },
@@ -242,7 +234,7 @@ def login(request: Request) -> Response:
     if not user.is_active:
         return Response({"error": "this account has not yet been activated by the admin"}, status=status.HTTP_403_FORBIDDEN)
 
-    return Response(returnToken(user), status= 200)
+    return Response(returnToken(user), status=200)
 
 
 # todo make logout api
