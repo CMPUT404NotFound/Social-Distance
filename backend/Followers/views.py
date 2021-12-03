@@ -105,14 +105,48 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
 
         elif isRequestLocal == False:
             # checkIsLocal(str(request))
+
             checkIsLocalResponse = checkIsLocal(str(request))
             #print("FOREIGN: ", (checkIsLocalResponse.id).replace("~", "/"), "--DONE--") #404.herokuapp.com~api~author~3190556a-dea8-47d1-a3b5-7c8a3e5c2f66/
             replace_with_slash = (checkIsLocalResponse.id).replace("~", "/")
+            replace_with_slash_local = follower_id.replace("~", "/")
             full_foreign_id = "https://" + replace_with_slash + "/"
-            #print("full_foreign_id: ", full_foreign_id)
-            result = makeRequest("GET", full_foreign_id) #json.loads(result.content)
-            print("GET REQUEST: ", returnGETRequest(full_foreign_id), " ", type(result))
-            #Have to make POST request to foreign inbox here
+            full_local_id = "https://" + replace_with_slash_local 
+            local_author = Author.objects.get(pk=follower_id.split("~")[-1])
+            local_author_serialize = AuthorSerializer(local_author).data
+            host = local_author_serialize["host"]
+
+            foreign_object = makeRequest("GET", full_foreign_id)
+            json_foreign_object = json.loads(foreign_object.content)
+            data = {"type":"Follow","summary":"","actor":{
+                        "type": local_author_serialize["type"],
+                        "id": local_author_serialize["id"],
+                        "displayName": local_author_serialize["displayName"],
+                        "host": local_author_serialize["host"],
+                        "url": local_author_serialize["url"],
+                        "github": local_author_serialize["github"],
+                        "profileImage": local_author_serialize["profileImage"]
+                    },"object":{"type":"author",
+                                "id":json_foreign_object.get("id"),
+                                "url":json_foreign_object.get("url"),
+                                "host":json_foreign_object.get("host"),
+                                "displayName":json_foreign_object.get("displayName"),
+                                "github":json_foreign_object.get("github"),
+                                "profileImage":json_foreign_object.get("profileImage")}}
+            result = makeRequest("POST", full_foreign_id + "inbox/", data)
+            print("RESULT 1: ", result)
+
+            
+
+            #-----MAKING REQUEST TO FOREIGN SERVER-----
+            # #print("full_foreign_id: ", full_foreign_id)
+            # result = makeRequest("GET", full_foreign_id) #json.loads(result.content)
+            # print("GET REQUEST: ", json.loads(result.content), " ", type(result))
+            # #Have to make POST request to foreign inbox here
+            # print("BABA: ", Author.objects.get(pk=follower_id.split("~")[-1])) #follower id is local
+            # local_author__id = Author.objects.get(pk=follower_id.split("~")[-1])
+            # #Following.objects.create(author=local_author__id, following=json.loads(result.content))
+            
 
             return Response(status=status.HTTP_404_NOT_FOUND)
 

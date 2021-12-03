@@ -31,6 +31,7 @@ class Following(models.Model):
     
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     following = models.CharField(max_length=200)
+    #following = models.JSONField()
     
     
 def findFriends(authorId: Union[str, Author]) -> List[str]:
