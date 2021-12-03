@@ -8,8 +8,8 @@ from .models import Post
 
 
 class PostAdmin(ModelAdmin):
-    fields = ["author_id", "title", "visibility", "content","description","contentType"]
-    list_display = ["post_id", "title", "visibility","content","description","contentType"]
+    fields = ["author_id", "title", "visibility", "content","description","contentType","unlisted"]
+    list_display = ["post_id", "title", "visibility","content","description","contentType","unlisted"]
 
 
 admin.site.register(Post, PostAdmin)

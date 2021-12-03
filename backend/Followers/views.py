@@ -36,7 +36,7 @@ from typing import Union
 @api_view(["GET"])
 @parseIncomingRequest(methodToCheck=["GET"], type= ClassType.AUTHOR)
 # def getAllFollowers(request: Request, id):
-def getAllFollowers(request: Union[ParsedRequest, HttpRequest], id):
+def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
     # print("union request: ", request)
     if request.method == "GET":
         try:
