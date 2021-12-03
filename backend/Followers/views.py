@@ -35,16 +35,11 @@ from typing import Union
 @swagger_auto_schema(method="get", tags=['followers'])
 @api_view(["GET"])
 @parseIncomingRequest(methodToCheck=["GET"], type= ClassType.AUTHOR)
-# def getAllFollowers(request: Request, id):
 def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
-    # print("union request: ", request)
     if request.method == "GET":
         try:
-            #author = Author.objects.get(pk=id)
-            #author = Author.objects.filter(sender__receiver=id)
             results = []
-            # followers = Follower.objects.filter(receiver = id)
-            receiver_id = request.id
+            receiver_id = (request.id).split("/")[-1]
             follower_object = Follower.objects.filter(receiver = receiver_id)
             for follower in follower_object:
                 print("follower.sender: ", follower.sender)
@@ -91,13 +86,9 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
     # print("HELLO DELETE: ", request.method) #HELLO:  c76413d1-00bc-4cb7-8ca6-282b0bfcb953 <- FOREIGN!! USE ME AS EXAMPLE!
     if request.method == "PUT":
         try:
-            # print("author_id: ", author_id)
             receiver = Author.objects.get(pk=(request.id).split("/")[-1]) #will always be local
             print("receiver: ", receiver)
-            # print("follower_id1: ", follower_id.split("~")[-1])
             follow_id_split = follower_id.split("~")[-1]
-            # print("TYPE OF FOLLOW_ID_SPLIT: ", type(follow_id_split))
-            #isLocal_var = checkIsLocal(str(follow_id_split), ClassType.author)
             try:
                 follower_exist = Follower.objects.get(
                     sender=follower_id, receiver=receiver)
@@ -106,7 +97,6 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
             except:
                 pass
             follow = Follower.objects.create(sender=follower_id, receiver=receiver)
-            # author.sender.add(follower).
             follow.save()
             return Response(status=status.HTTP_201_CREATED)
         except Author.DoesNotExist:
@@ -115,9 +105,7 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
     elif request.method == "DELETE":
         
         try:
-            receiver = Author.objects.get(pk=(request.id).split("/")[-1])
-            #author = Author.objects.get(pk=author_id)
-            #follower = Author.objects.get(pk=follower_id)
+            receiver = Author.objects.get(pk=(request.id).split("/")[-1]) #will always be local
             follow = Follower.objects.get(sender=follower_id, receiver=receiver)
             follow.delete()
             return Response(status=status.HTTP_200_OK)
@@ -127,7 +115,6 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
     elif request.method == "GET":
         try:
             author = Author.objects.get(pk=(request.id).split("/")[-1])
-            #follower = Author.objects.get(pk=follower_id)
             follow = Follower.objects.get(sender=follower_id, receiver=author)
             if follow:
                 return Response(status=status.HTTP_200_OK)
