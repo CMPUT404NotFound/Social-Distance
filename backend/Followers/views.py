@@ -26,7 +26,7 @@ from .models import *
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
-from utils.request import checkIsLocal, ClassType, makeRequest, parseIncomingRequest, ParsedRequest, HttpRequest
+from utils.request import checkIsLocal, ClassType, makeRequest, parseIncomingRequest, ParsedRequest, HttpRequest, returnGETRequest
 import json
 import requests
 from typing import Union
@@ -40,6 +40,7 @@ def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
         try:
             results = []
             receiver_id = (request.id).split("/")[-1]
+            print("receiver_id local?: ", receiver_id)
             follower_object = Follower.objects.filter(receiver = receiver_id)
             for follower in follower_object:
                 print("follower.sender: ", follower.sender)
@@ -60,16 +61,15 @@ def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
                         results.append(json.loads(response.content))
 
                 else:
-                    results.append(AuthorSerializer(object).data)
+                    #print("NEW OBJ: ", Author.objects.get(pk=just_id))
+                    new_obj_author_local = Author.objects.get(pk=just_id)
+                    results.append(AuthorSerializer(new_obj_author_local).data)
             
             s = {
                 'type': "followers",
                 'items': results
             }
             return Response(s)
-            # s = FollowerSerializer(
-            #     author, context={'request': request}, many=True)
-            # return Response(s.data)
         except Author.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -82,25 +82,40 @@ def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
 @parseIncomingRequest(methodToCheck=["GET", "DELETE", "PUT"], type= ClassType.AUTHOR)
 # def addFollower(request: Request, author_id, follower_id):
 def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_id):
-    print("union request1: ", (request.id).split("/")[-1])
-    # print("HELLO DELETE: ", request.method) #HELLO:  c76413d1-00bc-4cb7-8ca6-282b0bfcb953 <- FOREIGN!! USE ME AS EXAMPLE!
+    isRequestLocal = request.islocal
+    # print("request.islocal: ", request.islocal) #HELLO:  c76413d1-00bc-4cb7-8ca6-282b0bfcb953 <- FOREIGN!! USE ME AS EXAMPLE!
     if request.method == "PUT":
-        try:
-            receiver = Author.objects.get(pk=(request.id).split("/")[-1]) #will always be local
-            print("receiver: ", receiver)
-            follow_id_split = follower_id.split("~")[-1]
+        #PUT author/{full_id_to_follow}/follower/{our_id_full}, is full_id_to_follow local? if yes do below
+        if isRequestLocal == True:
             try:
-                follower_exist = Follower.objects.get(
-                    sender=follower_id, receiver=receiver)
-                if follower_exist:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
-            except:
-                pass
-            follow = Follower.objects.create(sender=follower_id, receiver=receiver)
-            follow.save()
-            return Response(status=status.HTTP_201_CREATED)
-        except Author.DoesNotExist:
+                receiver = Author.objects.get(pk=(request.id).split("/")[-1])
+                follow_id_split = follower_id.split("~")[-1]
+                try:
+                    follower_exist = Follower.objects.get(
+                        sender=follower_id, receiver=receiver)
+                    if follower_exist:
+                        return Response(status=status.HTTP_400_BAD_REQUEST)
+                except:
+                    pass
+                follow = Follower.objects.create(sender=follower_id, receiver=receiver)
+                follow.save()
+                return Response(status=status.HTTP_201_CREATED)
+            except Author.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+        elif isRequestLocal == False:
+            # checkIsLocal(str(request))
+            checkIsLocalResponse = checkIsLocal(str(request))
+            #print("FOREIGN: ", (checkIsLocalResponse.id).replace("~", "/"), "--DONE--") #404.herokuapp.com~api~author~3190556a-dea8-47d1-a3b5-7c8a3e5c2f66/
+            replace_with_slash = (checkIsLocalResponse.id).replace("~", "/")
+            full_foreign_id = "https://" + replace_with_slash + "/"
+            #print("full_foreign_id: ", full_foreign_id)
+            result = makeRequest("GET", full_foreign_id) #json.loads(result.content)
+            print("GET REQUEST: ", returnGETRequest(full_foreign_id), " ", type(result))
+            #Have to make POST request to foreign inbox here
+
             return Response(status=status.HTTP_404_NOT_FOUND)
+
 
     elif request.method == "DELETE":
         
@@ -115,6 +130,7 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
     elif request.method == "GET":
         try:
             author = Author.objects.get(pk=(request.id).split("/")[-1])
+            print("author local?: ", author)
             follow = Follower.objects.get(sender=follower_id, receiver=author)
             if follow:
                 return Response(status=status.HTTP_200_OK)
