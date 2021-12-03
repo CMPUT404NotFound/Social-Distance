@@ -30,11 +30,14 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @swagger_auto_schema(method="get", tags=['followers'])
 @api_view(["GET"])
-def getAllFollowers(request: Request, id):
+def getAllFollowers(request: Request, author_id):
+    
+    print(findFriends(author_id))
+    
     if request.method == "GET":
         try:
             #author = Author.objects.get(pk=id)
-            author = Author.objects.filter(sender__receiver=id)
+            author = Author.objects.filter(sender__receiver=author_id)
             s = FollowerSerializer(
                 author, context={'request': request}, many=True)
             return Response(s.data)
