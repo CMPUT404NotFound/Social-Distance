@@ -22,7 +22,7 @@ from .models import Post
 from .serializers import PostsSerializer
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from rest_framework.authtoken.models import Token
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from author.token import expires_in, refreshToken, TokenAuth
 
 @swagger_auto_schema(method="get", tags=['Posts'])
@@ -59,7 +59,6 @@ def managePost(request: Request, author_id, post_id):
         s = PostsSerializer(instance=post, data=request.data)
 
         if s.is_valid():
-            
             # post.visibility = s.visibility
             # post.title = s.title
             # post.description = s.description
@@ -70,7 +69,6 @@ def managePost(request: Request, author_id, post_id):
             # post.published = s.published
             # post.count = s.count
             # post.categories = s.categories
-            
             post.save()
             
             return Response("Post updated",s.data, status=status.HTTP_200_OK)
@@ -107,6 +105,7 @@ def managePost(request: Request, author_id, post_id):
                       request_body=PostsSerializer
                      )
 @api_view(["GET","POST"])
+@authentication_classes([TokenAuth(needAuthorCheck=["POST"])])
 def getAllPosts(request: Request, author_id):
     # if request.method == "GET":
     #     try:
@@ -122,8 +121,14 @@ def getAllPosts(request: Request, author_id):
         try:
 
             params: dict = request.query_params
-
-            post = Post.objects.filter(author_id=author_id).filter(visibility = "PU").exclude(unlisted = True)
+            if TokenAuthentication:
+                if request.user.id == author_id:
+                    post = Post.objects.filter(author_id=author_id)
+                else:
+                    post = Post.objects.filter(author_id=author_id).filter(visibility = "PU").exclude(unlisted = True)            
+            else:
+                post = Post.objects.filter(author_id=author_id).filter(visibility = "PU").exclude(unlisted = True)
+            
             if (
                 "page" in params and "size" in params
             ):  # make sure param has both page and size in order to paginate
