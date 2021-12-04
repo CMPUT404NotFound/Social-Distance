@@ -61,6 +61,7 @@ def managePost(request: Request, author_id, post_id):
         s = PostsSerializer(instance=post, data=request.data)
 
         if s.is_valid():
+            # This is not working with POST
             # post.visibility = s.visibility
             # post.title = s.title
             # post.description = s.description
