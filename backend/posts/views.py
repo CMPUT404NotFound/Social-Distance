@@ -32,7 +32,7 @@ from django.http import HttpResponse
 @parseIncomingRequest(["GET"], ClassType.POST)
 def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
 
-    if request.method != "GET" or request.islocal:
+    if request.method != "GET" or request.islocal: #front end wont need to call post, delete, put to other servers.
         try:
             author = Author.objects.get(pk=author_id)
         except Author.DoesNotExist:
@@ -96,7 +96,8 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
 )
 @api_view(["GET", "POST"])
 @authentication_classes([TokenAuth(needAuthorCheck=["POST"])])
-def getAllPosts(request: Request, author_id):
+@parseIncomingRequest(["GET"], ClassType.AUTHOR)
+def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
     # if request.method == "GET":
     #     try:
     #         #pagination
@@ -108,33 +109,36 @@ def getAllPosts(request: Request, author_id):
     #         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        try:
-            friend_id_string = findFriends(author_id)
-            usingTokenAuth = (
-                type(request.user) is Author
-            )  # token auth will return a Author in this case(by pass entirely is not true), and nodebasicauth will return 'True' on success.
-            is_friend = usingTokenAuth and request.user.id in friend_id_string
+        if request.islocal:
+            try:
+                friend_id_string = findFriends(author_id)
+                usingTokenAuth = (
+                    type(request.user) is Author
+                )  # token auth will return a Author in this case(by pass entirely is not true), and nodebasicauth will return 'True' on success.
+                is_friend = usingTokenAuth and request.islocal and request.user.id in friend_id_string #regardless if friend or not, 
 
-            params: dict = request.query_params
-            if usingTokenAuth:
-                if request.user.id == author_id or is_friend:
-                    post = Post.objects.filter(author_id=author_id)
+                params: dict = request.query_params
+                if usingTokenAuth:
+                    if request.user.id == author_id or is_friend:
+                        post = Post.objects.filter(author_id=author_id)
+                    else:
+                        post = Post.objects.filter(author_id=author_id).filter(visibility="PU").exclude(unlisted=True)
                 else:
                     post = Post.objects.filter(author_id=author_id).filter(visibility="PU").exclude(unlisted=True)
-            else:
-                post = Post.objects.filter(author_id=author_id).filter(visibility="PU").exclude(unlisted=True)
 
-            if "page" in params and "size" in params:  # make sure param has both page and size in order to paginate
-                try:
-                    paginator = Paginator(post, int(params["size"]), allow_empty_first_page=True)  # create paginator with size
-                    s = PostsSerializer(paginator.page(int(params["page"])), many=True)  # get requested page and serialize
-                except (ValueError, EmptyPage, PageNotAnInteger) as e:
-                    return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
-            else:
-                s = PostsSerializer(post, context={"request": request}, many=True)
-            return Response(s.data, status=status.HTTP_200_OK)
-        except Post.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+                if "page" in params and "size" in params:  # make sure param has both page and size in order to paginate
+                    try:
+                        paginator = Paginator(post, int(params["size"]), allow_empty_first_page=True)  # create paginator with size
+                        s = PostsSerializer(paginator.page(int(params["page"])), many=True)  # get requested page and serialize
+                    except (ValueError, EmptyPage, PageNotAnInteger) as e:
+                        return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    s = PostsSerializer(post, context={"request": request}, many=True)
+                return Response(s.data, status=status.HTTP_200_OK)
+            except Post.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            return returnGETRequest(request.id)
     elif request.method == "POST":
 
         try:
