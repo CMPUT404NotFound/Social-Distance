@@ -134,7 +134,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryR
             method,
             fixedurl,
             data=json.dumps(data) if type(data) is dict else data,
-            headers=({"Authorization": f"Basic {base64.b64encode(s).decode('utf-8')}", "Accept": "*/*"}),
+            headers=({"Authorization": f"Basic {base64.b64encode(s).decode('utf-8')}", "Accept": "*/*", "Content-Type":"application/json"}),
         )
     except RequestException as e:
         print("execption occured in utils.request", str(e))
@@ -193,11 +193,11 @@ def checkIsLocal(fullId: str, type: ClassType = None) -> IsLocalResponse:
     # if has isolate id of the item, and know the type of the item, then just lookup in the respective table to chech for existance.
     isLocal = (
         {ClassType.AUTHOR: Author, ClassType.POST: Post, ClassType.COMMENT: Comment}[type]
-        .objects.filter(pk=(shortId if len(items) > 2 else fullId))
+        .objects.filter(pk=(fullId))
         .exists()
     )
 
-    return IsLocalResponse(isLocal, type, shortId if len(items) > 1 else fullId, fullId)
+    return IsLocalResponse(isLocal or len(items) < 2, type, shortId if len(items) > 1 else fullId, fullId)
 
 
 

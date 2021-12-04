@@ -1,27 +1,25 @@
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.response import Response
+import json
 
 from author.models import Author
-from Followers.models import Follow_Request
-from Followers.models import Follower
 from author.token import TokenAuth
-from inbox.documentation import InboxItemSerializer
 from comment.documentation import NoSchemaTitleInspector
 from comment.models import Comment
-from posts.models import Post
-from inbox.models import InboxItem
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from drf_yasg.utils import swagger_auto_schema
+from Followers.models import Follow_Request, Follower
+from Followers.serializers import FollowRequestSerializer
 from likes.models import Like
-
-
-
-from Followers.serializers import FollowerSerializer
 from likes.serializers import LikeSerializer
+from posts.models import Post
 from posts.serializers import PostsSerializer
+from rest_framework.decorators import api_view, authentication_classes
+from rest_framework.response import Response
 from utils.request import makeRequest
 
-import json
+from inbox.documentation import InboxItemSerializer
+from inbox.models import InboxItem
+
+from backend.settings import SITE_ADDRESS
 # Create your views here.
 
 
@@ -80,6 +78,7 @@ def handleFollows(request, authorId: str):
         except Author.DoesNotExist:
             return Response("Author does not exist", status=404)
 
+
         if Author.objects.filter(authorId).exist():  # need varify the given author to follow exist in local db
             request = Follow_Request.objects.create(requestor=follower, requestee=authorId)
             InboxItem.objects.create(author=author, type="F", contentId=request.pk)
@@ -135,13 +134,13 @@ def getInboxItems(request, authorId):
         return Response("author not found", status=404)
 
     items = InboxItem.objects.filter(author=author)
-    item = 0
+
 
     itemsOutput = filter(
         lambda x: x != {},
         [
             (
-                {"F": FollowerSerializer, "P": PostsSerializer, "L": LikeSerializer}[item.type](
+                {"F": FollowRequestSerializer, "P": PostsSerializer, "L": LikeSerializer}[item.type](
                     {"L": Like.objects.get, "P": Post.objects.get, "F": Follower.objects.get,}[
                         item.type
                     ](**{"pk": item.contentId})
@@ -166,7 +165,7 @@ def getInboxItems(request, authorId):
 
     output = {
         "type": "inbox",
-        "author": f"placeholder/api/author/{authorId}",
+        "author": f"{SITE_ADDRESS}author/{authorId}",
         "items": [*itemsOutput],
     }
 
