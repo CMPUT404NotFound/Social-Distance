@@ -1,7 +1,7 @@
 import json
 
 from author.models import Author
-from author.token import TokenAuth
+from author.token import TokenAuth, NodeBasicAuth
 from comment.documentation import NoSchemaTitleInspector
 from comment.models import Comment
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -198,7 +198,7 @@ def getInboxItems(request, authorId):
     tags=["Inbox"],
 )
 @api_view(["POST", "DELETE", "GET"])
-@authentication_classes([TokenAuth(needAuthorCheck=["GET", "DELETE"], bypassEntirely=["POST"])])
+@authentication_classes([TokenAuth(needAuthorCheck=["GET", "DELETE"]), NodeBasicAuth])
 def handleInbox(request, authorId: str):
     print(request.method)
     if request.method == "POST":

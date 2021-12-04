@@ -2,7 +2,7 @@ import json
 from typing import Union
 
 from author.models import Author
-from author.token import TokenAuth
+from author.token import TokenAuth, NodeBasicAuth
 from backend.settings import SITE_ADDRESS
 from django.core.exceptions import ValidationError
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -159,7 +159,7 @@ def handlePOST(request: Union[HttpRequest, ParsedRequest], authorId: str = "", p
     tags=["comments"],
 )
 @api_view(["GET", "POST"])
-@authentication_classes([TokenAuth(needAuthorCheck=["POST"])])
+@authentication_classes([TokenAuth(needAuthorCheck=["POST"])], NodeBasicAuth)
 @parseIncomingRequest(["GET", "POST"], ClassType.POST)
 def handleComments(request: Union[HttpRequest, ParsedRequest], authorId: str = "", postId: str = ""):
 
