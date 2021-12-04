@@ -187,7 +187,7 @@ def findFriends(author : Author):
         id : str= follower["sender"]
         if id.startswith("http"):
             #if the id is a link, it's foreign author, make request
-            needFetch.append(id)
+            needFetch.append(f"{id if id.endswith('/') else (id + '/')  }followers/{author.id}/")
         else:
             localids.append(id)
     
@@ -214,3 +214,16 @@ def findFriends(author : Author):
     return output
 
 
+
+@api_view(["GET"])
+def friendsView(request: Union[HttpRequest, Request], authorId:str):
+    
+    
+    try:
+        author = Author.objects.get(pk=authorId)
+    except Author.DoesNotExist:
+        return Response("author requested does not exists", status=404)
+    
+    ids = findFriends(author)
+    
+    
