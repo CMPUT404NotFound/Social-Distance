@@ -123,7 +123,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryR
     node: Node = Node.objects.get(netloc=parsed.netloc)
 
     if not node.allowOutgoing:
-        return QueryResponse("error, outgoing request to this node is blocked by admin",) 
+        return QueryResponse("error, outgoing request to this node is blocked by admin", 400) 
     
 
     fixedurl = f"{node.url}{url[url.find('author'):]}"
