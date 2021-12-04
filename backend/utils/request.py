@@ -123,7 +123,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryR
     node: Node = Node.objects.get(netloc=parsed.netloc)
 
     if not node.allowOutgoing:
-        return QueryResponse("error, outgoing request to this node is blocked by admin", 400) 
+        return QueryResponse("error, outgoing request to this node is blocked by admin",) 
     
 
     fixedurl = f"{node.url}{url[url.find('author'):]}"
@@ -134,7 +134,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryR
             method,
             fixedurl,
             data=json.dumps(data) if type(data) is dict else data,
-            headers=({"Authorization": f"Basic {base64.b64encode(s).decode('utf-8')}"}),
+            headers=({"Authorization": f"Basic {base64.b64encode(s).decode('utf-8')}", "Accept": "*/*"}),
         )
     except RequestException as e:
         print("execption occured in utils.request", str(e))
