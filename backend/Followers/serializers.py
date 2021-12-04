@@ -4,7 +4,7 @@ from author.models import *
 from author.serializers import AuthorSerializer
 from Followers.models import Follow_Request
 from backend.settings import SITE_ADDRESS
-from backend.utils.request import makeRequest
+from utils.request import makeRequest
 
 from utils.request import checkIsLocal
 
