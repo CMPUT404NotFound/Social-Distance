@@ -6,7 +6,7 @@ from django.utils import timezone
 
 # Create your models here.
 
-visibility_choice = {("PU", "PUBLIC"), ("PR", "PRIVATE")}
+visibility_choice = [("PU", "PUBLIC"), ("PR", "PRIVATE")]
 content_choice = {("markdown","text/markdown"),("plain","text/plain"),("app","application/base64"),("png","image/png;base64"),("jpeg","image/jpeg;base64")}
 
 

@@ -3,7 +3,7 @@ from typing import Union
 
 from django.http.request import HttpRequest
 from author.models import Author
-from author.token import TokenAuth
+from author.token import TokenAuth, NodeBasicAuth
 from comment.documentation import NoSchemaTitleInspector
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from drf_yasg.utils import swagger_auto_schema
@@ -27,7 +27,7 @@ from django.http import HttpResponse
     tags=["Posts"],
 )
 @swagger_auto_schema(method="put", tags=["Posts"], field_inspectors=[NoSchemaTitleInspector], request_body=PostsSerializer)
-@authentication_classes([TokenAuth(needAuthorCheck=["POST", "PUT", "DELETE"])])
+@authentication_classes([TokenAuth(needAuthorCheck=["POST", "PUT", "DELETE"]), NodeBasicAuth])
 @api_view(["GET", "POST", "DELETE", "PUT"])
 @parseIncomingRequest(["GET"], ClassType.POST)
 def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
@@ -95,7 +95,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
     request_body=PostsSerializer,
 )
 @api_view(["GET", "POST"])
-@authentication_classes([TokenAuth(needAuthorCheck=["POST"])])
+@authentication_classes([TokenAuth(needAuthorCheck=["POST"]), NodeBasicAuth])
 @parseIncomingRequest(["GET"], ClassType.AUTHOR)
 def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
     # if request.method == "GET":
