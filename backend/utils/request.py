@@ -229,7 +229,7 @@ def returnPOSTRequest(url: str, data: Union[str, dict]) -> Response:
     
 
 
-def makeMultiplieGETs(urls: List[str], ) -> List[Tuple[str, QueryResponse]]:
+def makeMultipleGETs(urls: List[str], ) -> List[Tuple[str, QueryResponse]]:
     
     output = []
     threads = []

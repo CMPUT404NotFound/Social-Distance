@@ -22,7 +22,7 @@ from .models import *
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
-from utils.request import checkIsLocal, ClassType, makeRequest, parseIncomingRequest, ParsedRequest, HttpRequest, returnGETRequest, makeMultiplieGETs
+from utils.request import checkIsLocal, ClassType, makeRequest, parseIncomingRequest, ParsedRequest, HttpRequest, returnGETRequest, makeMultipleGETs
 import json
 import requests
 from typing import Union
@@ -199,7 +199,7 @@ def findFriends(author : Author):
         except:
             pass
     
-    responses = makeMultiplieGETs(needFetch)
+    responses = makeMultipleGETs(needFetch)
     
     for response in responses:
         obj = response[1]
@@ -209,7 +209,7 @@ def findFriends(author : Author):
             continue
         #neither of the know falsy reponses are gotten, this link is prob a follower
         
-        output.append(response[0])
+        output.append(response[0][:response[0].find("follower")])
     
     return output
 
@@ -224,6 +224,27 @@ def friendsView(request: Union[HttpRequest, Request], authorId:str):
     except Author.DoesNotExist:
         return Response("author requested does not exists", status=404)
     
-    ids = findFriends(author)
+    ids: List = findFriends(author)
+    print(ids)
+
     
+    output = []
+    needFetch = []
+    for id in ids:
+        if id.startswith("http"):
+            needFetch.append(id)
+        else:
+            try:
+                author = Author.objects.get(pk = id)
+                output.append(AuthorSerializer(author).data)
+            except:
+                output.append({"error": f"author with id {id} not found"})
+            
+    responses = makeMultipleGETs(needFetch)
     
+    for response in responses:
+        obj = response[1]
+        if 200 <= obj.status_code < 400:
+            output.append(json.loads(obj.content))
+    
+    return Response(output, status=200)
