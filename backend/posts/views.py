@@ -16,7 +16,8 @@ from rest_framework.permissions import (
 from author.models import Author
 from author.serializers import AuthorSerializer
 from comment.documentation import NoSchemaTitleInspector
-from Followers.models import findFriends
+# from Followers.models import findFriends
+from Followers.views import findFriends
 
 from .models import Post
 
@@ -122,10 +123,13 @@ def getAllPosts(request: Request, author_id):
       
     if request.method == "GET":
         try:
-            friend_id_string = findFriends(author_id)
+            # friend_id_string = findFriends(author_id)
+            friend_id_string = findFriends(Author.objects.get(id = author_id))
+            print(friend_id_string)
             is_friend = False
             if request.user.id in friend_id_string:
                 is_friend = True
+                print("I am friend Dude pssssst")
 
             params: dict = request.query_params
             if TokenAuthentication:
