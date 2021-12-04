@@ -70,8 +70,7 @@ class AuthorAdmin(UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    # im not sure what the following does
-    # help
+
     list_display = ("displayName", "github", "profileImage", "is_admin", "is_active")
     list_filter = ("is_admin","is_active")
     # fields for when modifying an existing user
