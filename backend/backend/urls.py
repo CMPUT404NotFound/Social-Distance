@@ -47,35 +47,35 @@ from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path("", RedirectView.as_view(url = 'https://project-api-404.herokuapp.com/api/', permanent = False)),
-    path("admin/", admin.site.urls),
-    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-~.]+)/$", authorViews.handleAuthorById),
+    re_path(r"^admin/?", admin.site.urls),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-~.]+)/?$", authorViews.handleAuthorById),
     
-    re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/posts/$", postsViews.getAllPosts),
-    re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-]+)/posts/(?P<post_id>[A-Za-z0-9-~.]+)/$", postsViews.managePost),
-    path("api/authors/", authorViews.getAllAuthors),
-    path("api/login/", authorViews.login),
-    path("api/signup/", authorViews.signUp),
+    re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/posts/?$", postsViews.getAllPosts),
+    re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-]+)/posts/(?P<post_id>[A-Za-z0-9-~.]+)/?$", postsViews.managePost),
+    re_path(r"^api/authors/?$", authorViews.getAllAuthors),
+    re_path(r"^api/login/?$", authorViews.login),
+    re_path(r"^api/signup/?$", authorViews.signUp),
     
-    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/post/(?P<postId>[A-Za-z0-9-~.]+)/comments/$", commentViews.handleComments),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/post/(?P<postId>[A-Za-z0-9-~.]+)/comments/?$", commentViews.handleComments),
     
-    path("api/author/(<slug:authorId>)/friends/", followerViews.friendsView),
-    re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/followers/$", followerViews.getAllFollowers),
-    re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/followers/(?P<follower_id>[A-Za-z0-9-~.]+)/$", followerViews.addFollower),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/friends/?$", followerViews.friendsView),
+    re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/followers/?$", followerViews.getAllFollowers),
+    re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/followers/(?P<follower_id>[A-Za-z0-9-~.]+)/?$", followerViews.addFollower),
     
-    path("api/author/<slug:authorId>/inbox/", inboxViews.handleInbox),
-    re_path(r'^api/author/(?P<authorId>[A-Za-z0-9-~.]+)/liked/$', likeviews.getLiked ),
-    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.])/likes/$", likeviews.getPostLikes),
-    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.])/comments/(?P<commentId>[A-Za-z0-9-~.])/likes/$", likeviews.getCommentLikes),
+    re_path(r"^api/author/<(?P<authorId>[A-Za-z0-9-~.]+)/inbox/?$", inboxViews.handleInbox),
+    re_path(r'^api/author/(?P<authorId>[A-Za-z0-9-~.]+)/liked/?$', likeviews.getLiked ),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.])/likes/?$", likeviews.getPostLikes),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.])/comments/(?P<commentId>[A-Za-z0-9-~.])/likes/?$", likeviews.getCommentLikes),
     
-    path("api/nodes/", nodeViews.getNodes),
+    re_path(r"^api/nodes/?$", nodeViews.getNodes),
 
     #api paths
-    path(
-        "api/",
+    re_path(
+        r"^api/?",
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
-    path(
-        "api/redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
-    ),
+    # path(
+    #     "api/redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
+    # ),
 ]

@@ -101,10 +101,10 @@ class QueryResponse:
 
 def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryResponse:
 
-    cacheKey = str((method, url))
+    cacheKey = f"{method}_{url}"
 
-    # if cacheKey in cache:  # if the request has recently been gotten, just return the cached version
-    #     return cache.get(cacheKey)
+    if cacheKey in cache:  # if the request has recently been gotten, just return the cached version
+        return cache.get(cacheKey)
 
     parsed = urlparse(url)
     if not parsed.scheme or (parsed.scheme != "http" and parsed.scheme != "https"):
@@ -137,9 +137,8 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryR
 
     response = QueryResponse(result.content, result.status_code)
 
-    if result.status_code == 200:
-        print("cache doesn't work")
-        # cache.set(cacheKey, response)
+    if 200<=result.status_code < 300:
+        cache.set(cacheKey, response)
     return response
 
 
