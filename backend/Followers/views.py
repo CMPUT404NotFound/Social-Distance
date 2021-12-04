@@ -51,14 +51,15 @@ def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
                 object = checkIsLocal(str(just_id), ClassType.AUTHOR)
                 print("object: ", object)
                 # print("HERE checkIsLocal(follower_id)23: ", object.isLocal)
-                if not object.isLocal:
-                    #response = makeRequest("GET", object.longId)
-                    url = "https://cmput404f21t17.herokuapp.com/service/author/" + str(follower_id) + "/"
-                    response = requests.get(url) #c76413d1-00bc-4cb7-8ca6-282b0bfcb953/ <-- url
-                    # print("HERE response: ", response)
-                    if 100 < response.status_code < 300:
-
-                        results.append(json.loads(response.content))
+                if object.isLocal == False:
+                    #print("NEW TO QUERY FOREIGN: ", checkIsLocal(str(request)))
+                    replace_with_slash_follower = follower_id.replace("~", "/")
+                    full_foreign_id = "https://" + replace_with_slash_follower + "/"
+                    result = makeRequest("GET", full_foreign_id)
+                    json_content = json.loads(result.content)
+                    if 100 < result.status_code < 300:
+                        json_content = json.loads(result.content)
+                        results.append(json_content)
 
                 else:
                     #print("NEW OBJ: ", Author.objects.get(pk=just_id))
@@ -114,7 +115,6 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
             full_local_id = "https://" + replace_with_slash_local 
             local_author = Author.objects.get(pk=follower_id.split("~")[-1])
             local_author_serialize = AuthorSerializer(local_author).data
-            host = local_author_serialize["host"]
 
             foreign_object = makeRequest("GET", full_foreign_id)
             json_foreign_object = json.loads(foreign_object.content)
