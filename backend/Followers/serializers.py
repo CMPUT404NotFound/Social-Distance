@@ -1,14 +1,15 @@
 
-from rest_framework import serializers
+import json
+
 from author.models import *
 from author.serializers import AuthorSerializer
-from Followers.models import Follow_Request
 from backend.settings import SITE_ADDRESS
-from utils.request import makeRequest
+from rest_framework import serializers
+from utils.request import checkIsLocal, makeRequest
 
-from utils.request import checkIsLocal
+from Followers.models import Follow_Request
 
-import json
+
 class FollowerSerializer(serializers.ModelSerializer):
 
     type = serializers.SerializerMethodField()
