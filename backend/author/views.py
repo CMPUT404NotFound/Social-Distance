@@ -143,8 +143,8 @@ def getAllAuthors(request: Request):
         #         if randint(0, 2) == 1:
         #             Follower.objects.create(sender = author1.id, receiver = author2)
         
-        import lorem
-        from random import randint
+        # import lorem
+        # from random import randint
         # for author in Author.objects.all():
             
         #     for i in range(6):
