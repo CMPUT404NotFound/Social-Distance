@@ -1,3 +1,5 @@
+import json
+from typing import Union
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
@@ -23,8 +25,104 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import ValidationError
 from .documentation import NoSchemaTitleInspector, getCommentsResponse
 
-from author.serializers import ForeignAuthorSerializer
+
 from author.models import Author
+
+
+from backend.settings import SITE_ADDRESS
+
+from utils.request import parseIncomingRequest, ParsedRequest, ClassType, returnGETRequest, returnPOSTRequest, makeRequest
+from django.http import HttpRequest
+
+
+def handleGET(request: Union[HttpRequest, ParsedRequest], authorId: str = "", postId: str = ""):
+    if request.islocal:
+        # handle local stuff
+        try:
+            post: Post = Post.objects.get(pk=request.id)  # request.id is the parsed post short id, since islocal is true
+            comments = post.post_comments.all()
+        except Post.DoesNotExist:
+            return Response("no comments under this post", status=404)
+        except ValidationError:
+            return Response("Bad input.", status=400)
+
+        params: dict = request.query_params
+
+        if "page" in params and "size" in params:
+            try:
+                pager = Paginator(comments, int(params["size"]))
+                serial = CommentSerializer(pager.page(int(params["page"])), many=True)
+            except (ValueError, EmptyPage, PageNotAnInteger) as e:
+                return Response(str(e), status=400)
+        else:
+            serial = CommentSerializer(comments, many=True)
+
+        output = {
+            "type": "comments",
+            "page": params.get("page", 0),
+            "size": params.get("size", 0),
+            "post": f"{SITE_ADDRESS}author/{post.author_id.id}/posts/{post.post_id}/",
+            # .TODO? this line seems uneeded"id": f"{SITE_ADDRESS}author/{post.author_id.id}/posts/{post.post_id}/comments/",
+            "comments": serial.data,
+        }
+
+        return Response(output, status=200)
+    else:
+        # sent foreign request.
+
+        return returnGETRequest(request.id)
+
+
+def handlePOST(request: Union[HttpRequest, ParsedRequest], authorId: str = "", postId: str = ""):
+
+    data = request.data  # jsonified body
+
+    if request.islocal:
+        try:
+            post = Post.objects.get(pk=request.id)
+        except Post.DoesNotExist:
+            return Response("no post under this id", status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            if all((item in data for item in ("type", "author", "comment", "contentType"))) and data["type"] == "comment":
+                if "id" in data["author"]:  # just check if author has id
+
+                    realAuthorId = data["author"]["id"].split("/author/")[-1]
+
+                    if Author.objects.filter(pk=realAuthorId).exists():
+                        # since if the db has the id already, then all other info is already in the db
+                        comment = Comment.objects.create(
+                            author=Author.objects.get(pk=data["author"]["id"]),
+                            comment=data["comment"],
+                            contentType=data["contentType"],
+                            post=post,
+                        )
+                        comment.save()
+                        return Response("comment created", status=status.HTTP_204_NO_CONTENT)
+                    else:
+                        # since author does not exist in current database, just save the id, to be looked up later
+                        comment = Comment.objects.create(
+                            author=data["author"]["id"],
+                            comment=data["comment"],
+                            contentType=data["contentType"],
+                            post=post,
+                        )
+                        comment.save()
+                        return Response("comment created", status=status.HTTP_204_NO_CONTENT)
+
+                else:
+                    return Response("bad formatting in author", status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(
+                    "Bad request! Are you sure all of ('type', 'author', 'comment', 'contentType') are provided in the request?",
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        except (KeyError,) as e:
+            return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
+    else:
+        # make request to a foreign server, see utils.request.py
+        return returnPOSTRequest(request.id, data)
 
 
 @swagger_auto_schema(
@@ -36,7 +134,7 @@ from author.models import Author
         400: "Bad path params or bad pagination",
         404: "Post not found",
     },
-   manual_parameters=[
+    manual_parameters=[
         openapi.Parameter(
             name="page",
             in_=openapi.IN_QUERY,
@@ -71,81 +169,13 @@ from author.models import Author
 )
 @api_view(["GET", "POST"])
 @authentication_classes([TokenAuth(needAuthorCheck=["POST"])])
-def handleComments(request: Request, authorId: str = "", postId: str = ""):
+@parseIncomingRequest(["GET", "POST"], ClassType.POST)
+def handleComments(request: Union[HttpRequest, ParsedRequest], authorId: str = "", postId: str = ""):
 
-    # todo verify if post's author is the same as the author privided in the url
     if request.method == "GET":
-        try:
-            comments = Post.objects.get(pk=postId).post_comments.all()
-        except Post.DoesNotExist:
-            return Response("no comments under this post", status=404)
-        except ValidationError:
-            return Response("Bad input.", status=400)
 
-        params: dict = request.query_params
-
-        if "page" in params and "size" in params:
-            try:
-                pager = Paginator(comments, int(params["size"]))
-                serial = CommentSerializer(pager.page(int(params["page"])), many=True)
-            except (ValueError, EmptyPage, PageNotAnInteger) as e:
-                return Response(str(e), status=400)
-        else:
-            serial = CommentSerializer(comments, many=True)
-
-        output = {
-            "type": "comments",
-            "page": params.get("page", 0),
-            "size": params.get("size", 0),
-            "post": "place holder post link",
-            "id": "placeHolderLink/comments",  # todo fix these 2 placeholders once post is done.
-            "comments": serial.data,
-        }
-
-        return Response(output, status=200)
+        return handleGET(request, authorId, postId)
 
     elif request.method == "POST":
-        data = request.data
 
-        try:
-            post = Post.objects.get(pk=postId)
-        except Post.DoesNotExist:
-            return Response("no post under this id", status=status.HTTP_404_NOT_FOUND)
-
-        try:
-            if all((item in data for item in ("type", "author", "comment", "contentType"))) and data["type"] == "comment":
-                if "id" in data["author"]:  # just check if author has id
-                    
-                    realAuthorId = data["author"]["id"].split('/author/')[-1]
-                    
-                    if Author.objects.filter(pk=realAuthorId).exists():
-                        # since if the db has the id already, then all other info is already in the db
-                        comment = Comment.objects.create(
-                            author=Author.objects.get(pk=data["author"]["id"]),
-                            comment=data["comment"],
-                            contentType=data["contentType"],
-                            post=post,
-                        )
-                        comment.save()
-                        return Response("comment created", status=status.HTTP_204_NO_CONTENT)
-                    else:
-                        #since author does not exist in current database, just save the id, to be looked up later
-                        comment = Comment.objects.create(
-                            author=data["author"]["id"],
-                            comment=data["comment"],
-                            contentType=data["contentType"],
-                            post=post,
-                        )
-                        comment.save()
-                        return Response("comment created", status=status.HTTP_204_NO_CONTENT)
-
-                else:
-                    return Response('bad formatting in author', status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response(
-                    "Bad request! Are you sure all of ('type', 'author', 'comment', 'contentType') are provided in the request?",
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
-        except (KeyError,) as e:
-            return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
+        return handlePOST(request, authorId, postId)

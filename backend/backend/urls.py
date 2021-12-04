@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls.conf import re_path
 import author.views as authorViews
 import posts.views as postsViews
 import Followers.views as followerViews
@@ -45,23 +46,26 @@ schema_view = get_schema_view(
 from django.views.generic.base import RedirectView
 
 urlpatterns = [
-    path("", RedirectView.as_view(url = 'https://cmput404project.netlify.app/', permanent = False)),
+    path("", RedirectView.as_view(url = 'https://project-api-404.herokuapp.com/api/', permanent = False)),
     path("admin/", admin.site.urls),
-    path("api/author/<slug:id>/", authorViews.handleAuthorById),
-    path("api/author/<uuid:author_id>/posts/", postsViews.getAllPosts),
-    path("api/author/<uuid:author_id>/posts/<uuid:post_id>", postsViews.managePost),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-~.]+)/$", authorViews.handleAuthorById),
+    
+    re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/posts/$", postsViews.getAllPosts),
+    re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-]+)/posts/(?P<post_id>[A-Za-z0-9-~.]+)/$", postsViews.managePost),
     path("api/authors/", authorViews.getAllAuthors),
     path("api/login/", authorViews.login),
     path("api/signup/", authorViews.signUp),
-    path("api/author/<slug:authorId>/post/<slug:postId>/comments/", commentViews.handleComments),
     
-    path("api/author/<uuid:id>/followers/", followerViews.getAllFollowers),
-    path("api/author/<uuid:author_id>/followers/<uuid:follower_id>/", followerViews.addFollower),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/post/(?P<postId>[A-Za-z0-9-~.]+)/comments/$", commentViews.handleComments),
     
-    path("api/author/<uuid:authorId>/inbox/", inboxViews.handleInbox),
-    path('api/author/<uuid:authorId>/liked/', likeviews.getLiked ),
-    path("api/author/<uuid:authorId>/posts/<uuid:postId>/likes/", likeviews.getPostLikes),
-    path("api/author/<uuid:authorId>/posts/<uuid:postId>/comments/<uuid:commentId>/likes/", likeviews.getCommentLikes),
+    path("api/author/(<slug:authorId>)/friends/", followerViews.friendsView),
+    re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/followers/$", followerViews.getAllFollowers),
+    re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/followers/(?P<follower_id>[A-Za-z0-9-~.]+)/$", followerViews.addFollower),
+    
+    path("api/author/<slug:authorId>/inbox/", inboxViews.handleInbox),
+    re_path(r'^api/author/(?P<authorId>[A-Za-z0-9-~.]+)/liked/$', likeviews.getLiked ),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.])/likes/$", likeviews.getPostLikes),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.])/comments/(?P<commentId>[A-Za-z0-9-~.])/likes/$", likeviews.getCommentLikes),
     
     path("api/nodes/", nodeViews.getNodes),
 

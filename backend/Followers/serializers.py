@@ -1,9 +1,14 @@
 
 from rest_framework import serializers
 from author.models import *
+from author.serializers import AuthorSerializer
+from Followers.models import Follow_Request
 from backend.settings import SITE_ADDRESS
+from backend.utils.request import makeRequest
 
+from utils.request import checkIsLocal
 
+import json
 class FollowerSerializer(serializers.ModelSerializer):
 
     type = serializers.SerializerMethodField()
@@ -26,3 +31,48 @@ class FollowerSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj: Author):
         return "placeholderserice/author/" + str(obj.id)
+
+class FollowRequestSerializer(serializers.ModelSerializer):
+    
+
+    class Meta:
+        model = Follow_Request
+        fields = []
+        
+    
+    def to_representation(self, instance : Follow_Request):
+        islocal = checkIsLocal(instance.requestor)
+        
+        
+        if islocal.isLocal:
+            try: 
+                author = Author.objects.get(pk = islocal.id)
+                follower = AuthorSerializer(author).data
+            except Author.DoesNotExist:
+                follower = {
+                    "error": "the requested local author as follower no long exists"
+                }
+                
+        else: 
+            result = makeRequest("GET", islocal.long)
+            
+            if 200 <=result.status_code < 300:
+                follower = json.loads(result.content)
+            else:
+                follower = {
+                    "error": "the requested foreign author as follower no longer exist"
+                }
+        
+        localAuthor :Author = instance.requestee # this author has to exist, since on_delete= Cascade
+        
+        
+        
+        repr = {
+            "type" : "Follow",
+            "summary": f"{follower['displayName']} wants to follow {localAuthor.displayName}",
+            "actor": follower,
+            "object": AuthorSerializer(localAuthor).data
+        }
+        
+        return repr
+        #to internal_val doesn't need to be implemented.

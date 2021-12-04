@@ -73,12 +73,16 @@ class TokenAuth(TokenAuthentication):
 
         Ensures that request has a valid token
         """
+        
+        print("startting token auth")
         if request.method in self.bypassEntirely:
             return (DummyAuthObject(True, True),None)
 
         auth = get_authorization_header(request).split()
-
+        print(auth, not auth , (auth[0].lower() != "token".lower().encode() and auth[0].lower() != "bearer".encode()))
+        
         if not auth or (auth[0].lower() != "token".lower().encode() and auth[0].lower() != "bearer".encode()):
+            print("returning none!")
             return None #when None is returned, the request is passed to the next auth class
         
         if not auth or len(auth) == 1:
@@ -124,13 +128,25 @@ class TokenAuth(TokenAuthentication):
 
 class NodeBasicAuth(BasicAuthentication):
     
+    def __init__(self, blockedMethod: List[str] = None):
+        
+        self.blockedMethod = blockedMethod if blockedMethod else []
+
+
+    def __call__(self):
+        return self  # a bit of a hack, to allow initial tokenAuth with initialized params
     
     def authenticate(self, request: Union[Request, HttpRequest]):
         """
         Returns a `User` if a correct username and password have been supplied
         using HTTP Basic authentication.  Otherwise returns `None`.
         """
+        
+        print("startting basic auth")
         auth = get_authorization_header(request).split()
+
+        if request.method in self.blockedMethod:
+            raise exceptions.AuthenticationFailed("external access of this api call is not allowed.")
 
         if not auth or auth[0].lower() != b'basic':
             return None
@@ -155,7 +171,8 @@ class NodeBasicAuth(BasicAuthentication):
 
         username, password = auth_parts[0], auth_parts[2]
         
-        # try:
+        #origin not needed anymore
+        # try: 
         #     #origin is used to later varify if this requester is trusted
         #     origin = request.headers['Origin']
         # except KeyError:
@@ -165,12 +182,12 @@ class NodeBasicAuth(BasicAuthentication):
             node : Node= Node.objects.get(incomingName = username)
             
             if not node.allowIncoming:
-                raise exceptions.AuthenticationFailed("This is not allowed to access this server")
+                raise exceptions.AuthenticationFailed("The origin provided is not allowed to access this server")
 
             
-            if node.authRequiredIncoming:
-                if not (node.incomingName == username and node.incomingPassword == password):
-                    raise exceptions.AuthenticationFailed("Basic auth credentials does not match.")
+            
+            if not node.incomingPassword == password:
+                raise exceptions.AuthenticationFailed("Basic auth credentials does not match.")
                 
         except Node.DoesNotExist:
             raise exceptions.AuthenticationFailed("The origin provided is not yet registered in this server")

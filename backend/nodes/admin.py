@@ -8,13 +8,13 @@ from nodes.models import Node
 class NodeAdmin(admin.ModelAdmin):
     
     list_display = ("url",'allowIncoming', 'allowOutgoing',
-              'authRequiredIncoming',
-              'authRequiredOutgoing', )
+              
+               )
     
     
-    fields = ['url', 'netloc','allowIncoming', 'allowOutgoing',
-              'authRequiredIncoming',
-              'authRequiredOutgoing',
+    fields = ['url', 'allowIncoming', 'allowOutgoing',
+              
+              
               'incomingName',
               'outgoingName',
               'incomingPassword',

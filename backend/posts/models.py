@@ -36,7 +36,7 @@ class Post(models.Model):
     # https://www.geeksforgeeks.org/datetimefield-django-models/
     published = models.DateTimeField(default = timezone.now, editable= False)
     count = models.IntegerField(default=0)
-    categories = models.CharField(max_length=200, null=True)
+    categories = models.CharField(max_length=200)
 
     def __str__(self):
         return f"post:{self.post_id}"

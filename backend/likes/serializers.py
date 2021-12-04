@@ -20,7 +20,7 @@ class LikeSerializer(serializers.ModelSerializer):
             author = Author.objects.get(pk=obj.author)
             return AuthorSerializer(author).data
         except Author.DoesNotExist:
-            return json.loads( makeRequest("GET", obj.author)[0])
+            return json.loads( makeRequest("GET", obj.author).content)
 
     def get_type(self, obj):
         return "Like"
