@@ -41,7 +41,7 @@ class UserCreationForm(ModelForm):
         # Save the provided password in hashed format
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
-
+        user.displayName = user.username if not user.displayName else user.displayName
         if commit:
             user.save()
         return user
@@ -70,9 +70,8 @@ class AuthorAdmin(UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    # im not sure what the following does
-    # help
-    list_display = ("displayName", "github", "profileImage", "is_admin", "is_active")
+
+    list_display = ( "userName","displayName", "id", "is_admin", "is_active")
     list_filter = ("is_admin","is_active")
     # fields for when modifying an existing user
     fieldsets = (

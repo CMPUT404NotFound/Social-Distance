@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='InboxItem',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type', models.CharField(choices=[('F', 'Follow'), ('L', 'Like'), ('P', 'Post')], default='P', max_length=1)),
+                ('type', models.CharField(choices=[('P', 'Post'), ('L', 'Like'), ('F', 'Follow')], default='P', max_length=1)),
                 ('contentId', models.CharField(default='', max_length=300)),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],

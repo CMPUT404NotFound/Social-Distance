@@ -1,39 +1,29 @@
 import json
 from typing import Union
+
+from author.models import Author
+from author.token import TokenAuth
+from backend.settings import SITE_ADDRESS
+from django.core.exceptions import ValidationError
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.http import HttpRequest
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from posts.models import Post as Post
 from rest_framework import status
-from rest_framework import response
-from rest_framework.response import Response
-from rest_framework.request import Request
-
-# Create your views here.
-
 from rest_framework.decorators import (
     api_view,
     authentication_classes,
-    permission_classes,
 )
 
-from author.token import TokenAuth
+from rest_framework.response import Response
+from utils.request import ClassType, ParsedRequest, parseIncomingRequest, returnGETRequest, returnPOSTRequest
 
-
-from .models import Comment
-from posts.models import Post as Post
-from .serializers import CommentSerializer
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.core.exceptions import ValidationError
 from .documentation import NoSchemaTitleInspector, getCommentsResponse
+from .models import Comment
+from .serializers import CommentSerializer
 
-
-from author.models import Author
-
-
-from backend.settings import SITE_ADDRESS
-
-from utils.request import parseIncomingRequest, ParsedRequest, ClassType, returnGETRequest, returnPOSTRequest, makeRequest
-from django.http import HttpRequest
-
+# Create your views here.
 
 def handleGET(request: Union[HttpRequest, ParsedRequest], authorId: str = "", postId: str = ""):
     if request.islocal:
