@@ -8,25 +8,21 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.decorators import (
     api_view,
-    permission_classes,
-    authentication_classes,
+  
 )
 from rest_framework import status
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
-from rest_framework.authentication import TokenAuthentication
-from author.token import expires_in, refreshToken, TokenAuth
-
 
 from author.models import *
 from author.serializers import *
-from author.token import TokenAuth
+
 from .models import *
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
-from utils.request import checkIsLocal, ClassType, makeRequest, parseIncomingRequest, ParsedRequest, HttpRequest, returnGETRequest
+from utils.request import checkIsLocal, ClassType, makeRequest, parseIncomingRequest, ParsedRequest, HttpRequest, returnGETRequest, makeMultiplieGETs
 import json
 import requests
 from typing import Union
@@ -170,3 +166,51 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
                 return Response(status=status.HTTP_200_OK)
         except Follower.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+def findFriends(author : Author):
+    
+    '''
+    finds a list of string that are the ids of friends of the (local)author provided. 
+    Note, this list of ids might be from the local server for foreign server.
+    '''
+    
+    followers : List[QuerySet] = Follower.objects.filter(receiver = author).values("sender")
+    
+    output = []
+    needFetch = []
+    localids = []
+
+    for follower in followers:
+        id : str= follower["sender"]
+        if id.startswith("http"):
+            #if the id is a link, it's foreign author, make request
+            needFetch.append(id)
+        else:
+            localids.append(id)
+    
+    
+    for id in localids:
+        try:
+            f = Follower.objects.get(receiver = id)
+            output.append(id)
+        except:
+            pass
+    
+    responses = makeMultiplieGETs(needFetch)
+    
+    for response in responses:
+        obj = response[1]
+        if obj.status_code >= 400:
+            continue
+        if obj.content.lower() != "true":
+            continue
+        #neither of the know falsy reponses are gotten, this link is prob a follower
+        
+        output.append(response[0])
+    
+    return output
+
+

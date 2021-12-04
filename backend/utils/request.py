@@ -20,6 +20,9 @@ import json
 import urllib.parse as parse
 from dataclasses import dataclass
 
+
+import threading
+import time
 class ClassType(enum.Enum):
     AUTHOR = 0
     POST = 1
@@ -216,9 +219,29 @@ def returnPOSTRequest(url: str, data: Union[str, dict]) -> Response:
     if url is None:
         return Response("The requested address is not registered with this server yet.", status=404)
     
-    result = makeRequest("POST", url, data)
+    result = makeRequest("POST", url, data if type(data) is str else json.dumps(data))
     
     if 200 <= result.status_code < 300:
         return Response(json.loads(result.content), status= 200)
     else:
         return Response("foreign content not found, or some error occured.")
+    
+    
+
+
+def makeMultiplieGETs(urls: List[str], ) -> List[Tuple[str, QueryResponse]]:
+    
+    output = []
+    threads = []
+    t0 = time.time()
+    for url in urls:
+        t = threading.Thread(target=lambda link: output.append((link, makeRequest("GET", link))), args=(url,))
+        threads.append(t)
+        t.start()
+    
+    for thread in threads:
+        thread.join()
+        
+    print(f"makeMultipleGETs fetched {len(output)} urls, taking {time.time() - t0} ms")
+
+    return output
