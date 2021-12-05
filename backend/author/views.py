@@ -66,8 +66,7 @@ from likes.models import Like
 @authentication_classes([TokenAuth(needAuthorCheck=["POST"]), NodeBasicAuth])
 @parseIncomingRequest(methodToCheck=["GET"], type=ClassType.AUTHOR)
 def handleAuthorById(request: Union[ParsedRequest, HttpRequest], authorId):
-
-    print(request.method, request.islocal, request.id, request.auth, request.user)
+    
     if request.method == "GET":
         if request.islocal:
             try:
