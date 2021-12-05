@@ -58,7 +58,7 @@ urlpatterns = [
     re_path(r"^api/login/?$", authorViews.login),
     re_path(r"^api/signup/?$", authorViews.signUp),
     
-    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/post/(?P<postId>[A-Za-z0-9-~.]+)/comments/?$", commentViews.handleComments),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.]+)/comments/?$", commentViews.handleComments),
     
     re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/friends/?$", followerViews.friendsView),
     re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/followers/?$", followerViews.getAllFollowers),
@@ -73,7 +73,7 @@ urlpatterns = [
 
     #api paths
     re_path(
-        r"^api/?",
+        r"^api/?$",
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),

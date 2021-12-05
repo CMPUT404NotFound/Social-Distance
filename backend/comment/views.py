@@ -26,6 +26,7 @@ from .serializers import CommentSerializer
 # Create your views here.
 
 def handleGET(request: Union[HttpRequest, ParsedRequest], authorId: str = "", postId: str = ""):
+    
     if request.islocal:
         # handle local stuff
         try:
@@ -36,6 +37,7 @@ def handleGET(request: Union[HttpRequest, ParsedRequest], authorId: str = "", po
         except ValidationError:
             return Response("Bad input.", status=400)
 
+    
         params: dict = request.query_params
 
         if "page" in params and "size" in params:
@@ -55,12 +57,11 @@ def handleGET(request: Union[HttpRequest, ParsedRequest], authorId: str = "", po
             # .TODO? this line seems uneeded"id": f"{SITE_ADDRESS}author/{post.author_id.id}/posts/{post.post_id}/comments/",
             "comments": serial.data,
         }
-
         return Response(output, status=200)
     else:
         # sent foreign request.
-
-        return returnGETRequest(request.id)
+        stuff = returnGETRequest(request.id)
+        return stuff
 
 
 def handlePOST(request: Union[HttpRequest, ParsedRequest], authorId: str = "", postId: str = ""):

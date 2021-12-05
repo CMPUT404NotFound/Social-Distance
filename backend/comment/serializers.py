@@ -47,8 +47,9 @@ class CommentSerializer(serializers.Serializer):
         fields = ("type", "author", "comment", "contentType", "published", "id")
         ordering = ["published"]
     
-    def get_author(self, obj :Comment):
-        data = checkIsLocal(obj.author, ClassType.author)
+    def get_author(self, obj : Comment):
+    
+        data = checkIsLocal(obj.author, ClassType.AUTHOR)
         
         if data.isLocal:
             return AuthorSerializer(Author.objects.get(pk = data.id)).data
@@ -62,8 +63,8 @@ class CommentSerializer(serializers.Serializer):
             
 
     def get_id(self, obj: Comment):
-        data = checkIsLocal(obj.author, ClassType.author)
-        return f"{SITE_ADDRESS}/author/{data.id}/posts/{obj.post.post_id}/comments/{obj.id}"
+        data = checkIsLocal(obj.author, ClassType.AUTHOR)
+        return f"{SITE_ADDRESS}author/{data.id}/posts/{obj.post.post_id}/comments/{obj.id}"
 
     def get_type(self, obj: Comment):
         return "comment"
