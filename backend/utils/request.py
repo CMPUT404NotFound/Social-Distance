@@ -60,10 +60,10 @@ def parseIncomingRequest(methodToCheck: List[str] = None, type: ClassType = Clas
             url = request.get_full_path()
             parsedId = getId(url, type).replace("~", "/")
             target = f"https://{parsedId}"  # link id has / replaced with - to make them url safe
-            print(target)
+           
             parsed = parse.urlparse(target)
 
-            print(parsed, NETLOC)
+          
             if parsed.netloc == "" or parsed.path == "":
                 parsedRequest = ParsedRequest(
                     request, islocal=True, id=parsedId
@@ -121,7 +121,9 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryR
     if not node.allowOutgoing:
         return QueryResponse("error, outgoing request to this node is blocked by admin", 400)
 
-    fixedurl = f"{node.url}{url[url.find('author'):]}"
+    fixedurl = f"{node.url}{url[url.find('author'):]}" 
+    if fixedurl[-1] != "/":
+        fixedurl += "/"
 
     try:
         s = f"{node.outgoingName}:{node.outgoingPassword}".encode("utf-8")
@@ -139,6 +141,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryR
 
     if 200<=result.status_code < 300:
         cache.set(cacheKey, response)
+        
     return response
 
 

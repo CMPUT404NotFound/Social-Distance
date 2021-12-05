@@ -14,7 +14,7 @@ from posts.models import Post
 from posts.serializers import PostsSerializer
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
-from utils.request import makeRequest
+from utils.request import makeMultipleGETs
 
 from inbox.documentation import InboxItemSerializer
 from inbox.models import InboxItem
@@ -25,7 +25,7 @@ from backend.settings import SITE_ADDRESS
 
 def getAuthorId(request, authorId):
     authorid = request.data.get("author", None)
-    if authorId is None:
+    if authorid is None:
         authorid = request.data.get("actor")["id"]
     else:
         authorid = authorid["id"]
@@ -79,11 +79,12 @@ def handleFollows(request, authorId: str):
             return Response("Author does not exist", status=404)
 
 
-        if Author.objects.filter(authorId).exist():  # need varify the given author to follow exist in local db
-            request = Follow_Request.objects.create(requestor=follower, requestee=authorId)
+        try:
+            author = Author.objects.get(pk = authorId)  # need varify the given author to follow exist in local db
+            request = Follow_Request.objects.create(requestor=follower, requestee=author)
             InboxItem.objects.create(author=author, type="F", contentId=request.pk)
             return Response(status=204)
-        else:
+        except Author.DoesNotExist:
             return Response("author to follow not found", status=404)
     except KeyError:
         return Response("bad body format", status=400)
@@ -135,24 +136,27 @@ def getInboxItems(request, authorId):
 
     items = InboxItem.objects.filter(author=author)
 
-
-    itemsOutput = filter(
-        lambda x: x != {},
+    needFetching = []
+    itemsOutput = list(filter(
+        lambda x: x != {} or x == None,
         [
             (
                 {"F": FollowRequestSerializer, "P": PostsSerializer, "L": LikeSerializer}[item.type](
-                    {"L": Like.objects.get, "P": Post.objects.get, "F": Follower.objects.get,}[
+                    {"L": Like.objects.get, "P": Post.objects.get, "F": Follow_Request.objects.get,}[
                         item.type
                     ](**{"pk": item.contentId})
                 ).data
-                if {"L": Like.objects.filter, "P": Post.objects.filter, "F": Follower.objects.filter,}[
+                if {"L": Like.objects.filter, "P": Post.objects.filter, "F": Follow_Request.objects.filter,}[
                     item.type
                 ](**{"pk": item.contentId}).exists()
-                else json.loads(makeRequest(method="GET", url=item.contentId)[0])
+                else needFetching.append(item.contentId) 
             )
             for item in items
         ],
-    )  # woah dude
+    )).extend([response[1].content for response in makeMultipleGETs(needFetching)]) # woah dude
+    # needFetching should really only contain posts' ids, since likes and follows's ids are always contained in the local database
+    # but the serializers of Like and FollowRequest will still need to fetch remote data, which is sadly not included in the multi threaded fetch
+    # fixing this will take some structural changes which i can't be bothered with, for the purpose of the project at least.
 
     params: dict = request.query_params
 
