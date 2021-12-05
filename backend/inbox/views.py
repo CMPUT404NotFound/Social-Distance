@@ -14,7 +14,7 @@ from posts.models import Post
 from posts.serializers import PostsSerializer
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
-from utils.request import makeRequest
+from utils.request import makeMultipleGETs
 
 from inbox.documentation import InboxItemSerializer
 from inbox.models import InboxItem
@@ -136,9 +136,9 @@ def getInboxItems(request, authorId):
 
     items = InboxItem.objects.filter(author=author)
 
-
-    itemsOutput = filter(
-        lambda x: x != {},
+    needFetching = []
+    itemsOutput = list(filter(
+        lambda x: x != {} or x == None,
         [
             (
                 {"F": FollowRequestSerializer, "P": PostsSerializer, "L": LikeSerializer}[item.type](
@@ -149,11 +149,14 @@ def getInboxItems(request, authorId):
                 if {"L": Like.objects.filter, "P": Post.objects.filter, "F": Follow_Request.objects.filter,}[
                     item.type
                 ](**{"pk": item.contentId}).exists()
-                else json.loads(makeRequest(method="GET", url=item.contentId).content)
+                else needFetching.append(item.contentId) 
             )
             for item in items
         ],
-    )  # woah dude
+    )).extend([response[1].content for response in makeMultipleGETs(needFetching)]) # woah dude
+    # needFetching should really only contain posts' ids, since likes and follows's ids are always contained in the local database
+    # but the serializers of Like and FollowRequest will still need to fetch remote data, which is sadly not included in the multi threaded fetch
+    # fixing this will take some structural changes which i can't be bothered with, for the purpose of the project at least.
 
     params: dict = request.query_params
 
