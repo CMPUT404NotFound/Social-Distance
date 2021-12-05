@@ -26,6 +26,7 @@ from utils.request import checkIsLocal, ClassType, makeRequest, parseIncomingReq
 import json
 import requests
 from typing import Union
+from inbox.models import *
 
 
 @swagger_auto_schema(method="get", tags=['followers'])
@@ -58,7 +59,7 @@ def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
                         results.append(json_content)
 
                 else:
-                    #print("NEW OBJ: ", Author.objects.get(pk=just_id))
+                    print("NEW OBJ: ", Author.objects.get(pk=just_id))
                     new_obj_author_local = Author.objects.get(pk=just_id)
                     results.append(AuthorSerializer(new_obj_author_local).data)
             
@@ -96,6 +97,10 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
                     pass
                 follow = Follower.objects.create(sender=follower_id, receiver=receiver)
                 follow.save()
+                # follow_request = Follow_Request.objects.create(requestor=follower_id, requestee=receiver)
+                # follow_request.save()
+                # print("follow_request.pk: ", follow_request.pk)
+                # InboxItem.objects.create(author=local_author, type="F", contentId=full_foreign_id).save()
                 return Response(status=status.HTTP_201_CREATED)
             except Author.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
@@ -130,7 +135,11 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
                                 "github":json_foreign_object.get("github"),
                                 "profileImage":json_foreign_object.get("profileImage")}}
             result = makeRequest("POST", full_foreign_id + "inbox/", data)
-
+            print("status code: ", result.status_code)
+            if 200 <= result.status_code < 300:
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
             
 
             #-----MAKING REQUEST TO FOREIGN SERVER-----
@@ -143,7 +152,6 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
             # #Following.objects.create(author=local_author__id, following=json.loads(result.content))
             
 
-            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
     elif request.method == "DELETE":
@@ -164,10 +172,7 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
             if follow:
                 return Response(status=status.HTTP_200_OK)
         except Follower.DoesNotExist:
-<<<<<<< HEAD
-            return Response(status=status.HTTP_404_NOT_FOUND)
-=======
-            return Response(status=status.HTTP_404_NOT_FOUND)
+                return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -250,4 +255,3 @@ def friendsView(request: Union[HttpRequest, Request], authorId:str):
             output.append(json.loads(obj.content))
     
     return Response(output, status=200)
->>>>>>> backend-refactored
