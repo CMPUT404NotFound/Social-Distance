@@ -4,7 +4,7 @@ from django.db import models
 
 import uuid
 
-Content_choices = {("P", "text/plain"), ("M", "text/markdown")}
+Content_choices = (("P", "text/plain"), ("M", "text/markdown"))
 
 from posts.models import Post
 

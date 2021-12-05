@@ -15,6 +15,8 @@ from rest_framework.decorators import (
 from rest_framework import status
 
 
+
+
 from .token import TokenAuth, expires_in, refreshToken, NodeBasicAuth
 
 from .models import Author
@@ -29,6 +31,10 @@ from globalSetting.models import Setting
 from utils.request import parseIncomingRequest, ParsedRequest, ClassType, makeRequest
 import json
 
+from Followers.models import Follower
+from posts.models import Post
+from comment.models import Comment
+from likes.models import Like
 # Create your views here.
 
 
@@ -60,8 +66,7 @@ import json
 @authentication_classes([TokenAuth(needAuthorCheck=["POST"]), NodeBasicAuth])
 @parseIncomingRequest(methodToCheck=["GET"], type=ClassType.AUTHOR)
 def handleAuthorById(request: Union[ParsedRequest, HttpRequest], authorId):
-
-    print(request.method, request.islocal, request.id, request.auth, request.user)
+    
     if request.method == "GET":
         if request.islocal:
             try:
@@ -130,6 +135,39 @@ def getAllAuthors(request: Request):
     """
     # TODO add ordering to authors
     if request.method == "GET":
+        # danger zone!
+        # from random import randint
+        # for author1 in Author.objects.all():
+        #     for author2 in Author.objects.all():
+        #         if randint(0, 2) == 1:
+        #             Follower.objects.create(sender = author1.id, receiver = author2)
+        
+        # import lorem
+        # from random import randint
+        # for author in Author.objects.all():
+            
+        #     for i in range(6):
+        #         if randint(0, 3) == 1:
+        #             Post.objects.create(author_id = author,
+        #                                 title = lorem.sentence(),
+        #                                 description = lorem.sentence(),
+        #                                 content = lorem.paragraph(),
+        #                                 source = SITE_ADDRESS,
+        #                                 origin = SITE_ADDRESS,
+        #                                 )
+        
+        # for post in Post.objects.all():
+        #     for i in range(3):
+        #         if randint(0 ,2) == 1:
+        #             Comment.objects.create(post = post, author = post.author_id.id, comment = lorem.sentence())
+        
+        # for author in Author.objects.all():
+        #     for post in Post.objects.all():
+        #         if randint(0, 4) == 1:
+        #             Like.objects.create(author = author.id, parentId = post.pk)
+        #     for comment in Comment.objects.all():
+        #         if randint(0, 4) == 1:
+        #             Like.objects.create(author = author.id, parentId = comment.pk)
         params: dict = request.query_params
 
         authors = Author.objects.all()

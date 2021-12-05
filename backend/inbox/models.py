@@ -4,7 +4,7 @@ from django.db import models
 
 from author.models import Author
 
-typeChoices = {("P", "Post"), ("F", "Follow"), ("L", "Like")}
+typeChoices = (("P", "Post"), ("F", "Follow"), ("L", "Like"))
 
 
 class InboxItem(models.Model):

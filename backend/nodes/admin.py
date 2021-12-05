@@ -18,6 +18,6 @@ class NodeAdmin(admin.ModelAdmin):
               'incomingName',
               'outgoingName',
               'incomingPassword',
-              'outgoingPassword']
+              'outgoingPassword', "description"]
 
 admin.site.register(Node, NodeAdmin)

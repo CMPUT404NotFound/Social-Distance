@@ -6,6 +6,9 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from backend.settings import SITE_ADDRESS
 
 class AuthorManager(BaseUserManager):
+    
+
+    
     def create_user(
         self,
         userName=None,
@@ -21,7 +24,7 @@ class AuthorManager(BaseUserManager):
         if not password:
             raise ValueError("Users must have a password")
 
-
+        print(displayName, userName ,bool(displayName))
         user = self.model(
             id=uuid.uuid4(),
             userName=userName,
@@ -73,7 +76,7 @@ class Author(AbstractBaseUser):
     is_active = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"author: {self.displayName}, id: {self.id}"
+        return f"author: {self.displayName }, id: {self.id}"
 
     objects: AuthorManager = AuthorManager()
 

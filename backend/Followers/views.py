@@ -22,10 +22,11 @@ from .models import *
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
-from utils.request import checkIsLocal, ClassType, makeRequest, parseIncomingRequest, ParsedRequest, HttpRequest, returnGETRequest, makeMultiplieGETs
+from utils.request import checkIsLocal, ClassType, makeRequest, parseIncomingRequest, ParsedRequest, HttpRequest, returnGETRequest, makeMultipleGETs
 import json
 import requests
 from typing import Union
+from inbox.models import *
 
 
 @swagger_auto_schema(method="get", tags=['followers'])
@@ -58,7 +59,7 @@ def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
                         results.append(json_content)
 
                 else:
-                    #print("NEW OBJ: ", Author.objects.get(pk=just_id))
+                    print("NEW OBJ: ", Author.objects.get(pk=just_id))
                     new_obj_author_local = Author.objects.get(pk=just_id)
                     results.append(AuthorSerializer(new_obj_author_local).data)
             
@@ -94,6 +95,12 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
                         return Response(status=status.HTTP_400_BAD_REQUEST)
                 except:
                     pass
+                
+                try:#removing the follow request onject
+                    follow_request = Follow_Request.objects.get(requestor=follower_id, requestee=receiver)
+                    follow_request.delete()
+                except:
+                    pass
                 follow = Follower.objects.create(sender=follower_id, receiver=receiver)
                 follow.save()
                 return Response(status=status.HTTP_201_CREATED)
@@ -108,7 +115,7 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
             replace_with_slash = (checkIsLocalResponse.id).replace("~", "/")
             replace_with_slash_local = follower_id.replace("~", "/")
             full_foreign_id = "https://" + replace_with_slash + "/"
-            full_local_id = "https://" + replace_with_slash_local 
+            full_local_id = "https://" + replace_with_slash_local
             local_author = Author.objects.get(pk=follower_id.split("~")[-1])
             local_author_serialize = AuthorSerializer(local_author).data
 
@@ -130,8 +137,11 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
                                 "github":json_foreign_object.get("github"),
                                 "profileImage":json_foreign_object.get("profileImage")}}
             result = makeRequest("POST", full_foreign_id + "inbox/", data)
-            print("RESULT 1: ", result)
-
+            print("status code: ", result.status_code)
+            if 200 <= result.status_code < 300:
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
             
 
             #-----MAKING REQUEST TO FOREIGN SERVER-----
@@ -144,7 +154,6 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
             # #Following.objects.create(author=local_author__id, following=json.loads(result.content))
             
 
-            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
     elif request.method == "DELETE":
@@ -165,7 +174,7 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
             if follow:
                 return Response(status=status.HTTP_200_OK)
         except Follower.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+                return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -187,7 +196,7 @@ def findFriends(author : Author):
         id : str= follower["sender"]
         if id.startswith("http"):
             #if the id is a link, it's foreign author, make request
-            needFetch.append(id)
+            needFetch.append(f"{id if id.endswith('/') else (id + '/')  }followers/{author.id}/")
         else:
             localids.append(id)
     
@@ -199,7 +208,7 @@ def findFriends(author : Author):
         except:
             pass
     
-    responses = makeMultiplieGETs(needFetch)
+    responses = makeMultipleGETs(needFetch)
     
     for response in responses:
         obj = response[1]
@@ -209,8 +218,42 @@ def findFriends(author : Author):
             continue
         #neither of the know falsy reponses are gotten, this link is prob a follower
         
-        output.append(response[0])
+        output.append(response[0][:response[0].find("follower")])
     
     return output
 
 
+
+@api_view(["GET"])
+def friendsView(request: Union[HttpRequest, Request], authorId:str):
+    
+    
+    try:
+        author = Author.objects.get(pk=authorId)
+    except Author.DoesNotExist:
+        return Response("author requested does not exists", status=404)
+    
+    ids: List = findFriends(author)
+    print(ids)
+
+    
+    output = []
+    needFetch = []
+    for id in ids:
+        if id.startswith("http"):
+            needFetch.append(id)
+        else:
+            try:
+                author = Author.objects.get(pk = id)
+                output.append(AuthorSerializer(author).data)
+            except:
+                output.append({"error": f"author with id {id} not found"})
+            
+    responses = makeMultipleGETs(needFetch)
+    
+    for response in responses:
+        obj = response[1]
+        if 200 <= obj.status_code < 400:
+            output.append(json.loads(obj.content))
+    
+    return Response(output, status=200)

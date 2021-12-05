@@ -9,7 +9,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 
 class Follower(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False, max_length=40)
     # sender = models.ForeignKey(
     #     Author, on_delete=models.CASCADE, related_name="sender")
     # sender = JSONField()
@@ -26,24 +26,3 @@ class Follow_Request(models.Model):
     requestee = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="requestee")
 
-
-class Following(models.Model):
-    
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    following = models.CharField(max_length=200)
-    #following = models.JSONField()
-    
-    
-def findFriends(authorId: Union[str, Author]) -> List[str]:
-    
-    '''
-    returns of list of ids of users(local or foreign) who are friends with the author provided.
-    '''
-    
-    followers : QuerySet = Follower.objects.filter(receiver = authorId).values("sender")
-    followings : QuerySet = Following.objects.filter(author = authorId).values("following")
-    
-    
-    friends =  followers.intersection(followings) 
-    
-    return [str(friend['sender']) for friend in friends]
