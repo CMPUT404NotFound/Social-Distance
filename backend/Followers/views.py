@@ -95,12 +95,14 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
                         return Response(status=status.HTTP_400_BAD_REQUEST)
                 except:
                     pass
+                
+                try:#removing the follow request onject
+                    follow_request = Follow_Request.objects.get(requestor=follower_id, requestee=receiver)
+                    follow_request.delete()
+                except:
+                    pass
                 follow = Follower.objects.create(sender=follower_id, receiver=receiver)
                 follow.save()
-                # follow_request = Follow_Request.objects.create(requestor=follower_id, requestee=receiver)
-                # follow_request.save()
-                # print("follow_request.pk: ", follow_request.pk)
-                # InboxItem.objects.create(author=local_author, type="F", contentId=full_foreign_id).save()
                 return Response(status=status.HTTP_201_CREATED)
             except Author.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
