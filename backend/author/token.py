@@ -79,10 +79,10 @@ class TokenAuth(TokenAuthentication):
             return (DummyAuthObject(True, True),None)
 
         auth = get_authorization_header(request).split()
-        print(auth, not auth , (auth[0].lower() != "token".lower().encode() and auth[0].lower() != "bearer".encode()))
+  
         
         if not auth or (auth[0].lower() != "token".lower().encode() and auth[0].lower() != "bearer".encode()):
-            print("returning none!")
+        
             return None #when None is returned, the request is passed to the next auth class
         
         if not auth or len(auth) == 1:

@@ -25,7 +25,7 @@ from backend.settings import SITE_ADDRESS
 
 def getAuthorId(request, authorId):
     authorid = request.data.get("author", None)
-    if authorId is None:
+    if authorid is None:
         authorid = request.data.get("actor")["id"]
     else:
         authorid = authorid["id"]
@@ -79,11 +79,12 @@ def handleFollows(request, authorId: str):
             return Response("Author does not exist", status=404)
 
 
-        if Author.objects.filter(authorId).exist():  # need varify the given author to follow exist in local db
-            request = Follow_Request.objects.create(requestor=follower, requestee=authorId)
+        try:
+            author = Author.objects.get(pk = authorId)  # need varify the given author to follow exist in local db
+            request = Follow_Request.objects.create(requestor=follower, requestee=author)
             InboxItem.objects.create(author=author, type="F", contentId=request.pk)
             return Response(status=204)
-        else:
+        except Author.DoesNotExist:
             return Response("author to follow not found", status=404)
     except KeyError:
         return Response("bad body format", status=400)
@@ -141,14 +142,14 @@ def getInboxItems(request, authorId):
         [
             (
                 {"F": FollowRequestSerializer, "P": PostsSerializer, "L": LikeSerializer}[item.type](
-                    {"L": Like.objects.get, "P": Post.objects.get, "F": Follower.objects.get,}[
+                    {"L": Like.objects.get, "P": Post.objects.get, "F": Follow_Request.objects.get,}[
                         item.type
                     ](**{"pk": item.contentId})
                 ).data
-                if {"L": Like.objects.filter, "P": Post.objects.filter, "F": Follower.objects.filter,}[
+                if {"L": Like.objects.filter, "P": Post.objects.filter, "F": Follow_Request.objects.filter,}[
                     item.type
                 ](**{"pk": item.contentId}).exists()
-                else json.loads(makeRequest(method="GET", url=item.contentId)[0])
+                else json.loads(makeRequest(method="GET", url=item.contentId).content)
             )
             for item in items
         ],

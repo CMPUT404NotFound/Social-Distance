@@ -9,7 +9,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 
 class Follower(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False, max_length=40)
     # sender = models.ForeignKey(
     #     Author, on_delete=models.CASCADE, related_name="sender")
     # sender = JSONField()

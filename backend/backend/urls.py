@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
 from django.urls.conf import re_path
@@ -47,6 +48,7 @@ from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path("", RedirectView.as_view(url = 'https://project-api-404.herokuapp.com/api/', permanent = False)),
+    path('admin/clearcache/', include('clearcache.urls')),
     re_path(r"^admin/?", admin.site.urls),
     re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-~.]+)/?$", authorViews.handleAuthorById),
     
@@ -62,7 +64,7 @@ urlpatterns = [
     re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/followers/?$", followerViews.getAllFollowers),
     re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/followers/(?P<follower_id>[A-Za-z0-9-~.]+)/?$", followerViews.addFollower),
     
-    re_path(r"^api/author/<(?P<authorId>[A-Za-z0-9-~.]+)/inbox/?$", inboxViews.handleInbox),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-~.]+)/inbox/?$", inboxViews.handleInbox),
     re_path(r'^api/author/(?P<authorId>[A-Za-z0-9-~.]+)/liked/?$', likeviews.getLiked ),
     re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.])/likes/?$", likeviews.getPostLikes),
     re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.])/comments/(?P<commentId>[A-Za-z0-9-~.])/likes/?$", likeviews.getCommentLikes),
