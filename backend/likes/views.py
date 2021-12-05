@@ -65,7 +65,7 @@ def getCommentLikes(request, authorId, postId, commentId):
             return Response("comment does not exist", status=404)
 
         likes = Like.objects.filter(parentId=request.id)
-
+        #pagination not required
         return Response(LikeSerializer(likes.all(), many=True).data, status=200)
     else:
         return returnGETRequest(request.id)
