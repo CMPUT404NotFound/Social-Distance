@@ -131,7 +131,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryR
             method,
             fixedurl,
             data=json.dumps(data) if type(data) is dict else data,
-            headers=({"Authorization": f"Basic {base64.b64encode(s).decode('utf-8')}"}),
+            headers=({"Authorization": f"Basic {base64.b64encode(s).decode('utf-8')}", "Accept": "*/*", "Content-Type":"application/json"}),
         )
     except RequestException as e:
         print("execption occured in utils.request", str(e))
