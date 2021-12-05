@@ -1,22 +1,22 @@
 from typing import Union
+
+from author.models import Author
+from author.token import NodeBasicAuth, TokenAuth
+from comment.documentation import NoSchemaTitleInspector
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.http import HttpRequest
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-
+from posts.models import Post
 from rest_framework.decorators import api_view, authentication_classes
-from author.models import Author
-from author.token import TokenAuth, NodeBasicAuth
-from comment.documentation import NoSchemaTitleInspector
+from rest_framework.response import Response
+from utils.request import (ClassType, ParsedRequest, checkIsLocal,
+                           parseIncomingRequest, returnGETRequest,)
+
 from likes.models import Like
 from likes.serializers import LikeSerializer
 
-from posts.models import Post
-from rest_framework.response import Response
-from rest_framework.request import Empty, Request
-from django.http import HttpRequest
-
 from .documentation import AddLike, getLikesResponse
-from utils.request import checkIsLocal, parseIncomingRequest, returnGETRequest, returnPOSTRequest, ClassType, ParsedRequest
 
 # Create your views here.
 
