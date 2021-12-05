@@ -112,7 +112,7 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
             replace_with_slash = (checkIsLocalResponse.id).replace("~", "/")
             replace_with_slash_local = follower_id.replace("~", "/")
             full_foreign_id = "https://" + replace_with_slash + "/"
-            full_local_id = "https://" + replace_with_slash_local 
+            full_local_id = "https://" + replace_with_slash_local
             local_author = Author.objects.get(pk=follower_id.split("~")[-1])
             local_author_serialize = AuthorSerializer(local_author).data
 
@@ -134,7 +134,6 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
                                 "github":json_foreign_object.get("github"),
                                 "profileImage":json_foreign_object.get("profileImage")}}
             result = makeRequest("POST", full_foreign_id + "inbox/", data)
-            print("RESULT 1: ", result)
 
             
 
