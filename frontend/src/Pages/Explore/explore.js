@@ -13,15 +13,15 @@ const Explore = () => {
 	const [people, setPeople] = useState([]);
 	const [remotePeople, setRemotePeople] = useState([]);
 
-	const config = {
-		headers: {
-			Authorization: `Token ${user.token}`,
-		},
-	};
-
-	// Get Local Users
 	useEffect(() => {
-		const url = `https://project-api-404.herokuapp.com/api/authors`;
+		const config = {
+			headers: {
+				Authorization: `Token ${user.token}`,
+			},
+		};
+
+		// Get Local Users
+		let url = `https://project-api-404.herokuapp.com/api/authors`;
 
 		axios
 			.get(url, config)
@@ -32,11 +32,9 @@ const Explore = () => {
 			.catch(function (error) {
 				console.log(error);
 			});
-	}, [user]);
 
-	// Get remote users
-	useEffect(() => {
-		const url = `https://project-api-404.herokuapp.com/api/nodes/authors/`;
+		// Get remote users
+		url = `https://project-api-404.herokuapp.com/api/nodes/authors/`;
 
 		axios
 			.get(url, config)

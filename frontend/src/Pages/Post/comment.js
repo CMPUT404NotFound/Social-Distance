@@ -3,6 +3,7 @@ import { Input, Button } from "antd";
 import UserContext from "../../userContext";
 import axios from "axios";
 import { SendOutlined } from "@ant-design/icons";
+import { getURLID } from "../../utils";
 
 const { TextArea } = Input;
 
@@ -12,7 +13,9 @@ const PostComment = ({ post }) => {
 	const [comment, setComment] = useState("");
 
 	const sendComment = () => {
-		const url = `${post.post_id}/comments/`;
+		const url = `https://project-api-404.herokuapp.com/api/author/${getURLID(
+			post.author.id
+		)}/posts/${getURLID(post.id)}/comments/`;
 
 		const config = {
 			headers: {
@@ -21,7 +24,7 @@ const PostComment = ({ post }) => {
 		};
 
 		const data = {
-			type: "comment",
+			type: "Comment",
 			author: user,
 			comment,
 			contentType: "text/plain",
@@ -33,7 +36,6 @@ const PostComment = ({ post }) => {
 				console.log(response);
 			})
 			.catch(function (error) {
-				console.log(post);
 				console.log(error);
 			});
 	};

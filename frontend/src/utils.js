@@ -67,7 +67,6 @@ export const getURLID = (url) => {
 
 	// replace / with ~
 	url = url.replaceAll("/", "~");
-	console.log(url);
 
 	return url;
 };

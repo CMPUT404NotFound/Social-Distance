@@ -19,6 +19,7 @@ const Profile = () => {
 	const { user } = useContext(UserContext);
 
 	const [posts, setPosts] = useState([]);
+
 	const [likes, setLikes] = useState([]);
 	const [following, setFollowing] = useState(false);
 	const [editModalVisible, setEditModalVisible] = useState(false);
@@ -37,11 +38,12 @@ const Profile = () => {
 			.get(url + "posts/", config)
 			.then(function (response) {
 				console.log(response);
-				setPosts(response.data);
+				setPosts(response.data.data || response.data);
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
+		// eslint-disable-next-line
 	}, [user, person]);
 
 	const getLikes = () => {
@@ -50,24 +52,20 @@ const Profile = () => {
 			.get(url + "liked/", config)
 			.then(function (response) {
 				console.log(response);
-				console.log(response.data.items);
-				setLikes(response.data.items);
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	};
 
-	const editProfile = () => {
-		let data = {
-			...user,
-		};
+				response.data.items.forEach((item) => {
+					axios
+						.get(item.object, config)
+						.then(function (response) {
+							console.log(response);
 
-		axios
-			.post(url, data, config)
-			.then(function (response) {
-				console.log(response);
-				setPosts(response.data.items);
+							if (response.data.type === "post")
+								setLikes((oldLikes) => [...oldLikes, response.data]);
+						})
+						.catch(function (error) {
+							console.log(error);
+						});
+				});
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -95,7 +93,7 @@ const Profile = () => {
 		// On load, check if following
 		check_following();
 		getLikes();
-		console.log(person);
+		// eslint-disable-next-line
 	}, []);
 
 	// Follow
@@ -184,6 +182,12 @@ const Profile = () => {
 				</TabPane>
 				<TabPane tab="Likes" key="2">
 					{/* User Likes */}
+					{likes &&
+						likes.map((like, i) => (
+							<Link to={{ pathname: "/post", state: like }} key={i}>
+								<InboxPost post={like} key={i} />
+							</Link>
+						))}
 				</TabPane>
 			</Tabs>
 

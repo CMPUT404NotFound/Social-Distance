@@ -3,7 +3,6 @@ import {
 	InboxOutlined,
 	LogoutOutlined,
 	PlusOutlined,
-	GlobalOutlined,
 	UserOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, Modal } from "antd";

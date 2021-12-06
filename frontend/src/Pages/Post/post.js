@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 // eslint-disable-next-line
-import { Row, Col, Avatar, Comment, Button, Tooltip, Popover } from "antd";
-import { UserOutlined, LikeOutlined } from "@ant-design/icons";
+import { Row, Col, Avatar, Comment, Button, Tooltip, Modal } from "antd";
+import { UserOutlined, LikeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import ReactCommonmark from "react-commonmark";
 import { useLocation } from "react-router";
@@ -11,6 +11,8 @@ import Like from "./like";
 import PostComment from "./comment";
 import axios from "axios";
 import UserContext from "../../userContext";
+import { getURLID } from "../../utils";
+import DeletePost from "./deletePost";
 
 const Post = () => {
 	const location = useLocation();
@@ -19,6 +21,12 @@ const Post = () => {
 	const { user } = useContext(UserContext);
 
 	const [comments, setComments] = useState([]);
+	const [self, setSelf] = useState(false); // whether the author is us
+
+	// Modal Visibilities
+	const [editModalVisible, setEditModalVisible] = useState(false);
+	const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+	const [shareModalVisible, setShareModalVisible] = useState(false);
 
 	const config = {
 		headers: {
@@ -44,19 +52,21 @@ const Post = () => {
 	// like a comment
 	const likeComment = (comment) => {
 		// Send to comment author's inbox
-		const url = `${comment.author.url}/inbox/`;
+		const url = `https://project-api-404.herokuapp.com/api/author/${
+			user.uuid
+		}/likes/comments/${getURLID(comment.id)}/`;
 
 		const data = {
 			type: "Like",
 			summary: `${user.displayName} likes your comment`,
 			author: user,
-			object: comment.id,
+			object: comment,
 		};
 
 		axios
 			.post(url, data, config)
 			.then(function (response) {
-				console.log(response.data.comments);
+				console.log(response);
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -66,7 +76,9 @@ const Post = () => {
 	// Get list of people who liked the comment
 	// eslint-disable-next-line
 	const getCommentLikes = (comment) => {
-		const url = `${comment.url}/likes/`;
+		let url = comment.url;
+		if (url.slice(-1) === "/") url += "likes/";
+		else url += "/likes/";
 
 		const config = {
 			headers: {
@@ -87,6 +99,8 @@ const Post = () => {
 
 	useEffect(() => {
 		getComments();
+		if (post.author.id === user.id) setSelf(true);
+		// eslint-disable-next-line
 	}, []);
 
 	return (
@@ -105,12 +119,43 @@ const Post = () => {
 						<Link to={{ pathname: "/profile", state: post.author }}>{post.author.displayName}</Link>
 						<h3>{post.title}</h3>
 						<p className="post_description">{post.description}</p>
-						<ReactCommonmark source={post.content} className="post_description" />
+						{post.contentType === "image/png;base64" || post.contentType === "image/jpeg;base64" ? (
+							<img src={post.content} className="post_content" alt={post.description} />
+						) : post.contentType === "text/markdown" ? (
+							<ReactCommonmark source={post.content} className="post_content" />
+						) : (
+							<p>{post.content}</p>
+						)}
 					</Col>
 				</Row>
 				<Row justify="end">
-					{/* Share Button */}
-					<Share post={post} />
+					{self ? (
+						/* Delete and Edit Buttons */
+						<>
+							<Tooltip title="Delete">
+								<Button
+									type="primary"
+									shape="circle"
+									icon={<DeleteOutlined />}
+									onClick={() => {
+										setDeleteModalVisible(true);
+									}}
+									danger
+								/>
+							</Tooltip>
+							<Tooltip key="comment-basic-like" title="Edit">
+								<Button
+									type="primary"
+									shape="circle"
+									icon={<EditOutlined />}
+									style={{ marginLeft: "1rem" }}
+								/>
+							</Tooltip>
+						</>
+					) : (
+						/* Share Button */
+						<Share post={post} />
+					)}
 					{/* Like Button */}
 					<Like post={post} />
 				</Row>
@@ -151,6 +196,13 @@ const Post = () => {
 						key={i}
 					/>
 				))}
+
+			{/* Delete Modal */}
+			<DeletePost visible={deleteModalVisible} setVisible={setDeleteModalVisible} post={post} />
+
+			{/* Edit Modal */}
+
+			{/* Share Modal */}
 		</div>
 	);
 };

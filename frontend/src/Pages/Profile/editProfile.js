@@ -1,9 +1,8 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import "./profile.css";
 import axios from "axios";
 import UserContext from "../../userContext";
-import { Alert, Button, Checkbox, Form, Input, Modal } from "antd";
-import { getIDfromURL } from "../../utils";
+import { Alert, Button, Form, Input, Modal } from "antd";
 
 const EditProfile = ({ visible, setVisible }) => {
 	const { setUser, user } = useContext(UserContext);

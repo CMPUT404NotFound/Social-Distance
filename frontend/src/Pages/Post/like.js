@@ -4,20 +4,24 @@ import { Button, Tooltip, Popover } from "antd";
 import UserContext from "../../userContext";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { getURLID } from "../../utils";
 
 const Like = ({ post }) => {
 	const { user } = useContext(UserContext);
 	const [likes, setLikes] = useState([]);
 
+	const config = {
+		headers: {
+			Authorization: `Token ${user.token}`,
+		},
+	};
+
 	// Get list of people who liked the post
 	const getLikes = useCallback(() => {
-		const url = `${post.post_id}/likes/`;
-
-		const config = {
-			headers: {
-				Authorization: `Token ${user.token}`,
-			},
-		};
+		const url = `https://project-api-404.herokuapp.com/api/author/${getURLID(
+			post.author.id
+		)}/posts/${getURLID(post.post_id || post.id)}/likes/`;
+		// const url = `${post.post_id}/likes/`;
 
 		axios
 			.get(url, config)
@@ -29,18 +33,15 @@ const Like = ({ post }) => {
 			.catch(function (error) {
 				console.log(error);
 			});
+		// eslint-disable-next-line
 	}, [post.id, user.token]);
 
 	// Like the post
 	const like = () => {
-		// Send to post author's inbox
-		const url = `https://project-api-404.herokuapp.com/api/author/${post.author.id}/inbox/`;
-
-		const config = {
-			headers: {
-				Authorization: `Token ${user.token}`,
-			},
-		};
+		// Post to own likes
+		const url = `https://project-api-404.herokuapp.com/api/author/${
+			user.uuid
+		}/likes/posts/${getURLID(post.post_id || post.id)}/`;
 
 		const data = {
 			type: "Like",
@@ -66,6 +67,7 @@ const Like = ({ post }) => {
 	const content = (
 		<div>
 			{likes &&
+				likes.map &&
 				likes.map((like, i) => (
 					<Link to={{ pathname: "/profile", state: like.author }} key={i}>
 						{like.author.displayName}

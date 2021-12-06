@@ -24,3 +24,8 @@
 	display: block;
 	margin-left: auto;
 }
+
+.post_page .post_content {
+	width: 100%;
+	margin: 0.25rem;
+}
