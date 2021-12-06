@@ -11,9 +11,8 @@ const PostComment = ({ post }) => {
 
 	const [comment, setComment] = useState("");
 
-	// Get list of people who liked the post
 	const sendComment = () => {
-		const url = `${post.id}/comments`;
+		const url = `${post.post_id}/comments`;
 
 		const config = {
 			headers: {
@@ -34,6 +33,7 @@ const PostComment = ({ post }) => {
 				console.log(response);
 			})
 			.catch(function (error) {
+				console.log(post);
 				console.log(error);
 			});
 	};

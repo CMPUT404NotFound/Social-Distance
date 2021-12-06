@@ -21,7 +21,7 @@ const CreatePost = ({ cancel }) => {
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
 
-	const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/posts/`;
+	const url = `https://project-api-404.herokuapp.com/api/author/${user.uuid}/posts/`;
 
 	const config = {
 		headers: {

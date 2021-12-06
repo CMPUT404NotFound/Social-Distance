@@ -11,7 +11,7 @@ const Explore = () => {
 	const { user } = useContext(UserContext);
 
 	const [people, setPeople] = useState([]);
-	const [remotePeople, setRemotePeople] = useState([]);
+	// const [remotePeople, setRemotePeople] = useState([]);
 
 	const config = {
 		headers: {
@@ -21,7 +21,7 @@ const Explore = () => {
 
 	// Get Local Users
 	useEffect(() => {
-		const url = `https://project-api-404.herokuapp.com/api/authors`;
+		const url = `https://project-api-404.herokuapp.com/api/authors/`;
 
 		axios
 			.get(url, config)
@@ -35,19 +35,19 @@ const Explore = () => {
 	}, [user]);
 
 	// Get remote users
-	useEffect(() => {
-		const url = `https://cmput404f21t17.herokuapp.com/service/connect/public/author/`;
+	// useEffect(() => {
+	// 	const url = `https://cmput404f21t17.herokuapp.com/service/connect/public/author/`;
 
-		axios
-			.get(url, config)
-			.then(function (response) {
-				console.log(response);
-				setRemotePeople(response.data);
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}, [user]);
+	// 	axios
+	// 		.get(url, config)
+	// 		.then(function (response) {
+	// 			console.log(response);
+	// 			setRemotePeople(response.data);
+	// 		})
+	// 		.catch(function (error) {
+	// 			console.log(error);
+	// 		});
+	// }, [user]);
 
 	return (
 		<div className="explore_page">
@@ -56,11 +56,11 @@ const Explore = () => {
 				<TabPane tab="Local Users" key="1" style={{ paddingInline: "1rem" }}>
 					{people && people.map((person, i) => <Profile person={person} key={i} />)}
 				</TabPane>
-				<TabPane tab="Remote Users" key="2" style={{ paddingInline: "1rem" }}>
+				{/* <TabPane tab="Remote Users" key="2" style={{ paddingInline: "1rem" }}>
 					{remotePeople &&
 						remotePeople.items &&
 						remotePeople.items.map((person, i) => <Profile person={person} key={i} remoteUser />)}
-				</TabPane>
+				</TabPane> */}
 			</Tabs>
 		</div>
 	);

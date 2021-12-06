@@ -9,7 +9,7 @@ const Share = ({ post }) => {
 	// eslint-disable-next-line
 	const [shared, setShared] = useState(false);
 
-	const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/posts/`;
+	const url = `https://project-api-404.herokuapp.com/api/author/${user.uuid}/posts/`;
 
 	const config = {
 		headers: {

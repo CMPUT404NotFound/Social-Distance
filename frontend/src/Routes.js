@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Switch } from "react-router";
 
 // Get Pages
@@ -15,6 +15,7 @@ import Post from "./Pages/Post/post";
 import Error404 from "./Error/error404";
 import UserContext from "./userContext";
 import Profile from "./Pages/Profile/profile";
+import { getSessionStorage } from "./utils";
 
 // User context tutorial resource
 // https://www.youtube.com/watch?v=lhMKvyLRWo0
@@ -22,6 +23,11 @@ import Profile from "./Pages/Profile/profile";
 
 const Routes = () => {
 	const [user, setUser] = useState(null);
+
+	useEffect(() => {
+		// get stored user from api
+		setUser(getSessionStorage("user").value);
+	}, []);
 
 	return (
 		<UserContext.Provider value={{ user, setUser }}>
@@ -69,13 +75,12 @@ const Routes = () => {
 					<Route exact path="/signup">
 						<Signup />
 					</Route>
-					<Route exact path="/login">
-						<Login />
-					</Route>
 					<Route exact path="/">
 						<Login />
 					</Route>
-					<Route component={Error404} />
+					<Route>
+						<Login />
+					</Route>
 				</Switch>
 			)}
 		</UserContext.Provider>

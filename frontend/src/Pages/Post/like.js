@@ -3,6 +3,7 @@ import { useContext, useState, useEffect, useCallback } from "react";
 import { Button, Tooltip, Popover } from "antd";
 import UserContext from "../../userContext";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Like = ({ post }) => {
 	const { user } = useContext(UserContext);
@@ -10,7 +11,7 @@ const Like = ({ post }) => {
 
 	// Get list of people who liked the post
 	const getLikes = useCallback(() => {
-		const url = `${post.id}/likes/`;
+		const url = `${post.post_id}/likes/`;
 
 		const config = {
 			headers: {
@@ -45,7 +46,7 @@ const Like = ({ post }) => {
 			type: "Like",
 			summary: `${user.displayName} likes your post`,
 			author: user,
-			object: post.id,
+			object: post.url,
 		};
 
 		axios
@@ -62,7 +63,16 @@ const Like = ({ post }) => {
 		getLikes();
 	}, [getLikes]);
 
-	const content = <div>{likes && likes.map((like, i) => <p>{like.author.displayName}</p>)}</div>;
+	const content = (
+		<div>
+			{likes &&
+				likes.map((like, i) => (
+					<Link to={{ pathname: "/profile", state: like.author }} key={i}>
+						{like.author.displayName}
+					</Link>
+				))}
+		</div>
+	);
 
 	return (
 		<Tooltip title={"Like"} placement="bottom">

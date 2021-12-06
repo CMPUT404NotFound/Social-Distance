@@ -6,7 +6,7 @@ import "./login.css";
 import axios from "axios";
 import history from "./../../history";
 import UserContext from "../../userContext";
-import { getIDfromURL } from "../../utils";
+import { getIDfromURL, setStorageSessionExpire } from "../../utils";
 
 const Login = () => {
 	// Inspired by AntD docs
@@ -34,7 +34,12 @@ const Login = () => {
 				console.log(response);
 
 				const user = response.data.author;
-				setUser({ ...user, id: getIDfromURL(user.id), idURL: user.id, token: response.data.token });
+				setUser({ ...user, uuid: getIDfromURL(user.id), token: response.data.token });
+				setStorageSessionExpire(
+					"user",
+					{ ...user, uuid: getIDfromURL(user.id), token: response.data.token },
+					response.data.expires_in
+				);
 
 				// redirect to inbox
 				history.push("inbox");

@@ -1,18 +1,16 @@
-// import React, { createElement, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 // eslint-disable-next-line
 import { Row, Col, Avatar, Comment, Button, Tooltip, Popover } from "antd";
 import { UserOutlined, LikeOutlined } from "@ant-design/icons";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ReactCommonmark from "react-commonmark";
 import { useLocation } from "react-router";
 import "./post.css";
 import Share from "./share";
-// import Like from "./like";
+import Like from "./like";
 import PostComment from "./comment";
-import { useContext } from "react";
 import axios from "axios";
 import UserContext from "../../userContext";
-import { Link } from "react-router-dom";
 
 const Post = () => {
 	const location = useLocation();
@@ -20,15 +18,33 @@ const Post = () => {
 
 	const { user } = useContext(UserContext);
 
+	const [comments, setComments] = useState([]);
+
+	const config = {
+		headers: {
+			Authorization: `Token ${user.token}`,
+		},
+	};
+
+	// Get all the comments
+	const getComments = (comment) => {
+		// Send to comment author's inbox
+		const url = post.comments;
+
+		axios
+			.get(url, config)
+			.then(function (response) {
+				setComments(response.data.comments);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	};
+
+	// like a comment
 	const likeComment = (comment) => {
 		// Send to comment author's inbox
 		const url = `${comment.author.url}/inbox/`;
-
-		const config = {
-			headers: {
-				Authorization: `Token ${user.token}`,
-			},
-		};
 
 		const data = {
 			type: "Like",
@@ -40,7 +56,7 @@ const Post = () => {
 		axios
 			.post(url, data, config)
 			.then(function (response) {
-				console.log(response);
+				console.log(response.data.comments);
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -69,6 +85,10 @@ const Post = () => {
 			});
 	};
 
+	useEffect(() => {
+		getComments();
+	}, []);
+
 	return (
 		<div className="post_page">
 			{/* Display post */}
@@ -92,7 +112,7 @@ const Post = () => {
 					{/* Share Button */}
 					<Share post={post} />
 					{/* Like Button */}
-					{/* <Like post={post} /> */}
+					<Like post={post} />
 				</Row>
 			</div>
 
@@ -100,9 +120,8 @@ const Post = () => {
 			<PostComment post={post} />
 
 			{/* Display comments */}
-			{post.commentsSrc &&
-				post.commentsSrc.comments &&
-				post.commentsSrc.comments.map((comment, i) => (
+			{comments &&
+				comments.map((comment, i) => (
 					<Comment
 						className="comment_container"
 						author={comment.author.displayName}
@@ -115,7 +134,7 @@ const Post = () => {
 						}
 						content={
 							<>
-								comment.comment
+								{comment.comment}
 								<Tooltip key="comment-basic-like" title="Like">
 									<Button
 										shape="circle"
