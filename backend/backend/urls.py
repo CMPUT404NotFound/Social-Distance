@@ -87,7 +87,6 @@ urlpatterns = [
     re_path(r"api/logout/?$", authorViews.logout),
     
     re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.]+)/comments/?$", commentViews.handleComments),
-    
     re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/friends/?$", followerViews.friendsView),
     re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/followers/?$", followerViews.getAllFollowers),
     re_path(r"^api/author/(?P<author_id>[A-Za-z0-9-~.]+)/followers/(?P<follower_id>[A-Za-z0-9-~.]+)/?$", followerViews.addFollower),
@@ -100,6 +99,7 @@ urlpatterns = [
     re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/likes/comments/(?P<commentId>[A-Za-z0-9-~.]+)/?$", likeviews.addLikeComment),
     
     re_path(r"^api/nodes/?$", nodeViews.getNodes),
+    re_path(r"^api/nodes/authors/?$", nodeViews.getAllAuthors),
 
     #api paths
     re_path(

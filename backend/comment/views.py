@@ -159,7 +159,6 @@ def handlePOST(request: Union[HttpRequest, ParsedRequest], authorId: str = "", p
     tags=["comments"],
 )
 @api_view(["GET", "POST"])
-@authentication_classes([TokenAuth(needAuthorCheck=["POST"]), NodeBasicAuth])
 @parseIncomingRequest(["GET", "POST"], ClassType.POST)
 def handleComments(request: Union[HttpRequest, ParsedRequest], authorId: str = "", postId: str = ""):
 
