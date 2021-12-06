@@ -9,7 +9,7 @@ from django.http import JsonResponse
 
 class PostsSerializer(serializers.ModelSerializer):
 
-    post_id = serializers.SerializerMethodField()
+    id = serializers.SerializerMethodField()
     type = serializers.SerializerMethodField()
     author = serializers.SerializerMethodField()
     source = serializers.SerializerMethodField('get_source_id')
@@ -21,7 +21,7 @@ class PostsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ("type", "post_id", "author", "title", 
+        fields = ("type", "id", "author", "title", 
         "visibility","description","content", "contentType",
         "source", "origin","count","categories","comments",
         "unlisted","published")
@@ -30,7 +30,7 @@ class PostsSerializer(serializers.ModelSerializer):
         return "post"
     def get_author(self, obj):
         return AuthorSerializer(obj.author_id).data
-    def get_post_id(self, obj):
+    def get_id(self, obj):
         return f"{SITE_ADDRESS}author/{obj.author_id.pk}/posts/{obj.post_id}/"
     def get_origin_id(self, obj):
         if obj.origin:

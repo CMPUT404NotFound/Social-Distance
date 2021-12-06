@@ -1,6 +1,4 @@
 import base64
-from typing_extensions import Required
-from PIL import Image, ImageColor
 from os import path
 import requests
 
@@ -10,10 +8,13 @@ def handleImage(img_req):
     if (type.startswith("image/")):
         post_content = img_req["content"]
         if post_content.startswith("http"):
-            response = requests.get(url=img_req)
+            response = requests.get(url=post_content)
             if response.ok:
                 img_req["content"] = base64.b64encode(response.content)  
                 return img_req
+        elif post_content.startswith("data"):
+            img_req["content"] = post_content.split(",")[1]
+    
     return img_req
 
 def saveImage(base64Image, fileName):
