@@ -19,11 +19,10 @@ from utils.request import parseIncomingRequest, ParsedRequest, returnGETRequest,
 from django.http import HttpResponse
 import json
 
-# @swagger_auto_schema(method="delete",operation_summary="deletes a post", tags=["Posts"])
-# @swagger_auto_schema(method="get",operation_summary="gets a post by id", tags=["Posts"])
-# @swagger_auto_schema(method="post",operation_summary="updates an existing post", tags=["Posts"], field_inspectors=[NoSchemaTitleInspector], request_body=PostsSerializer)
-# @swagger_auto_schema(method="put", operation_summary="creates a new post with given id", tags=["Posts"], field_inspectors=[NoSchemaTitleInspector], request_body=PostsSerializer)
-
+@swagger_auto_schema(method="delete",operation_summary="deletes a post", tags=["Posts"])
+@swagger_auto_schema(method="get",operation_summary="gets a post by id", tags=["Posts"])
+@swagger_auto_schema(method="post",operation_summary="updates an existing post", tags=["Posts"], field_inspectors=[NoSchemaTitleInspector], request_body=PostsSerializer)
+@swagger_auto_schema(method="put", operation_summary="creates a new post with given id", tags=["Posts"], field_inspectors=[NoSchemaTitleInspector], request_body=PostsSerializer)
 @api_view(["GET", "POST", "DELETE", "PUT"])
 @authentication_classes([TokenAuth(needAuthorCheck=["POST", "PUT", "DELETE"]), NodeBasicAuth])
 @parseIncomingRequest(["GET"], ClassType.POST)
