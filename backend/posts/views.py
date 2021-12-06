@@ -273,14 +273,14 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
             output = []
             response =  makeRequest("GET", f"{request.id}posts/")
             if response.status_code < 300:
-                posts = json.loads(response.content)
-                if request.id in friend_id_strings:
+                posts = json.loads(response.content).get("items", [])
+                if request.id in friend_id_strings or request.id[:-1]:
                     for post in posts:
                         if not post.get("unlised", False):
                             output.append(post)
                 else:
                     for post in posts:
-                        if  post.get("visibility", "PUBLIC") == 'PUBLIC':
+                        if post.get("visibility", "PUBLIC") == 'PUBLIC':
                             output.append(post)
                             
                 return Response(output, status=200)
