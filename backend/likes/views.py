@@ -118,29 +118,29 @@ def getLiked(request: Union[ParsedRequest, HttpRequest], authorId):
         if "page" in params and "size" in params:
             try:
                 pager = Paginator(likes, int(params["size"]))
-                serial = LikeSerializer(pager.page(int(params["page"]), many=True))
+                serial = LikeSerializer(pager.page(int(params["page"])), many=True)
             except (ValueError, EmptyPage, PageNotAnInteger) as e:
                 return Response(str(e), status=400)
         else:
             serial = LikeSerializer(likes, many=True)
         return Response({"type": "liked", "items": serial.data}, status=200)
 
-    elif request.method == "POST":
-        # parse does not handle POST oops.
-        # if not request.islocal:
-        #     return Response("POSTing likes directly to other servers user is not allowed.", status=400)
+    # elif request.method == "POST":
+    #     # parse does not handle POST oops.
+    #     # if not request.islocal:
+    #     #     return Response("POSTing likes directly to other servers user is not allowed.", status=400)
 
-        data = request.data
-        try:
-            target = data["target"]
-            if pair := checkIsLocal(target):
-                Like.objects.create(author=authorId, parentId=pair[0])
-            else:
-                Like.objects.create(author=authorId, parentId=target)
-            return Response(status=204)
+    #     data = request.data
+    #     try:
+    #         target = data["target"]
+    #         if pair := checkIsLocal(target):
+    #             Like.objects.create(author=authorId, parentId=pair[0])
+    #         else:
+    #             Like.objects.create(author=authorId, parentId=target)
+    #         return Response(status=204)
 
-        except KeyError as e:
-            return Response("bad request json format", status=400)
+    #     except KeyError as e:
+    #         return Response("bad request json format", status=400)
 
 
 @swagger_auto_schema(
@@ -158,16 +158,16 @@ def addLikePost(request: Union[ParsedRequest, HttpRequest], authorId, postId: st
 
     if request.islocal:
         try:
-            post : Post = Post.objects.get(pk = request.id)
+            post: Post = Post.objects.get(pk=request.id)
             targetAuthorId = post.author_id.pk
         except Comment.DoesNotExist:
-            return Response("post not found!", status= 404)
+            return Response("post not found!", status=404)
 
         # this author id def exists, since it passed auth
         like = Like.objects.create(author=authorId, parentId=request.id)
-      
-        #post.author_id is linked a existing author via foreignkey
-        InboxItem.objects.create(author=post.author_id, type="L", contentId=like.pk) 
+
+        # post.author_id is linked a existing author via foreignkey
+        InboxItem.objects.create(author=post.author_id, type="L", contentId=like.pk)
         return Response(status=204)
     else:
         foreignid = request.id[: request.id.find("post")]
@@ -200,20 +200,20 @@ def addLikeComment(request: Union[ParsedRequest, HttpRequest], authorId, comment
 
     if request.islocal:
         try:
-            comment : Comment = Comment.objects.get(pk = request.id)
+            comment: Comment = Comment.objects.get(pk=request.id)
             targetAuthorId = comment.author
         except Comment.DoesNotExist:
-            return Response("comment not found!", status= 404)
+            return Response("comment not found!", status=404)
 
         # this author id def exists, since it passed auth
         like = Like.objects.create(author=authorId, parentId=request.id)
         try:
-            targetAuthor = Author.objects.get(pk = targetAuthorId) 
-            InboxItem.objects.create(author=targetAuthor, type="L", contentId=like.pk) 
+            targetAuthor = Author.objects.get(pk=targetAuthorId)
+            InboxItem.objects.create(author=targetAuthor, type="L", contentId=like.pk)
         except Author.DoesNotExist:
             # if owner of the comment no longer exists, just simply skip sending inbox
             pass
-        
+
         return Response(status=204)
     else:
         foreignid = request.id[: request.id.find("post")]
