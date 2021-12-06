@@ -13,15 +13,15 @@ const Explore = () => {
 	const [people, setPeople] = useState([]);
 	const [remotePeople, setRemotePeople] = useState([]);
 
+	const config = {
+		headers: {
+			Authorization: `Token ${user.token}`,
+		},
+	};
+
 	// Get Local Users
 	useEffect(() => {
 		const url = `https://project-api-404.herokuapp.com/api/authors`;
-
-		let config = {
-			headers: {
-				Authorization: `Token ${user.token}`,
-			},
-		};
 
 		axios
 			.get(url, config)
@@ -36,17 +36,7 @@ const Explore = () => {
 
 	// Get remote users
 	useEffect(() => {
-		const url = `https://cmput404f21t17.herokuapp.com/service/connect/public/author/`;
-
-		let config = {
-			headers: {
-				Authorization: `Token ${user.token}`,
-			},
-			auth: {
-				username: "1802fb2b-e473-4078-ace3-c205897accf7",
-				password: "123456",
-			},
-		};
+		const url = `https://project-api-404.herokuapp.com/api/nodes/authors/`;
 
 		axios
 			.get(url, config)

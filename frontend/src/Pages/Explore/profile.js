@@ -15,11 +15,11 @@ const Profile = ({ person, remoteUser }) => {
 
 	if (remoteUser) {
 		url = `https://project-api-404.herokuapp.com/api/author/${getIDfromURL(person.id)}/followers/${
-			user.id
+			user.uuid
 		}/`;
 	} else {
 		url = `https://project-api-404.herokuapp.com/api/author/${getIDfromURL(person.id)}/followers/${
-			user.id
+			user.uuid
 		}/`;
 	}
 
@@ -27,14 +27,10 @@ const Profile = ({ person, remoteUser }) => {
 		headers: {
 			Authorization: `Token ${user.token}`,
 		},
-		// auth: {
-		// 	username: "1802fb2b-e473-4078-ace3-c205897accf7",
-		// 	password: "123456",
-		// },
 	};
 
 	const check_following = () => {
-		if (getIDfromURL(person.id) === user.id) return;
+		if (getIDfromURL(person.id) === user.uuid) return;
 
 		axios
 			.get(url, config)
@@ -84,34 +80,37 @@ const Profile = ({ person, remoteUser }) => {
 	};
 
 	return (
-		<Row align="middle" gutter={[16, 16]} className="profile_container">
-			<Col>
-				{person.profileImage ? (
-					<Avatar src={person.profileImage} />
-				) : (
-					<Avatar icon={<UserOutlined />} />
-				)}
-			</Col>
-			<Col flex={1}>
-				<Link to={{ pathname: "/profile", state: person }}>{person.displayName}</Link>
-			</Col>
-			<Col>
-				{following ? (
-					<Button type="primary" icon={<PlusOutlined />} onClick={unfollow} danger>
-						Unfollow
-					</Button>
-				) : (
-					<Button
-						type="primary"
-						icon={<PlusOutlined />}
-						onClick={follow}
-						disabled={getIDfromURL(person.id) === user.id}
-					>
-						Follow
-					</Button>
-				)}
-			</Col>
-		</Row>
+		<div className="profile_container">
+			<Row align="middle" gutter={[16, 16]}>
+				<Col>
+					{person.profileImage ? (
+						<Avatar src={person.profileImage} />
+					) : (
+						<Avatar icon={<UserOutlined />} />
+					)}
+				</Col>
+				<Col flex={1}>
+					<Link to={{ pathname: "/profile", state: person }}>{person.displayName}</Link>
+				</Col>
+				<Col>
+					{following ? (
+						<Button type="primary" icon={<PlusOutlined />} onClick={unfollow} danger>
+							Unfollow
+						</Button>
+					) : (
+						<Button
+							type="primary"
+							icon={<PlusOutlined />}
+							onClick={follow}
+							disabled={getIDfromURL(person.id) === user.uuid}
+						>
+							Follow
+						</Button>
+					)}
+				</Col>
+			</Row>
+			<div className="source">Source: {person.host}</div>
+		</div>
 	);
 };
 

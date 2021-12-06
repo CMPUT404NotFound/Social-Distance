@@ -6,3 +6,9 @@
 	cursor: pointer;
 	margin-bottom: 1rem;
 }
+
+.explore_page .profile_container .source {
+	color: rgb(171, 169, 169);
+	font-size: 0.75rem;
+	margin-top: 0.5rem;
+}

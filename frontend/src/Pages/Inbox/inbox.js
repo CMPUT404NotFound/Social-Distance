@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const Inbox = () => {
 	const { user } = useContext(UserContext);
 
-	// /*
+	/*
 	const examplepost = {
 		type: "post",
 		title: "A post title about a post about web dev",
@@ -63,29 +63,29 @@ const Inbox = () => {
 	};
 
 	const [posts, setPosts] = useState([examplepost]);
-	// */
+	*/
 
-	// const [posts, setPosts] = useState([]);
+	const [posts, setPosts] = useState([]);
 
-	// useEffect(() => {
-	// 	const url = `https://project-api-404.herokuapp.com/api/author/${user.id}/inbox/`;
+	useEffect(() => {
+		const url = `https://project-api-404.herokuapp.com/api/author/${user.uuid}/inbox/`;
 
-	// 	let config = {
-	// 		headers: {
-	// 			Authorization: `Token ${user.token}`,
-	// 		},
-	// 	};
+		let config = {
+			headers: {
+				Authorization: `Token ${user.token}`,
+			},
+		};
 
-	// 	axios
-	// 		.get(url, config)
-	// 		.then(function (response) {
-	// 			console.log(response);
-	// 			setPosts(response.data.items);
-	// 		})
-	// 		.catch(function (error) {
-	// 			console.log(error);
-	// 		});
-	// }, [user]);
+		axios
+			.get(url, config)
+			.then(function (response) {
+				console.log(response);
+				setPosts(response.data.items);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	}, [user]);
 
 	return (
 		<div className="inbox_page">

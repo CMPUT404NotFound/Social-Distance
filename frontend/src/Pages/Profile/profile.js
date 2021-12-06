@@ -7,7 +7,8 @@ import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { Row, Col, Avatar, Button, Tabs } from "antd";
 import { UserOutlined, PlusOutlined, EditOutlined } from "@ant-design/icons";
-import { getIDfromURL } from "../../utils";
+import { getIDfromURL, getURLID } from "../../utils";
+import EditProfile from "./editProfile";
 
 const { TabPane } = Tabs;
 
@@ -18,10 +19,11 @@ const Profile = () => {
 	const { user } = useContext(UserContext);
 
 	const [posts, setPosts] = useState([]);
+	const [likes, setLikes] = useState([]);
 	const [following, setFollowing] = useState(false);
 	const [editModalVisible, setEditModalVisible] = useState(false);
 
-	let url = `https://project-api-404.herokuapp.com/api/author/${person.id}/`;
+	let url = `https://project-api-404.herokuapp.com/api/author/${getURLID(person.id)}/`;
 
 	const config = {
 		headers: {
@@ -31,24 +33,30 @@ const Profile = () => {
 
 	useEffect(() => {
 		// Get the user's posts
-		url += "posts/";
-
-		let config = {
-			headers: {
-				Authorization: `Token ${user.token}`,
-			},
-		};
-
 		axios
-			.get(url, config)
+			.get(url + "posts/", config)
 			.then(function (response) {
 				console.log(response);
-				setPosts(response.data.items);
+				setPosts(response.data);
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
 	}, [user, person]);
+
+	const getLikes = () => {
+		// Get the user's likes
+		axios
+			.get(url + "liked/", config)
+			.then(function (response) {
+				console.log(response);
+				console.log(response.data.items);
+				setLikes(response.data.items);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	};
 
 	const editProfile = () => {
 		let data = {
@@ -68,10 +76,10 @@ const Profile = () => {
 
 	// Check if following
 	const check_following = () => {
-		if (getIDfromURL(person.id) === user.id) return;
+		if (getIDfromURL(person.id) === user.uuid) return;
 
 		axios
-			.get(url, config)
+			.get(url + `followers/${getURLID(user.id)}/`, config)
 			.then(function (response) {
 				console.log(response);
 				setFollowing(true);
@@ -86,13 +94,16 @@ const Profile = () => {
 	useEffect(() => {
 		// On load, check if following
 		check_following();
-	});
+		getLikes();
+		console.log(person);
+	}, []);
 
 	// Follow
 	const follow = () => {
 		const data = {};
+
 		axios
-			.put(url, data, config)
+			.put(url + `followers/${getURLID(user.id)}/`, data, config)
 			.then(function (response) {
 				console.log(response);
 				setFollowing(true);
@@ -109,7 +120,7 @@ const Profile = () => {
 	// Unfollow
 	const unfollow = () => {
 		axios
-			.delete(url, config)
+			.delete(url + `followers/${getURLID(user.id)}/`, config)
 			.then(function (response) {
 				console.log(response);
 				setFollowing(false);
@@ -136,7 +147,7 @@ const Profile = () => {
 					{person.github ? <a href={person.github}>{person.github}</a> : "N/A"}
 				</Col>
 				<Col>
-					{getIDfromURL(person.id) !== user.id ? (
+					{getIDfromURL(person.id) !== user.uuid ? (
 						following ? (
 							<Button type="primary" icon={<PlusOutlined />} onClick={unfollow} danger>
 								Unfollow
@@ -175,6 +186,9 @@ const Profile = () => {
 					{/* User Likes */}
 				</TabPane>
 			</Tabs>
+
+			{/* Edit Profile Modal */}
+			<EditProfile visible={editModalVisible} setVisible={setEditModalVisible} />
 		</div>
 	);
 };

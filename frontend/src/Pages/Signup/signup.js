@@ -41,7 +41,7 @@ const Signup = () => {
 					const user = response.data.author;
 					setUser({
 						...user,
-						id: getIDfromURL(user.id),
+						uuid: getIDfromURL(user.id),
 						idURL: user.id,
 						token: response.data.token,
 					});
