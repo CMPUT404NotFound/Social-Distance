@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from django.contrib.auth import authenticate
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authtoken.models import Token
 
@@ -29,7 +30,14 @@ from typing import Union
 from inbox.models import *
 
 
-@swagger_auto_schema(method="get", tags=['followers'])
+@swagger_auto_schema(
+    method="get", 
+    operation_description="Get a list of all followers of author_id",
+    responses={
+        200: "Successful retrieval",
+        404: "Author not found",
+    },
+    tags=['followers'])
 @api_view(["GET"])
 @parseIncomingRequest(methodToCheck=["GET"], type= ClassType.AUTHOR)
 def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
@@ -73,9 +81,32 @@ def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 #.TODO add speicial authentication for put
-@swagger_auto_schema(method="get", tags=['followers'])
-@swagger_auto_schema(method="put", tags=['followers'])
-@swagger_auto_schema(method="delete", tags=['followers'])
+@swagger_auto_schema(
+    method="get", 
+    operation_summary="Check whether a potential author_A is following the author_B",
+    responses={
+        200: openapi.Response("True if author_A is following author_B", AuthorSerializer),
+        404: openapi.Response("Author_A or author_B not found")
+    },
+    tags=['followers'])
+    
+@swagger_auto_schema(
+    method="put", 
+    operation_summary="If author_id is local, then regardless of whether follower_id is local or foreign, let follower_id follow author_id. If author_id is foreign, follower_id must be local; will then send follow request to author_id's inbox.",
+    responses={
+        200: openapi.Response("Successfully sent to author_id inbox/Successfully create a a Follower object"),
+        404: openapi.Response("author_id or follower_id not found/Follower object already exists")
+    },
+    tags=['followers'])
+@swagger_auto_schema(
+    method="delete", 
+    operation_summary="Remove follower_id from author_id's followers",
+    responses={
+        200: openapi.Response("Successfully removed from author_id's followers"),
+        404: openapi.Response("author_id or follower_id not found/Unsuccessful deletion")
+    },
+    tags=['followers'])
+
 # @authentication_classes([TokenAuth(needAuthorCheck=["DELETE"])])
 @api_view(["GET", "DELETE", "PUT"])
 @parseIncomingRequest(methodToCheck=["GET", "DELETE", "PUT"], type= ClassType.AUTHOR)
@@ -140,6 +171,8 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
                                 "profileImage":json_foreign_object.get("profileImage")}}
             result = makeRequest("POST", full_foreign_id + "inbox/", data)
             print("RESULT: ", result)
+            print("RESULT.CONTENT: ", result.content)
+            print("RESULT.STATUS_CODE: ", result.status_code)
             if 200 <= result.status_code < 300:
                 return Response(status=status.HTTP_201_CREATED)
             else:
