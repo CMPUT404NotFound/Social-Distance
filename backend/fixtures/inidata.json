@@ -118,7 +118,7 @@
             "post": "47e71ded-e926-4cd4-98a1-6f8f87bf5367",
             "author": "c879c4fa-f0d3-4b30-84fc-507ed5ac6e93",
             "comment": "Etincidunt ut quisquam magnam dolore est tempora amet.",
-            "contentType": "P",
+            "contentType": "text/plain",
             "published": "2021-12-04T23:06:00.041Z"
         }
     },
@@ -129,7 +129,7 @@
             "post": "e377ecfb-efd4-4993-8a20-5af7812cda97",
             "author": "a1f0f317-5a3c-4d5d-bb58-e8ad563e9aba",
             "comment": "Neque non sit amet.",
-            "contentType": "P",
+            "contentType": "text/plain",
             "published": "2021-12-04T23:05:59.047Z"
         }
     },
@@ -140,7 +140,7 @@
             "post": "78d23fb6-ec4d-4db5-aed4-28d86fc580d7",
             "author": "20d63709-f5ce-43c7-87c1-c3c39ebd3910",
             "comment": "Velit non ut dolor dolorem.",
-            "contentType": "P",
+            "contentType": "text/plain",
             "published": "2021-12-04T23:05:59.496Z"
         }
     },
@@ -151,7 +151,7 @@
             "post": "78d23fb6-ec4d-4db5-aed4-28d86fc580d7",
             "author": "20d63709-f5ce-43c7-87c1-c3c39ebd3910",
             "comment": "Dolor eius quaerat aliquam labore.",
-            "contentType": "P",
+            "contentType": "text/plain",
             "published": "2021-12-04T23:05:59.601Z"
         }
     },
@@ -162,7 +162,7 @@
             "post": "c9fea4ca-6c61-444d-9719-d507f6c5cc6b",
             "author": "a1f0f317-5a3c-4d5d-bb58-e8ad563e9aba",
             "comment": "Numquam velit voluptatem est.",
-            "contentType": "P",
+            "contentType": "text/plain",
             "published": "2021-12-04T23:05:59.248Z"
         }
     },
@@ -173,7 +173,7 @@
             "post": "c9fea4ca-6c61-444d-9719-d507f6c5cc6b",
             "author": "a1f0f317-5a3c-4d5d-bb58-e8ad563e9aba",
             "comment": "Est eius magnam ipsum labore dolor est.",
-            "contentType": "P",
+            "contentType": "text/plain",
             "published": "2021-12-04T23:05:59.364Z"
         }
     },
@@ -184,7 +184,7 @@
             "post": "669b8267-0c5d-4d35-8f0d-f9d700ac0c1f",
             "author": "20d63709-f5ce-43c7-87c1-c3c39ebd3910",
             "comment": "Modi quaerat sit eius ipsum ut sed ut.",
-            "contentType": "P",
+            "contentType": "text/plain",
             "published": "2021-12-04T23:05:59.707Z"
         }
     },
@@ -195,7 +195,7 @@
             "post": "e377ecfb-efd4-4993-8a20-5af7812cda97",
             "author": "a1f0f317-5a3c-4d5d-bb58-e8ad563e9aba",
             "comment": "Porro tempora dolor quisquam quisquam tempora est aliquam.",
-            "contentType": "P",
+            "contentType": "text/plain",
             "published": "2021-12-04T23:05:58.869Z"
         }
     },
@@ -206,7 +206,7 @@
             "post": "7876fead-2512-43a3-8b94-229999db3060",
             "author": "a238b1d8-2b8d-4760-aeb9-5e66841c0d0f",
             "comment": "Est modi dolor sit dolorem.",
-            "contentType": "P",
+            "contentType": "text/plain",
             "published": "2021-12-04T23:05:59.813Z"
         }
     },
@@ -217,7 +217,7 @@
             "post": "e7cc890d-efcd-4f94-99db-6d0c95526c0d",
             "author": "f3ba1f94-ab39-453d-af87-994d4b2c0571",
             "comment": "Numquam velit quaerat adipisci quisquam.",
-            "contentType": "P",
+            "contentType": "text/plain",
             "published": "2021-12-04T23:05:59.153Z"
         }
     },
@@ -228,7 +228,7 @@
             "post": "7876fead-2512-43a3-8b94-229999db3060",
             "author": "a238b1d8-2b8d-4760-aeb9-5e66841c0d0f",
             "comment": "Sit est numquam modi voluptatem.",
-            "contentType": "P",
+            "contentType": "text/plain",
             "published": "2021-12-04T23:05:59.928Z"
         }
     },
@@ -702,10 +702,10 @@
         "fields": {
             "author_id": "c879c4fa-f0d3-4b30-84fc-507ed5ac6e93",
             "title": "Amet non dolore amet est velit magnam.",
-            "visibility": "PU",
+            "visibility": "PUBLIC",
             "description": "Consectetur tempora aliquam velit porro tempora.",
             "content": "Modi ut aliquam quiquia est. Porro quaerat voluptatem adipisci quiquia. Eius tempora tempora velit neque non. Quisquam amet est est tempora etincidunt. Sed modi neque ut neque quaerat quisquam quaerat. Dolor velit ut consectetur sed. Ipsum dolor dolore non magnam consectetur.",
-            "contentType": "plain",
+            "contentType": "text/plain",
             "source": "https://project-api-404.herokuapp.com/api/",
             "origin": "https://project-api-404.herokuapp.com/api/",
             "unlisted": false,
@@ -720,10 +720,10 @@
         "fields": {
             "author_id": "a238b1d8-2b8d-4760-aeb9-5e66841c0d0f",
             "title": "Tempora aliquam etincidunt est.",
-            "visibility": "PU",
+            "visibility": "PUBLIC",
             "description": "Eius ut numquam amet ipsum amet.",
             "content": "Tempora aliquam tempora dolorem adipisci quisquam magnam. Dolorem modi modi voluptatem sit quisquam. Porro labore etincidunt modi labore consectetur velit. Numquam dolore etincidunt magnam. Amet sed quiquia modi.",
-            "contentType": "plain",
+            "contentType": "text/plain",
             "source": "https://project-api-404.herokuapp.com/api/",
             "origin": "https://project-api-404.herokuapp.com/api/",
             "unlisted": false,
@@ -738,10 +738,10 @@
         "fields": {
             "author_id": "f3ba1f94-ab39-453d-af87-994d4b2c0571",
             "title": "Non porro adipisci est consectetur est.",
-            "visibility": "PU",
+            "visibility": "PUBLIC",
             "description": "Labore ut ut ut tempora porro porro magnam.",
             "content": "Labore ut quisquam sed non adipisci eius dolorem. Quaerat dolorem est ipsum quiquia aliquam numquam. Quisquam est ipsum labore. Dolorem numquam etincidunt voluptatem. Velit quaerat velit etincidunt consectetur velit quaerat labore. Numquam consectetur dolorem aliquam quisquam. Etincidunt voluptatem eius velit.",
-            "contentType": "plain",
+            "contentType": "text/plain",
             "source": "https://project-api-404.herokuapp.com/api/",
             "origin": "https://project-api-404.herokuapp.com/api/",
             "unlisted": false,
@@ -756,10 +756,10 @@
         "fields": {
             "author_id": "20d63709-f5ce-43c7-87c1-c3c39ebd3910",
             "title": "Neque ipsum quisquam labore.",
-            "visibility": "PU",
+            "visibility": "PUBLIC",
             "description": "Amet ipsum neque dolore.",
             "content": "Est modi dolore quiquia est adipisci quiquia modi. Numquam consectetur tempora quiquia modi. Quiquia porro magnam dolorem dolore amet aliquam adipisci. Porro sed porro dolorem aliquam dolor. Consectetur non dolorem velit neque est. Velit consectetur est velit voluptatem velit labore quisquam. Velit numquam amet labore est amet tempora. Eius dolor porro sed. Ut velit ut non voluptatem labore sed.",
-            "contentType": "plain",
+            "contentType": "text/plain",
             "source": "https://project-api-404.herokuapp.com/api/",
             "origin": "https://project-api-404.herokuapp.com/api/",
             "unlisted": false,
@@ -774,10 +774,10 @@
         "fields": {
             "author_id": "a238b1d8-2b8d-4760-aeb9-5e66841c0d0f",
             "title": "Ut quaerat modi quisquam velit aliquam dolorem quaerat.",
-            "visibility": "PU",
+            "visibility": "PUBLIC",
             "description": "Ut modi quiquia sed ut amet.",
             "content": "Numquam voluptatem ipsum quaerat dolor dolorem. Labore dolorem consectetur sit consectetur adipisci. Labore quiquia quaerat dolorem sit quiquia. Consectetur amet aliquam neque. Sed adipisci labore magnam dolore eius dolorem voluptatem. Etincidunt voluptatem labore ipsum quisquam labore sed.",
-            "contentType": "plain",
+            "contentType": "text/plain",
             "source": "https://project-api-404.herokuapp.com/api/",
             "origin": "https://project-api-404.herokuapp.com/api/",
             "unlisted": false,
@@ -792,10 +792,10 @@
         "fields": {
             "author_id": "20d63709-f5ce-43c7-87c1-c3c39ebd3910",
             "title": "Amet consectetur dolor quiquia dolorem dolor aliquam.",
-            "visibility": "PU",
+            "visibility": "PUBLIC",
             "description": "Quisquam non dolor est consectetur.",
             "content": "Sed velit sit sit dolorem aliquam. Magnam est porro modi. Dolor voluptatem est ipsum quiquia labore neque. Etincidunt magnam quiquia neque. Tempora quiquia adipisci dolore numquam quaerat.",
-            "contentType": "plain",
+            "contentType": "text/plain",
             "source": "https://project-api-404.herokuapp.com/api/",
             "origin": "https://project-api-404.herokuapp.com/api/",
             "unlisted": false,
@@ -810,10 +810,10 @@
         "fields": {
             "author_id": "a1f0f317-5a3c-4d5d-bb58-e8ad563e9aba",
             "title": "Quaerat non consectetur voluptatem ipsum voluptatem.",
-            "visibility": "PU",
+            "visibility": "PUBLIC",
             "description": "Consectetur tempora dolorem magnam dolorem aliquam dolore magnam.",
             "content": "Labore quisquam quiquia non non. Numquam sit adipisci dolorem ut. Velit magnam adipisci magnam aliquam est neque. Dolorem sit aliquam dolor amet etincidunt eius velit. Etincidunt voluptatem dolore eius aliquam neque. Voluptatem tempora labore dolore magnam tempora sed adipisci. Sit tempora consectetur ut labore aliquam ut adipisci. Dolore dolorem consectetur sit sit.",
-            "contentType": "plain",
+            "contentType": "text/plain",
             "source": "https://project-api-404.herokuapp.com/api/",
             "origin": "https://project-api-404.herokuapp.com/api/",
             "unlisted": false,
@@ -828,10 +828,10 @@
         "fields": {
             "author_id": "f3ba1f94-ab39-453d-af87-994d4b2c0571",
             "title": "Dolor voluptatem est eius dolorem.",
-            "visibility": "PU",
+            "visibility": "PUBLIC",
             "description": "Velit ipsum sed dolor quisquam consectetur.",
             "content": "Non porro dolore quiquia etincidunt. Tempora tempora etincidunt labore adipisci labore. Eius tempora etincidunt ut est. Neque numquam porro ipsum est. Sit amet dolorem non etincidunt etincidunt.",
-            "contentType": "plain",
+            "contentType": "text/plain",
             "source": "https://project-api-404.herokuapp.com/api/",
             "origin": "https://project-api-404.herokuapp.com/api/",
             "unlisted": false,
@@ -846,10 +846,10 @@
         "fields": {
             "author_id": "a1f0f317-5a3c-4d5d-bb58-e8ad563e9aba",
             "title": "Neque numquam non ipsum modi ut sit.",
-            "visibility": "PU",
+            "visibility": "PUBLIC",
             "description": "Eius sed dolore ut velit adipisci.",
             "content": "Ut voluptatem ut magnam porro quaerat. Etincidunt numquam dolore velit quisquam. Neque est ut sit quaerat est modi magnam. Labore consectetur numquam ut est dolore eius. Neque porro quaerat adipisci velit magnam.",
-            "contentType": "plain",
+            "contentType": "text/plain",
             "source": "https://project-api-404.herokuapp.com/api/",
             "origin": "https://project-api-404.herokuapp.com/api/",
             "unlisted": false,
@@ -864,10 +864,10 @@
         "fields": {
             "author_id": "a1f0f317-5a3c-4d5d-bb58-e8ad563e9aba",
             "title": "golden ratio post",
-            "visibility": "PU",
+            "visibility": "PUBLIC",
             "description": "stuff",
             "content": "wow! wowowowowoowow!",
-            "contentType": "plain",
+            "contentType": "text/plain",
             "source": "",
             "origin": "",
             "unlisted": false,
@@ -882,10 +882,10 @@
         "fields": {
             "author_id": "a1f0f317-5a3c-4d5d-bb58-e8ad563e9aba",
             "title": "Labore numquam quaerat aliquam amet dolor modi.",
-            "visibility": "PU",
+            "visibility": "PUBLIC",
             "description": "Ipsum labore modi voluptatem voluptatem sed dolore tempora.",
             "content": "Aliquam adipisci voluptatem eius velit tempora amet non. Ut neque porro velit quaerat velit. Ipsum dolore neque numquam magnam. Non amet aliquam consectetur velit quaerat velit eius. Sed voluptatem non eius sed amet. Eius amet dolore quiquia dolorem modi. Aliquam dolore ipsum dolorem adipisci quaerat neque. Magnam neque dolor velit.",
-            "contentType": "plain",
+            "contentType": "text/plain",
             "source": "https://project-api-404.herokuapp.com/api/",
             "origin": "https://project-api-404.herokuapp.com/api/",
             "unlisted": false,
@@ -900,10 +900,10 @@
         "fields": {
             "author_id": "f3ba1f94-ab39-453d-af87-994d4b2c0571",
             "title": "Etincidunt eius quiquia adipisci non.",
-            "visibility": "PU",
+            "visibility": "PUBLIC",
             "description": "Adipisci numquam amet neque.",
             "content": "Aliquam consectetur eius adipisci amet. Magnam labore dolor est modi porro amet. Tempora non numquam labore. Neque dolore neque dolore adipisci numquam porro quisquam. Consectetur velit amet quisquam. Aliquam eius porro labore aliquam. Etincidunt sed modi magnam aliquam ipsum consectetur dolore.",
-            "contentType": "plain",
+            "contentType": "text/plain",
             "source": "https://project-api-404.herokuapp.com/api/",
             "origin": "https://project-api-404.herokuapp.com/api/",
             "unlisted": false,

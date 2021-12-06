@@ -62,7 +62,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             s = PostsSerializer(post, context={"request": request}, many=True)
             
             # checking the visibility of the post
-            if s.data.get("visibility") == "PU":
+            if s.data.get("visibility") == "PUBLIC":
                 is_it_visible = True
             else:
                 is_it_visible = False
@@ -93,7 +93,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
             # checking the visibility of the post
-            if s.data.get("visibility") == "PU":
+            if s.data.get("visibility") == "PUBLIC":
                 is_it_visible = True
             else:
                 is_it_visible = False
@@ -138,7 +138,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
             # checking the visibility of the post
-            if s.data.get("visibility") == "PU":
+            if s.data.get("visibility") == "PUBLIC":
                 is_it_visible = True
             else:
                 is_it_visible = False
@@ -208,8 +208,8 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
             try:
                 # getting friends list of that author  
                 friend_id_string = findFriends(Author.objects.get(pk= author_id))
-                print(Author.objects.get(pk= author_id))
-                print(friend_id_string)
+                # print(Author.objects.get(pk = author_id))
+                # print(friend_id_string)
                 
                 # token auth will return a Author in this case(by pass entirely is not true), and nodebasicauth will return 'True' on success.
                 usingTokenAuth = (
@@ -217,7 +217,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
                 )  
                 # checking if user is a friend and is in the server
                 is_friend = request.user.id in friend_id_string #regardless if friend or not, 
-        
+                print(is_friend)
                 params: dict = request.query_params
                 
                 # if user is from our server then check; foreign server wont ask for private post
@@ -225,9 +225,9 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
                     if request.user.id == author_id or is_friend:
                         post = Post.objects.filter(author_id=author_id)
                     else:
-                        post = Post.objects.filter(author_id=author_id).filter(visibility="PU").exclude(unlisted=True)
+                        post = Post.objects.filter(author_id=author_id).filter(visibility="PUBLIC").exclude(unlisted=True)
                 else:
-                    post = Post.objects.filter(author_id=author_id).filter(visibility="PU").exclude(unlisted=True)
+                    post = Post.objects.filter(author_id=author_id).filter(visibility="PUBLIC").exclude(unlisted=True)
 
                 #doing pagination
                 if "page" in params and "size" in params:  # make sure param has both page and size in order to paginate
@@ -262,7 +262,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
             new_post = Post.objects.create(
                 author_id=author,
                 title=request.data.get("title", ""),
-                visibility=request.data.get("visibility", "PU"),
+                visibility=request.data.get("visibility", "PUBLIC"),
                 description=request.data.get("description", ""),
                 content=request.data.get("content", ""),
                 contentType=request.data.get("contentType", "plain"),
@@ -272,35 +272,32 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
                 categories=request.data.get("categories", ""),
                 count=request.data.get("count", "0"),
             )
-            if new_post.is_valid():
-                new_post.save()
-                # getting friends list of that author  
-                local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
-                follower_id_string = findFollowers(Author.objects.get(pk=author_id))
-                # checking the visibility of the post
-                if new_post.data.get("visibility") == "PU":
-                    is_it_visible = True
-                else:
-                    is_it_visible = False
-                
-                if(is_it_visible): #if visible then push to all the followers
-                    for follower in follower_id_string:
-                        # checking if the follower is local or foreign
-                        if(follower.startswith("http")):
-                            return makeRequest("PUT", f"{follower if follower.endswith('/') else (follower + '/')  }inbox/", new_post.data)
-                        else:
-                            InboxItem.objects.create(author=follower, type="P", contentId=new_post.data.get(id))
-            
-                else: # post is private
-                    for friend in foreign_author_id_string:
-                        return makeRequest("PUT", f"{friend if friend.endswith('/') else (friend + '/')}inbox/", new_post.data)
-                    for local_freind in local_friend_id_string:    
-                        InboxItem.objects.create(author=local_freind, type="P", contentId= new_post.data.get(id))
-               
-                return Response("Post is created",status=status.HTTP_204_NO_CONTENT)
-            # if data is not valid
+              
+            new_post.save()
+            # getting friends list of that author  
+            local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
+            follower_id_string = findFollowers(Author.objects.get(pk=author_id))
+            # checking the visibility of the post
+            if request.data.get("visibility") == "PUBLIC":
+                is_it_visible = True
             else:
-                return Response("Data not valid, Post not created")  
+                is_it_visible = False
+                
+            if(is_it_visible): #if visible then push to all the followers
+                for follower in follower_id_string:
+                    # checking if the follower is local or foreign
+                    if(follower.startswith("http")):
+                        return makeRequest("PUT", f"{follower if follower.endswith('/') else (follower + '/')  }inbox/", new_post.data)
+                    else:
+                        InboxItem.objects.create(author=Author.objects.get(pk = follower), type="P", contentId=new_post.pk)
+                              
+            else: # post is private
+                for friend in foreign_author_id_string:
+                    return makeRequest("PUT", f"{friend if friend.endswith('/') else (friend + '/')}inbox/", new_post.data)
+                for local_freind in local_friend_id_string:    
+                    InboxItem.objects.create(author=Author.objects.get(pk = local_freind), type="P", contentId= new_post.pk)
+               
+            return Response("Post is created",status=status.HTTP_204_NO_CONTENT)
             
         except KeyError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
