@@ -1,1 +1,92 @@
-[{"model": "nodes.node", "pk": 1, "fields": {"url": "https://cmput404-social-circle.herokuapp.com/", "netloc": "cmput404-social-circle.herokuapp.com", "allowIncoming": true, "allowOutgoing": true, "incomingName": "Team5", "outgoingName": "admin", "incomingPassword": "Team5", "outgoingPassword": "admin", "description": "team 05"}}, {"model": "nodes.node", "pk": 2, "fields": {"url": "http://newconnection-server.herokuapp.com/api/v1/", "netloc": "newconnection-server.herokuapp.com", "allowIncoming": true, "allowOutgoing": true, "incomingName": "T06Username", "outgoingName": "admin", "incomingPassword": "T06Password", "outgoingPassword": "NewConnectionAdmin", "description": "False"}}, {"model": "nodes.node", "pk": 3, "fields": {"url": "https://plurr.herokuapp.com/service/", "netloc": "plurr.herokuapp.com", "allowIncoming": true, "allowOutgoing": true, "incomingName": "T26Username", "outgoingName": "team23", "incomingPassword": "T26Password", "outgoingPassword": "password", "description": "False"}}, {"model": "nodes.node", "pk": 4, "fields": {"url": "https://cmput404f21t17.herokuapp.com/service/", "netloc": "cmput404f21t17.herokuapp.com", "allowIncoming": true, "allowOutgoing": true, "incomingName": "team17", "outgoingName": "77adf1e5-6609-4c0c-a1eb-6c49b5eb5260", "incomingPassword": "password17", "outgoingPassword": "123456", "description": "False"}}, {"model": "nodes.node", "pk": 5, "fields": {"url": "https://glowing-palm-tree1.herokuapp.com/service/", "netloc": "glowing-palm-tree1.herokuapp.com", "allowIncoming": true, "allowOutgoing": true, "incomingName": "team12", "outgoingName": "t23", "incomingPassword": "team12", "outgoingPassword": "CMPUT404", "description": "False"}}, {"model": "nodes.node", "pk": 6, "fields": {"url": "https://unhindled.herokuapp.com/service/", "netloc": "unhindled.herokuapp.com", "allowIncoming": true, "allowOutgoing": true, "incomingName": "team15", "outgoingName": "connectionsuperuser", "incomingPassword": "team15", "outgoingPassword": "404connection", "description": "team 15's api"}}]
+[
+    {
+        "model": "nodes.node",
+        "pk": 1,
+        "fields": {
+            "url": "https://cmput404-social-circle.herokuapp.com/",
+            "netloc": "cmput404-social-circle.herokuapp.com",
+            "allowIncoming": true,
+            "allowOutgoing": true,
+            "incomingName": "Team5",
+            "outgoingName": "admin",
+            "incomingPassword": "Team5",
+            "outgoingPassword": "admin",
+            "description": "team 05"
+        }
+    },
+    {
+        "model": "nodes.node",
+        "pk": 2,
+        "fields": {
+            "url": "http://newconnection-server.herokuapp.com/api/v1/",
+            "netloc": "newconnection-server.herokuapp.com",
+            "allowIncoming": true,
+            "allowOutgoing": true,
+            "incomingName": "T06Username",
+            "outgoingName": "admin",
+            "incomingPassword": "T06Password",
+            "outgoingPassword": "NewConnectionAdmin",
+            "description": "False"
+        }
+    },
+    {
+        "model": "nodes.node",
+        "pk": 3,
+        "fields": {
+            "url": "https://plurr.herokuapp.com/service/",
+            "netloc": "plurr.herokuapp.com",
+            "allowIncoming": true,
+            "allowOutgoing": true,
+            "incomingName": "T26Username",
+            "outgoingName": "team23",
+            "incomingPassword": "T26Password",
+            "outgoingPassword": "password",
+            "description": "False"
+        }
+    },
+    {
+        "model": "nodes.node",
+        "pk": 4,
+        "fields": {
+            "url": "https://cmput404f21t17.herokuapp.com/service/",
+            "netloc": "cmput404f21t17.herokuapp.com",
+            "allowIncoming": true,
+            "allowOutgoing": false,
+            "incomingName": "team17",
+            "outgoingName": "77adf1e5-6609-4c0c-a1eb-6c49b5eb5260",
+            "incomingPassword": "password17",
+            "outgoingPassword": "123456",
+            "description": "False"
+        }
+    },
+    {
+        "model": "nodes.node",
+        "pk": 5,
+        "fields": {
+            "url": "https://glowing-palm-tree1.herokuapp.com/service/",
+            "netloc": "glowing-palm-tree1.herokuapp.com",
+            "allowIncoming": true,
+            "allowOutgoing": true,
+            "incomingName": "team12",
+            "outgoingName": "t23",
+            "incomingPassword": "team12",
+            "outgoingPassword": "CMPUT404",
+            "description": "False"
+        }
+    },
+    {
+        "model": "nodes.node",
+        "pk": 6,
+        "fields": {
+            "url": "https://unhindled.herokuapp.com/service/",
+            "netloc": "unhindled.herokuapp.com",
+            "allowIncoming": true,
+            "allowOutgoing": true,
+            "incomingName": "team15",
+            "outgoingName": "connectionsuperuser",
+            "incomingPassword": "team15",
+            "outgoingPassword": "404connection",
+            "description": "team 15's api"
+        }
+    }
+]
