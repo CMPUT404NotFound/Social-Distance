@@ -180,7 +180,7 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
 
 
 
-def findFriends(author : Author):
+def findFriends(author : Author, split = False):
     
     '''
     finds a list of string that are the ids of friends of the (local)author provided. 
@@ -189,7 +189,7 @@ def findFriends(author : Author):
     
     followers : List[QuerySet] = Follower.objects.filter(receiver = author).values("sender")
     
-    output = []
+    
     needFetch = []
     localids = []
 
@@ -201,16 +201,17 @@ def findFriends(author : Author):
         else:
             localids.append(id)
     
-    
+    localFriends = []
     for id in localids:
         try:
             f = Follower.objects.get(receiver = id)
-            output.append(id)
+            localFriends.append(id)
         except:
             pass
     
     responses = makeMultipleGETs(needFetch)
     
+    foreignFriends = []
     for response in responses:
         obj = response[1]
         if obj.status_code >= 400:
@@ -219,9 +220,9 @@ def findFriends(author : Author):
             continue
         #neither of the know falsy reponses are gotten, this link is prob a follower
         
-        output.append(response[0][:response[0].find("follower")])
+        foreignFriends.append(response[0][:response[0].find("follower")])
     
-    return output
+    return localFriends.extend(foreignFriends) if not split else (localFriends, foreignFriends)
 
 
 @swagger_auto_schema(
