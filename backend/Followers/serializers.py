@@ -43,11 +43,13 @@ class FollowRequestSerializer(serializers.ModelSerializer):
     
     def to_representation(self, instance : Follow_Request):
         islocal = checkIsLocal(instance.requestor)
-        
-        
-        if islocal.isLocal:
+        origin = instance.requestor.split("~")[0]
+        just_id = instance.requestor.split("~")[-1]
+        print("2HERE: ", instance.requestor.split("~")[-1])
+        # if islocal.isLocal:
+        if origin == "project-api-404.herokuapp.com":
             try: 
-                author = Author.objects.get(pk = islocal.id)
+                author = Author.objects.get(pk = just_id)
                 follower = AuthorSerializer(author).data
             except Author.DoesNotExist:
                 follower = {
