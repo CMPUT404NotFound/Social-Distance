@@ -118,11 +118,14 @@ def getGithub(request: Union[Request, HttpRequest], authorId) -> Response:
     output = []
     print(json.dumps(eventsJson))
     for events in eventsJson:
+        if events["type"] != "PushEvent":
+            continue
         output.append(
             {
                 "type": events["type"],
                 "actor": events["actor"]["display_login"],
                 "repo": events["repo"]["name"],
+                "branch": events["payload"]["ref"][11:],
                 "creationtime": events["created_at"],
                 "commits": [
                     {"name": commit["author"]["name"], "email": commit["author"]["email"], "message": commit    ["message"]}
