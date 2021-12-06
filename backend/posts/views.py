@@ -12,7 +12,7 @@ from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
 from inbox.models import InboxItem
-from .models import Post
+from .models import Post, postsManager
 from .serializers import PostsSerializer
 from utils.request import parseIncomingRequest, ParsedRequest, returnGETRequest, ClassType
 from django.http import HttpResponse
@@ -83,11 +83,14 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
 
     # PUT the specific post
     elif request.method == "PUT":
-    
-        s = PostsSerializer(data=request.data)
-        s.id = post_id
         
         
+        data= dict(request.data)
+        data["id"] = post_id
+        data["author"] = author_id
+        
+        s = PostsSerializer(data=data)
+
         # checking if the post is valid
         if s.is_valid():
             s.data.author = author_id
