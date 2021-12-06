@@ -57,7 +57,12 @@ schema_view = get_schema_view(
         + POST api/author/local-uuid/likes/comments/<link-comment>/ (local author likes link-comment)
         + POST api/author/local-uuid/likes/posts/<link-post>/ (local author likes link-post)
         + GET api/author/<ignored>/posts/<ignored>/comments/<link-comment>/likes/ (get likes of local or foreign )
-        ''',
+        + GET api/author/<ignored>/posts/<link-post>/likes/
+        + GET api/author/<ignored>/posts/<link-post>/comments/ (get comments of a post)
+        + GET api/author/<link-author>/posts/ (all posts of a author)
+        + GET api/author/<ignored>/posts/<link-post>/ (get since post by id)
+        + GET api/nodes/ (get a list of nodes)
+        + GET api/nodes/authors/ (get a list of all authors from every server, WIP)        ''',
       
         #license=openapi.License(name="BSD License"),
     ),
