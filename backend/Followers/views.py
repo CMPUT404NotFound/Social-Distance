@@ -113,6 +113,9 @@ def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
 # def addFollower(request: Request, author_id, follower_id):
 def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_id):
     isRequestLocal = request.islocal
+    if request.id is None:
+        return Response("foreign server not found", status=404)
+    
     # print("request.islocal: ", request.islocal) #HELLO:  c76413d1-00bc-4cb7-8ca6-282b0bfcb953 <- FOREIGN!! USE ME AS EXAMPLE!
     if request.method == "PUT":
         #PUT author/{full_id_to_follow}/follower/{our_id_full}, is full_id_to_follow local? if yes do below
@@ -199,9 +202,6 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
             # local_author__id = Author.objects.get(pk=follower_id.split("~")[-1])
             # #Following.objects.create(author=local_author__id, following=json.loads(result.content))
             
-
-
-
     elif request.method == "DELETE":
         
         try:

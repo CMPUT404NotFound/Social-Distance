@@ -109,6 +109,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None, queryPara
         return cache.get(cacheKey)
 
     parsed = urlparse(url)
+    print("!!!!!", parsed)
     if not parsed.scheme or (parsed.scheme != "http" and parsed.scheme != "https"):
 
         return QueryResponse("error, invalid url", 400)
@@ -118,8 +119,10 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None, queryPara
     #     return Response({"error": "requested domain is not registered"}, status=400)
 
     # node the request is refering to definitely exists
-    node: Node = Node.objects.get(netloc=parsed.netloc)
-
+    try:
+        node: Node = Node.objects.get(netloc=parsed.netloc)
+    except Node.DoesNotExist:
+        return QueryResponse("node doesnt exist", 400)
     if not node.allowOutgoing:
         return QueryResponse("error, outgoing request to this node is blocked by admin", 400)
 
