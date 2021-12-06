@@ -66,7 +66,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             
             # checking the visibility of the post
          
-            is_it_visible = s.data.get("visibility") == "PUBLIC"
+            is_it_visible = s.data.get("visibility") == "PUBLIC" and s.data.get("unlisted") == False
             
             # if visible then just return the post, no authentication 
             if is_it_visible:
@@ -108,7 +108,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
         follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
         # checking the visibility of the post
-        if request.data.get("visibility") == "PUBLIC":
+        if request.data.get("visibility") == "PUBLIC" and request.data.get("unlisted") == False :
             is_it_visible = True
         else:
             is_it_visible = False
@@ -153,7 +153,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
             # checking the visibility of the post
-            if request.data.get("visibility") == "PUBLIC":
+            if request.data.get("visibility") == "PUBLIC" and request.data.get("unlisted") == False :
                 is_it_visible = True
             else:
                 is_it_visible = False
@@ -226,12 +226,12 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
                 # getting friends list of that author  
                 friend_id_string = findFriends(Author.objects.get(pk= request.id))
                 # print(Author.objects.get(pk = author_id))
-                # print(friend_id_string)
                 
                 # token auth will return a Author in this case(by pass entirely is not true), and nodebasicauth will return 'True' on success.
                 usingTokenAuth = (
                     type(request.user) is Author
-                )  
+                )
+            
                 # checking if user is a friend and is in the server
                 is_friend = usingTokenAuth and request.user.id in friend_id_string #regardless if friend or not, 
                 print(is_friend)
@@ -244,7 +244,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
                     else:
                         post = Post.objects.filter(author_id=request.id).filter(visibility="PUBLIC").exclude(unlisted=True)
                 else:
-                    post = Post.objects.filter(author_id=request.id).filter(visibility="PUBLIC").exclude(unlisted=True)
+                    post = Post.objects.filter(author_id=request.id)
 
                 #doing pagination
                 if "page" in params and "size" in params:  # make sure param has both page and size in order to paginate
@@ -264,6 +264,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
         
         # if post is not on our server then go fetch it from pther server
         else:
+            print(request.id)
             return returnGETRequest(f"{request.id if request.id.endswith('/') else (request.id + '/')}posts/")
     
     #POST method
@@ -297,7 +298,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
             local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
             follower_id_string = findFollowers(Author.objects.get(pk=author_id))
             # checking the visibility of the post
-            if request.data.get("visibility") == "PUBLIC":
+            if request.data.get("visibility") == "PUBLIC" and request.data.get("unlisted") == False :
                 is_it_visible = True
             else:
                 is_it_visible = False
