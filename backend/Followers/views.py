@@ -27,7 +27,8 @@ from utils.request import checkIsLocal, ClassType, makeRequest, parseIncomingReq
 import json
 import requests
 from typing import Union
-from inbox.models import *
+from inbox.models import InboxItem
+
 
 
 @swagger_auto_schema(
@@ -140,8 +141,15 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
                 except:
                     pass
                 if makeFollower == False:
+                    print("requestor: ", follower_id.split("~")[-1])
+                    print("requestee: ", receiver.id)
                     follow_request = Follow_Request.objects.create(requestor=follower_id, requestee=receiver)
                     follow_request.save()
+
+                    inbox_object = InboxItem.objects.create(author=receiver, type="F", contentId=follow_request.pk)
+                    inbox_object.save()
+
+
                 else:
                     follow = Follower.objects.create(sender=follower_id, receiver=receiver)
                     follow.save()
