@@ -6,8 +6,8 @@ from django.utils import timezone
 
 # Create your models here.
 
-visibility_choice = (("PUBLIC","PU"), ("PRIVATE","PR"))
-content_choice = (("markdown","text/markdown"),("plain","text/plain"),("app","application/base64"),("png","image/png;base64"),("jpeg","image/jpeg;base64"))
+visibility_choice = (("PUBLIC","PUBLIC"), ("PRIVATE","PRIVATE"))
+content_choice = (("text/markdown","text/markdown"),("text/plain","text/plain"),("application/base64","application/base64"),("image/png;base64","image/png;base64"),("image/jpeg;base64","image/jpeg;base64"))
 
 
 class postsManager(models.Model):
@@ -23,12 +23,12 @@ class Post(models.Model):
         "title", max_length=100, unique=False, null=False, blank=False, default= ""
     )
     visibility = models.CharField(
-        choices=visibility_choice, max_length=8, null=False, blank=False, default="PU"
+        choices=visibility_choice, max_length=8, null=False, blank=False, default="PUBLIC"
     )
     description = models.CharField("description", max_length=100, blank=True)
     content = models.TextField("content", blank=True)
     contentType = models.CharField(
-        choices=content_choice, max_length= 20, null=False, default="plain"
+        choices=content_choice, max_length= 20, null=False, default="text/plain"
     )
     source = models.URLField(editable = False)
     origin = models.URLField(editable = False)
