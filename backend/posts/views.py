@@ -84,49 +84,49 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
     # PUT the specific post
     elif request.method == "PUT":
         
+        s = Post.objects.create(
+                post_id = post_id,
+                author_id=author,
+                title=request.data.get("title", ""),
+                visibility=request.data.get("visibility", "PUBLIC"),
+                description=request.data.get("description", ""),
+                content=request.data.get("content", ""),
+                contentType=request.data.get("contentType", "plain"),
+                source=request.data.get("source", ""),
+                origin=request.data.get("origin", ""),
+                unlisted=request.data.get("unlisted", "False"),
+                categories=request.data.get("categories", ""),
+                count=request.data.get("count", "0"),
+            )
         
-        data= dict(request.data)
-        data["id"] = post_id
-        data["author"] = author_id
-        
-        s = PostsSerializer(data=data)
+        # getting friends list of that author  
+        local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
+        follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
-        # checking if the post is valid
-        if s.is_valid():
-            s.data.author = author_id
-            s.save()
-
-            # getting friends list of that author  
-            local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
-            follower_id_string = findFollowers(Author.objects.get(pk=author_id))
-
-            # checking the visibility of the post
-            if request.data.get("visibility") == "PUBLIC":
-                is_it_visible = True
-            else:
-                is_it_visible = False
-
-            # pushing it to the inbox according to the friend and follower 
-            if(is_it_visible): #if visible then push to all the followers
-                for follower in follower_id_string:
-                    # checking if the follower is local or foreign
-                    if(follower.startswith("http")):
-                        return makeRequest("PUT", f"{follower if follower.endswith('/') else (follower + '/')  }inbox/", s.data)
-                    else:
-                        InboxItem.objects.create(author=Author.objects.get(pk = follower), type="P", contentId=post_id)
-            
-            else: # post is private
-                for friend in foreign_author_id_string:
-                    return makeRequest("PUT", f"{friend if friend.endswith('/') else (friend + '/')}inbox/", s.data)
-                for local_freind in local_friend_id_string:    
-                    InboxItem.objects.create(author=Author.objects.get(pk = local_freind), type="P", contentId=post_id)
-            
-            # Post created        
-            return Response("Post created", s.data, status=status.HTTP_201_CREATED)
-        
-        # if data is not valid
+        # checking the visibility of the post
+        if request.data.get("visibility") == "PUBLIC":
+            is_it_visible = True
         else:
-            return Response("Data not valid, Post not created")  
+            is_it_visible = False
+
+        # pushing it to the inbox according to the friend and follower 
+        if(is_it_visible): #if visible then push to all the followers
+            for follower in follower_id_string:
+                # checking if the follower is local or foreign
+                if(follower.startswith("http")):
+                    return makeRequest("PUT", f"{follower if follower.endswith('/') else (follower + '/')  }inbox/", s.data)
+                else:
+                    InboxItem.objects.create(author=Author.objects.get(pk = follower), type="P", contentId=post_id)
+        
+        else: # post is private
+            for friend in foreign_author_id_string:
+                return makeRequest("PUT", f"{friend if friend.endswith('/') else (friend + '/')}inbox/", s.data)
+            for local_freind in local_friend_id_string:    
+                InboxItem.objects.create(author=Author.objects.get(pk = local_freind), type="P", contentId=post_id)
+        
+        # Post created        
+        return Response("Post created", status=status.HTTP_201_CREATED)
+    
      
     # Update a specific post 
     elif request.method == "POST":
