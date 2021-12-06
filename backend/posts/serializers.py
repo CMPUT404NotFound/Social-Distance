@@ -31,20 +31,20 @@ class PostsSerializer(serializers.ModelSerializer):
     def get_author(self, obj):
         return AuthorSerializer(obj.author_id).data
     def get_post_id(self, obj):
-        return f"{SITE_ADDRESS}author/{obj.author_id.pk}/posts/{obj.post_id}"
+        return f"{SITE_ADDRESS}author/{obj.author_id.pk}/posts/{obj.post_id}/"
     def get_origin_id(self, obj):
         if obj.origin:
             return obj.origin
         else:    
-            return f"{SITE_ADDRESS}author/{obj.author_id.pk}/posts/{obj.post_id}"
+            return f"{SITE_ADDRESS}author/{obj.author_id.pk}/posts/{obj.post_id}/"
     def get_source_id(self,obj):
         if obj.source:
             return obj.source
         else:
-            return f"{SITE_ADDRESS}author/{obj.author_id.pk}/posts/{obj.post_id}"
+            return f"{SITE_ADDRESS}author/{obj.author_id.pk}/posts/{obj.post_id}/"
         
     def get_comments(self,obj):
-            return f"{SITE_ADDRESS}author/{obj.author_id.pk}/posts/{obj.post_id}/comments"
+            return f"{SITE_ADDRESS}author/{obj.author_id.pk}/posts/{obj.post_id}/comments/"
     
     def get_count(slef,obj):
         return Post.objects.get(pk=obj.post_id).post_comments.all().count()
