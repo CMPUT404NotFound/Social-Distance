@@ -223,8 +223,8 @@ def findFriends(author : Author, split = False):
         #neither of the know falsy reponses are gotten, this link is prob a follower
         
         foreignFriends.append(response[0][:response[0].find("follower")])
-    
-    return localFriends.extend(foreignFriends) if not split else (localFriends, foreignFriends)
+   
+    return localFriends + foreignFriends if not split else (localFriends, foreignFriends)
 
 
 @swagger_auto_schema(

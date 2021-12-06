@@ -48,7 +48,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
             # getting friends list of that author  
-            friend_id_string = findFriends(Author.objects.get(author= author_id))
+            friend_id_string = findFriends(Author.objects.get(pk= author_id))
            
             # token auth will return a Author in this case(by pass entirely is not true), and nodebasicauth will return 'True' on success.
             usingTokenAuth = (
@@ -89,8 +89,8 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             s.save(author, post_id)
 
             # getting friends list of that author  
-            local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(author= author_id), True)
-            follower_id_string = findFollowers(Author.objects.get(author=author_id))
+            local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
+            follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
             # checking the visibility of the post
             if s.data.get("visibility") == "PU":
@@ -134,8 +134,8 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
         if s.is_valid():
             post.save()
             # getting friends list of that author  
-            local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(author= author_id), True)
-            follower_id_string = findFollowers(Author.objects.get(author=author_id))
+            local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
+            follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
             # checking the visibility of the post
             if s.data.get("visibility") == "PU":
@@ -207,7 +207,9 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
         if request.islocal:
             try:
                 # getting friends list of that author  
-                friend_id_string = findFriends(Author.objects.get(author= author_id))
+                friend_id_string = findFriends(Author.objects.get(pk= author_id))
+                print(Author.objects.get(pk= author_id))
+                print(friend_id_string)
                 
                 # token auth will return a Author in this case(by pass entirely is not true), and nodebasicauth will return 'True' on success.
                 usingTokenAuth = (
@@ -273,8 +275,8 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
             if new_post.is_valid():
                 new_post.save()
                 # getting friends list of that author  
-                local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(author= author_id), True)
-                follower_id_string = findFollowers(Author.objects.get(author=author_id))
+                local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
+                follower_id_string = findFollowers(Author.objects.get(pk=author_id))
                 # checking the visibility of the post
                 if new_post.data.get("visibility") == "PU":
                     is_it_visible = True
