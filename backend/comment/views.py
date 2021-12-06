@@ -60,7 +60,7 @@ def handleGET(request: Union[HttpRequest, ParsedRequest], authorId: str = "", po
         return Response(output, status=200)
     else:
         # sent foreign request.
-        stuff = returnGETRequest(request.id)
+        stuff = returnGETRequest(f"{request.id}comments", request.query_params)
         return stuff
 
 
@@ -113,7 +113,13 @@ def handlePOST(request: Union[HttpRequest, ParsedRequest], authorId: str = "", p
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
     else:
         # make request to a foreign server, see utils.request.py
-        return returnPOSTRequest(request.id, data)
+        response = returnPOSTRequest(f"{request.id}comments", data)
+        if response.status_code >299:
+            # using the comment api directly failed, try inbox instead.
+            authorId = request.id[:request.id.find("post")]
+            data = dict(request.data)
+            data["id"] = request.id
+            return returnPOSTRequest(f"{authorId}inbox/", data)
 
 
 @swagger_auto_schema(

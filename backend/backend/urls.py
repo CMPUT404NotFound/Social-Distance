@@ -45,22 +45,25 @@ schema_view = get_schema_view(
         ---------------
         ## For Frontend: 
         A few api are modified to allow foreign or local link to be encoded in the request url, by remove `http://` and replace `/` with `~`.  
-        For exmaple: `http://project-site.com/api/author/uuid-to-author/posts/uuid/` becomes
-        `project-site.com~api~author~uuid-to-author~posts~uuid~`  
+        For exmaple: `http://project-site.com/api/author/uuid-to-author/posts/uuid/` becomes `project-site.com~api~author~uuid-to-author~posts~uuid~`  
         And a GET request to the above post might look like `GET https://project-api-404.herokuapp.com/api/author/junkid/posts/project-site.com~api~author~uuid-to-author~posts~uuid~/`
         
-        With <link> being the above encoded url, the following api are added/changed:
-        + note: <link> can be an encoded link to either foreign site or our site, or just normal uuid, so that other server can access with no issues.
+        With <link_> being the above encoded url, the following api are added/changed:
+        + note: <link_> can be an encoded link to either foreign site or our site, or just normal uuid, so that other server can access with no issues.
+        + in case <link_> is provided, <ignored-> may be any text, and will not be checked or used in any way.
         + GET api/author/<link-author>/ (get any author by id)
-        + follower stuff @phou
+        + GET api/author/<link-author>/followers/ (get a list of authors who are their followers) 
+        + PUT api/author/<link-author1>/followers/<link-author2> (If <link-author1> is local, then regardless of whether <link-author2> is local or foreign, let <link-author2> follow <link-author1>. If <link-author1> is foreign, <link-author2> must be local; PUT then send follow request to <link-author1>'s inbox.       
+        + GET api/author/<link-author1>/followers/<link-author2> (check whether <link-author2> is a follower of <link-author1>               
+        + DELETE api/author/<link-author1>/followers/<link-author2> (remove <link-author2> as a follower of <link-author1>
         + GET api/author/<link-author>/liked/ (all liked items for any author)
         + POST api/author/local-uuid/likes/comments/<link-comment>/ (local author likes link-comment)
         + POST api/author/local-uuid/likes/posts/<link-post>/ (local author likes link-post)
-        + GET api/author/<ignored>/posts/<ignored>/comments/<link-comment>/likes/ (get likes of local or foreign )
-        + GET api/author/<ignored>/posts/<link-post>/likes/
-        + GET api/author/<ignored>/posts/<link-post>/comments/ (get comments of a post)
+        + GET api/author/<ignored->/posts/<ignored>/comments/<link-comment>/likes/ (get likes of local or foreign )
+        + GET api/author/<ignored->/posts/<link-post>/likes/
+        + GET api/author/<ignored->/posts/<link-post>/comments/ (get comments of a post)
         + GET api/author/<link-author>/posts/ (all posts of a author)
-        + GET api/author/<ignored>/posts/<link-post>/ (get since post by id)
+        + GET api/author/<ignored->/posts/<link-post>/ (get since post by id)
         + GET api/nodes/ (get a list of nodes)
         + GET api/nodes/authors/ (get a list of all authors from every server, WIP)
         ''',
@@ -112,3 +115,5 @@ urlpatterns = [
     #     "api/redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
     # ),
 ]
+
+

@@ -17,6 +17,7 @@ from .models import Post, postsManager
 from .serializers import PostsSerializer
 from utils.request import parseIncomingRequest, ParsedRequest, returnGETRequest, ClassType
 from django.http import HttpResponse
+import json
 
 @swagger_auto_schema(method="get", tags=["Posts"])
 @swagger_auto_schema(method="post", tags=["Posts"], field_inspectors=[NoSchemaTitleInspector], request_body=PostsSerializer)
@@ -87,7 +88,11 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
         
         #image is handled here
         img_handled_data = handleImage(request.data) 
-
+        
+        post = Post.objects.filter(post_id = post_id).exists()
+        if not post:
+            return Response('Post already exist with that id', status=status.HTTP_403_FORBIDDEN)
+        
         s = Post.objects.create(
                 post_id = post_id,
                 author_id=author,
@@ -142,42 +147,42 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
         
         #image is handled here
         img_handled_data = handleImage(request.data) 
+        post.content = img_handled_data.get("content")
+        post.contentType = img_handled_data.get("contentType")
+        post.title = img_handled_data.get("title")
+        post.unlisted = img_handled_data.get("unlisted")
+        post.visibility = img_handled_data.get("visibility")
+        post.id = img_handled_data.get("id")
+        post.description = img_handled_data.get("description")
+        post.save()
 
-        s = PostsSerializer(instance=post, data=img_handled_data)
-        
-       # check if the updated post is valid
-        if s.is_valid():
-            s.update()
-            # getting friends list of that author  
-            local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
-            follower_id_string = findFollowers(Author.objects.get(pk=author_id))
+        # getting friends list of that author  
+        local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
+        follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
-            # checking the visibility of the post
-            if request.data.get("visibility") == "PUBLIC" and request.data.get("unlisted") == False :
-                is_it_visible = True
-            else:
-                is_it_visible = False
-
-            # pushing it to the inbox according to the friend and follower 
-            if(is_it_visible): #if visible then push to all the followers
-                for follower in follower_id_string:
-                    # checking if the follower is local or foreign
-                    if(follower.startswith("http")):
-                        return makeRequest("PUT", f"{follower if follower.endswith('/') else (follower + '/')  }inbox/", s.data)
-                    else:
-                        InboxItem.objects.create(author=Author.objects.get(pk = follower), type="P", contentId=post_id)
-            
-            else: # post is private
-                for friend in foreign_author_id_string:
-                    return makeRequest("PUT", f"{friend if friend.endswith('/') else (friend + '/')}inbox/", s.data)
-                for local_freind in local_friend_id_string:    
-                    InboxItem.objects.create(author=Author.objects.get(pk = local_freind), type="P", contentId=post_id)
-            
-            return Response("Post updated", status=status.HTTP_200_OK)
-        
-        # if post is not valid
+        # checking the visibility of the post
+        if request.data.get("visibility") == "PUBLIC" and request.data.get("unlisted") == False :
+            is_it_visible = True
         else:
-            return Response("Post not updated, not a valid post", status=status.HTTP_400_BAD_REQUEST)
+            is_it_visible = False
+
+        # pushing it to the inbox according to the friend and follower 
+        if(is_it_visible): #if visible then push to all the followers
+            for follower in follower_id_string:
+                # checking if the follower is local or foreign
+                if(follower.startswith("http")):
+                    return makeRequest("PUT", f"{follower if follower.endswith('/') else (follower + '/')  }inbox/", s.data)
+                else:
+                    InboxItem.objects.create(author=Author.objects.get(pk = follower), type="P", contentId=post_id)
+        
+        else: # post is private
+            for friend in foreign_author_id_string:
+                return makeRequest("PUT", f"{friend if friend.endswith('/') else (friend + '/')}inbox/", s.data)
+            for local_freind in local_friend_id_string:    
+                InboxItem.objects.create(author=Author.objects.get(pk = local_freind), type="P", contentId=post_id)
+        
+        return Response("Post updated", status=status.HTTP_200_OK)
+        
 
     # DELETE the post 
     elif request.method == "DELETE":
@@ -264,8 +269,28 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
         
         # if post is not on our server then go fetch it from pther server
         else:
-            print(request.id)
-            return returnGETRequest(f"{request.id if request.id.endswith('/') else (request.id + '/')}posts/")
+            friend_id_strings = findFriends(request.user)
+            # foreign_id =  (request.id).replace("~","/").split("/")[-2]
+            "https://glowing-palm-tree1.herokuapp.com/service/author/81d961dc-a9a5-48fa-9eca-c973c70bd06e/"
+            print("foreign id", request.id)
+            
+            output = []
+            response =  makeRequest("GET", f"{request.id}posts/")
+            if response.status_code < 300:
+                posts = json.loads(response.content).get("items", [])
+                if request.id in friend_id_strings or request.id[:-1] in friend_id_strings:
+                    for post in posts:
+                        if not post.get("unlised", False):
+                            output.append(post)
+                else:
+                    for post in posts:
+                        if post.get("visibility", "PUBLIC") == 'PUBLIC':
+                            output.append(post)
+                            
+                return Response(output, status=200)
+            else:
+                return response
+        
     
     #POST method
     elif request.method == "POST":

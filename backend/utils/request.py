@@ -101,7 +101,7 @@ class QueryResponse:
     status_code: int
 
 
-def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryResponse:
+def makeRequest(method: str, url: str, data: Union[dict, None] = None, queryParams = None) -> QueryResponse:
 
     cacheKey = f"{method}_{url}"
 
@@ -129,10 +129,12 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryR
 
     try:
         s = f"{node.outgoingName}:{node.outgoingPassword}".encode("utf-8")
+        print(s)
         result = requests.request(
             method,
             fixedurl,
             data=json.dumps(data) if type(data) is dict else data,
+            params=queryParams if queryParams is not None else {},
             headers=({"Authorization": f"Basic {base64.b64encode(s).decode('utf-8')}", "Accept": "*/*", "Content-Type": "application/json"}),
         )
     except RequestException as e:
@@ -194,16 +196,17 @@ def checkIsLocal(fullId: str, type: ClassType = None) -> IsLocalResponse:
     return IsLocalResponse(isLocal or len(items) < 2, type, shortId if len(items) > 1 else fullId, fullId)
 
 
-def returnGETRequest(url: str) -> Response:
+def returnGETRequest(url: str, params : dict = None) -> Response:
 
     if url is None:
         return Response("The requested address is not registered with this server yet.", status=404)
 
-    result = makeRequest("GET", url)
-    if 200 <= result.status_code < 300:
-        return Response(json.loads(result.content), status=200)
-    else:
-        return Response("foreign content not found, or some error occured.")
+    result = makeRequest("GET", url, queryParams=params)
+    print("get,", result.status_code)
+    try:
+        return Response(json.loads(result.content), status=result.status_code)
+    except :
+        return Response(result.content, status=result.status_code)
 
 
 def returnPOSTRequest(url: str, data: Union[str, dict]) -> Response:
@@ -212,11 +215,13 @@ def returnPOSTRequest(url: str, data: Union[str, dict]) -> Response:
         return Response("The requested address is not registered with this server yet.", status=404)
 
     result = makeRequest("POST", url, data if type(data) is str else json.dumps(data))
+    print("post,", result.status_code, url)
+    print(json.dumps(data))
+    try:
+        return Response(json.loads(result.content), status=result.status_code)
+    except :
+        return Response(result.content, status=result.status_code)
 
-    if 200 <= result.status_code < 300:
-        return Response(json.loads(result.content), status=200)
-    else:
-        return Response("foreign content not found, or some error occured.")
 
 
 def makeMultipleGETs(
