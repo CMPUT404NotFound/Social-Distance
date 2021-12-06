@@ -4,14 +4,14 @@ from django.db import models
 
 import uuid
 
-Content_choices = (("P", "text/plain"), ("M", "text/markdown"))
+Content_choices = (("text/plain", "text/plain"), ("text/markdown", "text/markdown"))
 
 from posts.models import Post
 
 
 class Comment(models.Model):
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False, max_length=40)
 
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name="post_comments"
@@ -28,8 +28,8 @@ class Comment(models.Model):
     contentType = models.CharField(
         "contentType",
         choices=Content_choices,
-        max_length=1,
-        default="P",
+        max_length=13,
+        default="text/plain",
         null=False,
         blank=False,
     )

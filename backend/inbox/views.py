@@ -155,7 +155,7 @@ def getInboxItems(request, authorId):
             )
             for item in items
         ],
-    )).extend([response[1].content for response in makeMultipleGETs(needFetching)]) # woah dude
+    )) + ([response[1].content for response in makeMultipleGETs(needFetching)]) # woah dude
     # needFetching should really only contain posts' ids, since likes and follows's ids are always contained in the local database
     # but the serializers of Like and FollowRequest will still need to fetch remote data, which is sadly not included in the multi threaded fetch
     # fixing this will take some structural changes which i can't be bothered with, for the purpose of the project at least.

@@ -200,10 +200,12 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
 @parseIncomingRequest(["GET"], ClassType.AUTHOR)
 def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
    # checking if the author exists
-    try:
-        author = Author.objects.get(pk=author_id)
-    except Author.DoesNotExist:
-        return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method != "GET" or request.islocal:
+        try:
+            author = Author.objects.get(pk=author_id)
+        except Author.DoesNotExist:
+            return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)    
     
     # Get all the post of that author   
     if request.method == "GET":
