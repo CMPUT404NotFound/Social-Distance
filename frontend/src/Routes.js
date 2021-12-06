@@ -43,11 +43,6 @@ const Routes = () => {
 							<Inbox />
 						</Main>
 					</Route>
-					<Route exact path="/feed">
-						<Main>
-							<Feed />
-						</Main>
-					</Route>
 					<Route exact path="/explore">
 						<Main>
 							<Explore />

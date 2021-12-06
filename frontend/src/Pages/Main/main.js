@@ -49,16 +49,13 @@ const Main = ({ children }) => {
 					<Menu.Item key="1" icon={<InboxOutlined />}>
 						<Link to="/inbox">Inbox</Link>
 					</Menu.Item>
-					<Menu.Item key="2" icon={<GlobalOutlined />}>
-						<Link to="/feed">Feed</Link>
-					</Menu.Item>
-					<Menu.Item key="3" icon={<CompassOutlined />}>
+					<Menu.Item key="2" icon={<CompassOutlined />}>
 						<Link to="/explore">Explore</Link>
 					</Menu.Item>
-					<Menu.Item key="4" icon={<UserOutlined />}>
+					<Menu.Item key="3" icon={<UserOutlined />}>
 						<Link to={{ pathname: "/profile", state: user }}>Profile</Link>
 					</Menu.Item>
-					<Menu.Item key="5" icon={<LogoutOutlined />} onClick={logout}>
+					<Menu.Item key="4" icon={<LogoutOutlined />} onClick={logout}>
 						LogOut
 					</Menu.Item>
 				</Menu>
