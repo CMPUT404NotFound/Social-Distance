@@ -165,11 +165,11 @@ const Post = () => {
 		<Switch>
 			<Route exact path = "/author/${post.author.id}/posts/${post.id}">
 				if ((post.visibility === "PUBLIC") or (post.visibility === "UNLISTED")) {postDisplay()}
+				else {Error401}
 			</Route>
 			<Route path = "/*">
 				{postDisplay()}
 			</Route>
-			<Route component = {Error401} />
 		</Switch>
 	);
 };
