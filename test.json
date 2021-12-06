@@ -1,0 +1,1781 @@
+[
+    
+    {
+        "id": "19196480774",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8549211587,
+            "size": 3,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "7714b1f245398adb101e4e7f7bd7585672c09743",
+            "before": "803752e5f8150bd26128db1d895281c6e1a0ac7b",
+            "commits": [
+                {
+                    "sha": "18445bc894d16325ad157aee3edaef39c8f626af",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "works gg",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/18445bc894d16325ad157aee3edaef39c8f626af"
+                },
+                {
+                    "sha": "407953010cf1c03b8e537a1984fd3a3e4bb6bc5c",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Merge branch 'aniket' into backend-refactored",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/407953010cf1c03b8e537a1984fd3a3e4bb6bc5c"
+                },
+                {
+                    "sha": "7714b1f245398adb101e4e7f7bd7585672c09743",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge branch 'backend-refactored'",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/7714b1f245398adb101e4e7f7bd7585672c09743"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T09:42:05Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19196453332",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8549198331,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "803752e5f8150bd26128db1d895281c6e1a0ac7b",
+            "before": "ce7eeb689c6c04f674cfb99b1a843887f5b31559",
+            "commits": [
+                {
+                    "sha": "803752e5f8150bd26128db1d895281c6e1a0ac7b",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Update views.py",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/803752e5f8150bd26128db1d895281c6e1a0ac7b"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T09:40:18Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19196282200",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8549115841,
+            "size": 12,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "ce7eeb689c6c04f674cfb99b1a843887f5b31559",
+            "before": "a8aaf05d5d771c9afc76d5a9ab967c5587ca1e5d",
+            "commits": [
+                {
+                    "sha": "168a6790ef4712170c450ed7aef549f59d253638",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Update views.py",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/168a6790ef4712170c450ed7aef549f59d253638"
+                },
+                {
+                    "sha": "a5a4205fddc8cade1628160af59fcd9b06ba2965",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Update views.py",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/a5a4205fddc8cade1628160af59fcd9b06ba2965"
+                },
+                {
+                    "sha": "9d2072d7c0079ca8fcf58f1c1bfe70a789811813",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "update",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/9d2072d7c0079ca8fcf58f1c1bfe70a789811813"
+                },
+                {
+                    "sha": "22fe20e1ffd15c70adefaf16f50dcc7604eca4be",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "not fixed yet",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/22fe20e1ffd15c70adefaf16f50dcc7604eca4be"
+                },
+                {
+                    "sha": "5f5c5f3fc1a4b8ef57cf47903af1eca6c9f4a65f",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge remote-tracking branch 'origin/aniket' into backend-refactored",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/5f5c5f3fc1a4b8ef57cf47903af1eca6c9f4a65f"
+                },
+                {
+                    "sha": "378d380c56187703b0fff6d6ec43346d11016e45",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Update views.py",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/378d380c56187703b0fff6d6ec43346d11016e45"
+                },
+                {
+                    "sha": "758b38bf7bb620e94246719058ddb099318c2e3d",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Merge branch 'backend-refactored' into aniket",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/758b38bf7bb620e94246719058ddb099318c2e3d"
+                },
+                {
+                    "sha": "b3e751a8db7c34a9b531887fe2641325e0e9efb8",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Merge branch 'backend-refactored' into aniket",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/b3e751a8db7c34a9b531887fe2641325e0e9efb8"
+                },
+                {
+                    "sha": "f91ebd9e077d3882a57c2e36d59701f7d5684c07",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Update views.py",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/f91ebd9e077d3882a57c2e36d59701f7d5684c07"
+                },
+                {
+                    "sha": "0b5b5591d26db807bdcb25d22647bd922b02583e",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "maybe?",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/0b5b5591d26db807bdcb25d22647bd922b02583e"
+                },
+                {
+                    "sha": "1913e34c6f9731a0609d4394897e7732eee2fd00",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge remote-tracking branch 'origin/aniket' into backend-refactored",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/1913e34c6f9731a0609d4394897e7732eee2fd00"
+                },
+                {
+                    "sha": "ce7eeb689c6c04f674cfb99b1a843887f5b31559",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge branch 'backend-refactored'",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/ce7eeb689c6c04f674cfb99b1a843887f5b31559"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T09:29:32Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19196240601",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8549096003,
+            "size": 4,
+            "distinct_size": 1,
+            "ref": "refs/heads/backend-refactored",
+            "head": "1913e34c6f9731a0609d4394897e7732eee2fd00",
+            "before": "f91ebd9e077d3882a57c2e36d59701f7d5684c07",
+            "commits": [
+                {
+                    "sha": "758b38bf7bb620e94246719058ddb099318c2e3d",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Merge branch 'backend-refactored' into aniket",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/758b38bf7bb620e94246719058ddb099318c2e3d"
+                },
+                {
+                    "sha": "b3e751a8db7c34a9b531887fe2641325e0e9efb8",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Merge branch 'backend-refactored' into aniket",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/b3e751a8db7c34a9b531887fe2641325e0e9efb8"
+                },
+                {
+                    "sha": "0b5b5591d26db807bdcb25d22647bd922b02583e",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "maybe?",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/0b5b5591d26db807bdcb25d22647bd922b02583e"
+                },
+                {
+                    "sha": "1913e34c6f9731a0609d4394897e7732eee2fd00",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge remote-tracking branch 'origin/aniket' into backend-refactored",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/1913e34c6f9731a0609d4394897e7732eee2fd00"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T09:26:59Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19196236944",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8549094211,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/backend-refactored",
+            "head": "f91ebd9e077d3882a57c2e36d59701f7d5684c07",
+            "before": "378d380c56187703b0fff6d6ec43346d11016e45",
+            "commits": [
+                {
+                    "sha": "f91ebd9e077d3882a57c2e36d59701f7d5684c07",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Update views.py",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/f91ebd9e077d3882a57c2e36d59701f7d5684c07"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T09:26:45Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19196006014",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8548985246,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/backend-refactored",
+            "head": "378d380c56187703b0fff6d6ec43346d11016e45",
+            "before": "5f5c5f3fc1a4b8ef57cf47903af1eca6c9f4a65f",
+            "commits": [
+                {
+                    "sha": "378d380c56187703b0fff6d6ec43346d11016e45",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Update views.py",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/378d380c56187703b0fff6d6ec43346d11016e45"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T09:12:51Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19195950768",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8548958849,
+            "size": 3,
+            "distinct_size": 1,
+            "ref": "refs/heads/backend-refactored",
+            "head": "5f5c5f3fc1a4b8ef57cf47903af1eca6c9f4a65f",
+            "before": "22fe20e1ffd15c70adefaf16f50dcc7604eca4be",
+            "commits": [
+                {
+                    "sha": "168a6790ef4712170c450ed7aef549f59d253638",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Update views.py",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/168a6790ef4712170c450ed7aef549f59d253638"
+                },
+                {
+                    "sha": "9d2072d7c0079ca8fcf58f1c1bfe70a789811813",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "update",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/9d2072d7c0079ca8fcf58f1c1bfe70a789811813"
+                },
+                {
+                    "sha": "5f5c5f3fc1a4b8ef57cf47903af1eca6c9f4a65f",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge remote-tracking branch 'origin/aniket' into backend-refactored",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/5f5c5f3fc1a4b8ef57cf47903af1eca6c9f4a65f"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T09:09:31Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19195937107",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8548952523,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/backend-refactored",
+            "head": "22fe20e1ffd15c70adefaf16f50dcc7604eca4be",
+            "before": "a5a4205fddc8cade1628160af59fcd9b06ba2965",
+            "commits": [
+                {
+                    "sha": "22fe20e1ffd15c70adefaf16f50dcc7604eca4be",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "not fixed yet",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/22fe20e1ffd15c70adefaf16f50dcc7604eca4be"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T09:08:42Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19195641243",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8548812022,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/backend-refactored",
+            "head": "a5a4205fddc8cade1628160af59fcd9b06ba2965",
+            "before": "9f4d1a2245dfe00ba4be6534a6c859dfcd89339a",
+            "commits": [
+                {
+                    "sha": "a5a4205fddc8cade1628160af59fcd9b06ba2965",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Update views.py",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/a5a4205fddc8cade1628160af59fcd9b06ba2965"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T08:49:36Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19195469649",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8548727362,
+            "size": 2,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "a8aaf05d5d771c9afc76d5a9ab967c5587ca1e5d",
+            "before": "e1b1a1cd35131af9e24ae5f88304262158c88323",
+            "commits": [
+                {
+                    "sha": "9f4d1a2245dfe00ba4be6534a6c859dfcd89339a",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "comment bug fix",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/9f4d1a2245dfe00ba4be6534a6c859dfcd89339a"
+                },
+                {
+                    "sha": "a8aaf05d5d771c9afc76d5a9ab967c5587ca1e5d",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge branch 'backend-refactored'",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/a8aaf05d5d771c9afc76d5a9ab967c5587ca1e5d"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T08:37:30Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19195467198",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8548726162,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/backend-refactored",
+            "head": "9f4d1a2245dfe00ba4be6534a6c859dfcd89339a",
+            "before": "e693e6e55624b0686f01125c4b46aaa4fa38bc7a",
+            "commits": [
+                {
+                    "sha": "9f4d1a2245dfe00ba4be6534a6c859dfcd89339a",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "comment bug fix",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/9f4d1a2245dfe00ba4be6534a6c859dfcd89339a"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T08:37:19Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19195132544",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8548564907,
+            "size": 2,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "e1b1a1cd35131af9e24ae5f88304262158c88323",
+            "before": "8dbe11e5cb496f518c5b811ef29d3a9581afba20",
+            "commits": [
+                {
+                    "sha": "e693e6e55624b0686f01125c4b46aaa4fa38bc7a",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "nodes get all author",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/e693e6e55624b0686f01125c4b46aaa4fa38bc7a"
+                },
+                {
+                    "sha": "e1b1a1cd35131af9e24ae5f88304262158c88323",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge branch 'backend-refactored'",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/e1b1a1cd35131af9e24ae5f88304262158c88323"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T08:13:43Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19195129549",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8548563483,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/backend-refactored",
+            "head": "e693e6e55624b0686f01125c4b46aaa4fa38bc7a",
+            "before": "76ba3410704aa045e437c745242be71521619237",
+            "commits": [
+                {
+                    "sha": "e693e6e55624b0686f01125c4b46aaa4fa38bc7a",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "nodes get all author",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/e693e6e55624b0686f01125c4b46aaa4fa38bc7a"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T08:13:30Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19194444894",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8548218871,
+            "size": 2,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "8dbe11e5cb496f518c5b811ef29d3a9581afba20",
+            "before": "7fcedc408dac1fc54d3ab79134ccd3a2f296bfcc",
+            "commits": [
+                {
+                    "sha": "76ba3410704aa045e437c745242be71521619237",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "comment auth fix",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/76ba3410704aa045e437c745242be71521619237"
+                },
+                {
+                    "sha": "8dbe11e5cb496f518c5b811ef29d3a9581afba20",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge branch 'backend-refactored'",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/8dbe11e5cb496f518c5b811ef29d3a9581afba20"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T07:17:34Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19194442315",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8548217565,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/backend-refactored",
+            "head": "76ba3410704aa045e437c745242be71521619237",
+            "before": "0e7cb145dc9d0c5ac26359ecb3c3ce94e6e27642",
+            "commits": [
+                {
+                    "sha": "76ba3410704aa045e437c745242be71521619237",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "comment auth fix",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/76ba3410704aa045e437c745242be71521619237"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T07:17:21Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19194236049",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8548114359,
+            "size": 2,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "7fcedc408dac1fc54d3ab79134ccd3a2f296bfcc",
+            "before": "fee7786eee506a57b80caa9d2b3d3967ba4b2877",
+            "commits": [
+                {
+                    "sha": "0e7cb145dc9d0c5ac26359ecb3c3ce94e6e27642",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "like serializer fixes",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/0e7cb145dc9d0c5ac26359ecb3c3ce94e6e27642"
+                },
+                {
+                    "sha": "7fcedc408dac1fc54d3ab79134ccd3a2f296bfcc",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge branch 'backend-refactored'",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/7fcedc408dac1fc54d3ab79134ccd3a2f296bfcc"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T07:00:11Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19194233807",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8548112991,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/backend-refactored",
+            "head": "0e7cb145dc9d0c5ac26359ecb3c3ce94e6e27642",
+            "before": "a7ad3abf618ea0be1a877786ba8576efca86663a",
+            "commits": [
+                {
+                    "sha": "0e7cb145dc9d0c5ac26359ecb3c3ce94e6e27642",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "like serializer fixes",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/0e7cb145dc9d0c5ac26359ecb3c3ce94e6e27642"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T06:59:59Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19193945982",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8547959578,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "fee7786eee506a57b80caa9d2b3d3967ba4b2877",
+            "before": "658d2cf5a72761f43ffa7beb2d00946402a404ee",
+            "commits": [
+                {
+                    "sha": "fee7786eee506a57b80caa9d2b3d3967ba4b2877",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Update views.py",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/fee7786eee506a57b80caa9d2b3d3967ba4b2877"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T06:29:59Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19193879987",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8547924584,
+            "size": 2,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "658d2cf5a72761f43ffa7beb2d00946402a404ee",
+            "before": "5f8b3e935664562c71c3f1e8fe115d27bddbaf9f",
+            "commits": [
+                {
+                    "sha": "a7ad3abf618ea0be1a877786ba8576efca86663a",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "local url parse bug fix",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/a7ad3abf618ea0be1a877786ba8576efca86663a"
+                },
+                {
+                    "sha": "658d2cf5a72761f43ffa7beb2d00946402a404ee",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge branch 'backend-refactored'",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/658d2cf5a72761f43ffa7beb2d00946402a404ee"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T06:23:10Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19193875825",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8547922473,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/backend-refactored",
+            "head": "a7ad3abf618ea0be1a877786ba8576efca86663a",
+            "before": "fc0e30c7a55135babbdb940027633c08305c5a97",
+            "commits": [
+                {
+                    "sha": "a7ad3abf618ea0be1a877786ba8576efca86663a",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "local url parse bug fix",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/a7ad3abf618ea0be1a877786ba8576efca86663a"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T06:22:46Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19193600247",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8547779071,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "5f8b3e935664562c71c3f1e8fe115d27bddbaf9f",
+            "before": "cf653cc048b015e8471e4faffb6d2bc72c73f940",
+            "commits": [
+                {
+                    "sha": "5f8b3e935664562c71c3f1e8fe115d27bddbaf9f",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "shrug",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/5f8b3e935664562c71c3f1e8fe115d27bddbaf9f"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T05:54:51Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19193473660",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8547710799,
+            "size": 8,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "cf653cc048b015e8471e4faffb6d2bc72c73f940",
+            "before": "440b9e9dbfa6af0f841795f69153bfc2aed6a0c7",
+            "commits": [
+                {
+                    "sha": "56b7a65cb3e12575d1604d22e3d728510cd0c080",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "update post",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/56b7a65cb3e12575d1604d22e3d728510cd0c080"
+                },
+                {
+                    "sha": "4a06293ec1d9827829a72132f157d3164840a92d",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge remote-tracking branch 'origin/aniket' into backend-refactored",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/4a06293ec1d9827829a72132f157d3164840a92d"
+                },
+                {
+                    "sha": "b5dca931f3856d1947a887d8cd0ee8264e0ee13b",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "this works?",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/b5dca931f3856d1947a887d8cd0ee8264e0ee13b"
+                },
+                {
+                    "sha": "d83120918e12222077721826d06112f65761ee2c",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Update models.py",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/d83120918e12222077721826d06112f65761ee2c"
+                },
+                {
+                    "sha": "9c750033c1fa99c21d4bf6c9685847b4a0d28754",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Merge branch 'aniket' into backend-refactored",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/9c750033c1fa99c21d4bf6c9685847b4a0d28754"
+                },
+                {
+                    "sha": "e8704a8d6c4d430a852747d796f1b6715f26af0a",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "db choice fields changes",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/e8704a8d6c4d430a852747d796f1b6715f26af0a"
+                },
+                {
+                    "sha": "fc0e30c7a55135babbdb940027633c08305c5a97",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge branch 'backend-refactored' of https://github.com/CMPUT404NotFound/project into backend-refactored",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/fc0e30c7a55135babbdb940027633c08305c5a97"
+                },
+                {
+                    "sha": "cf653cc048b015e8471e4faffb6d2bc72c73f940",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge branch 'backend-refactored'",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/cf653cc048b015e8471e4faffb6d2bc72c73f940"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T05:39:17Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19193468020",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8547707756,
+            "size": 2,
+            "distinct_size": 2,
+            "ref": "refs/heads/backend-refactored",
+            "head": "fc0e30c7a55135babbdb940027633c08305c5a97",
+            "before": "9c750033c1fa99c21d4bf6c9685847b4a0d28754",
+            "commits": [
+                {
+                    "sha": "e8704a8d6c4d430a852747d796f1b6715f26af0a",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "db choice fields changes",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/e8704a8d6c4d430a852747d796f1b6715f26af0a"
+                },
+                {
+                    "sha": "fc0e30c7a55135babbdb940027633c08305c5a97",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge branch 'backend-refactored' of https://github.com/CMPUT404NotFound/project into backend-refactored",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/fc0e30c7a55135babbdb940027633c08305c5a97"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T05:38:32Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19193249456",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8547592264,
+            "size": 2,
+            "distinct_size": 1,
+            "ref": "refs/heads/backend-refactored",
+            "head": "4a06293ec1d9827829a72132f157d3164840a92d",
+            "before": "78efc589c0c613bfa4866154571aae50c3510716",
+            "commits": [
+                {
+                    "sha": "56b7a65cb3e12575d1604d22e3d728510cd0c080",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "update post",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/56b7a65cb3e12575d1604d22e3d728510cd0c080"
+                },
+                {
+                    "sha": "4a06293ec1d9827829a72132f157d3164840a92d",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge remote-tracking branch 'origin/aniket' into backend-refactored",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/4a06293ec1d9827829a72132f157d3164840a92d"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T05:12:53Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19193043721",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8547482168,
+            "size": 2,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "440b9e9dbfa6af0f841795f69153bfc2aed6a0c7",
+            "before": "0aa72203f2040443220288304c804d347293e63b",
+            "commits": [
+                {
+                    "sha": "78efc589c0c613bfa4866154571aae50c3510716",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "inbox bug fix",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/78efc589c0c613bfa4866154571aae50c3510716"
+                },
+                {
+                    "sha": "440b9e9dbfa6af0f841795f69153bfc2aed6a0c7",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge branch 'backend-refactored'",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/440b9e9dbfa6af0f841795f69153bfc2aed6a0c7"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T04:47:53Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19193041012",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8547480691,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/backend-refactored",
+            "head": "78efc589c0c613bfa4866154571aae50c3510716",
+            "before": "61182a1700f88c944b132c361050b5d2be2f9189",
+            "commits": [
+                {
+                    "sha": "78efc589c0c613bfa4866154571aae50c3510716",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "inbox bug fix",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/78efc589c0c613bfa4866154571aae50c3510716"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T04:47:30Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19192996205",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8547456072,
+            "size": 1,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "0aa72203f2040443220288304c804d347293e63b",
+            "before": "79dae77e7b37f8ca318e2569f45efd1a7b125ce6",
+            "commits": [
+                {
+                    "sha": "0aa72203f2040443220288304c804d347293e63b",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Update urls.py",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/0aa72203f2040443220288304c804d347293e63b"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T04:41:15Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    },
+    {
+        "id": "19192846010",
+        "type": "PushEvent",
+        "actor": {
+            "id": 59712548,
+            "login": "goldentoaste",
+            "display_login": "goldentoaste",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/goldentoaste",
+            "avatar_url": "https://avatars.githubusercontent.com/u/59712548?"
+        },
+        "repo": {
+            "id": 410997690,
+            "name": "CMPUT404NotFound/project",
+            "url": "https://api.github.com/repos/CMPUT404NotFound/project"
+        },
+        "payload": {
+            "push_id": 8547375108,
+            "size": 17,
+            "distinct_size": 1,
+            "ref": "refs/heads/main",
+            "head": "79dae77e7b37f8ca318e2569f45efd1a7b125ce6",
+            "before": "4b848c2ae69d14373e7aed95733ba88c49095e0d",
+            "commits": [
+                {
+                    "sha": "77b61c1043597f79add78a2e4f6fca3e70dfae51",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "idk what this was for",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/77b61c1043597f79add78a2e4f6fca3e70dfae51"
+                },
+                {
+                    "sha": "01d4333ac9922949d8c816fcf93c87e65725b1ca",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Merge branch 'backend-refactored' into aniket",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/01d4333ac9922949d8c816fcf93c87e65725b1ca"
+                },
+                {
+                    "sha": "21a66e4e0de49604b7d5232a63ed5818ec8ce476",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Friend thingy Works!",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/21a66e4e0de49604b7d5232a63ed5818ec8ce476"
+                },
+                {
+                    "sha": "cf0eb6df5b32699566a13b4e3fa9298c656c689a",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Merge branch 'backend-refactored' into aniket",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/cf0eb6df5b32699566a13b4e3fa9298c656c689a"
+                },
+                {
+                    "sha": "637be231f7941f2198f8556713224883088709f1",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "POST complete (need testing)\\n\\nauthor exist check, getting followers and sending post to local server and foreign server. depending on the",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/637be231f7941f2198f8556713224883088709f1"
+                },
+                {
+                    "sha": "d9887ff0c7624c2bed3b059255171daf4126fb9b",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Merge branch 'backend-refactored' into aniket",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/d9887ff0c7624c2bed3b059255171daf4126fb9b"
+                },
+                {
+                    "sha": "fa298279c4cb059882f783cf7205a2a9498b1e98",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "POST fixing",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/fa298279c4cb059882f783cf7205a2a9498b1e98"
+                },
+                {
+                    "sha": "536c12c4d3cf191686ac6cc527e2b8c4dcb3558e",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "POST update",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/536c12c4d3cf191686ac6cc527e2b8c4dcb3558e"
+                },
+                {
+                    "sha": "c47123b9b78d7060859fd92f2cb7d9f7c12b2bae",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "update",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/c47123b9b78d7060859fd92f2cb7d9f7c12b2bae"
+                },
+                {
+                    "sha": "e65daa1052877cf207638032ed3a050489f13576",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "Merge branch 'backend-refactored' into aniket",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/e65daa1052877cf207638032ed3a050489f13576"
+                },
+                {
+                    "sha": "b70555123504e94c53b402bbe8725a26990bb698",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "update",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/b70555123504e94c53b402bbe8725a26990bb698"
+                },
+                {
+                    "sha": "a04d9ba8d6c2924f4592e913f9db9e5a964b1650",
+                    "author": {
+                        "email": "ianiket23@gmail.com",
+                        "name": "Aniket Mishra"
+                    },
+                    "message": "migration",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/a04d9ba8d6c2924f4592e913f9db9e5a964b1650"
+                },
+                {
+                    "sha": "44bddfd8c3b912729dfb6de2e5b3efcad8636f88",
+                    "author": {
+                        "email": "phousana@ualberta.ca",
+                        "name": "Phousanak Han"
+                    },
+                    "message": "followers documentation",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/44bddfd8c3b912729dfb6de2e5b3efcad8636f88"
+                },
+                {
+                    "sha": "c9ce616f4ebf1127f8abadd88863f12427a49cc3",
+                    "author": {
+                        "email": "62774573+phousanakhan@users.noreply.github.com",
+                        "name": "Phousanak Han"
+                    },
+                    "message": "Merge pull request #32 from CMPUT404NotFound/followers_update_backend_refactored\\n\\nfollowers documentation",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/c9ce616f4ebf1127f8abadd88863f12427a49cc3"
+                },
+                {
+                    "sha": "affbf8930ba7ba26f63602adb4c93216bdaf762f",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "docs",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/affbf8930ba7ba26f63602adb4c93216bdaf762f"
+                },
+                {
+                    "sha": "61182a1700f88c944b132c361050b5d2be2f9189",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge branch 'backend-refactored' of https://github.com/CMPUT404NotFound/project into backend-refactored",
+                    "distinct": false,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/61182a1700f88c944b132c361050b5d2be2f9189"
+                },
+                {
+                    "sha": "79dae77e7b37f8ca318e2569f45efd1a7b125ce6",
+                    "author": {
+                        "email": "rayg2375@gmail.com",
+                        "name": "Goldentoaste"
+                    },
+                    "message": "Merge branch 'backend-refactored'",
+                    "distinct": true,
+                    "url": "https://api.github.com/repos/CMPUT404NotFound/project/commits/79dae77e7b37f8ca318e2569f45efd1a7b125ce6"
+                }
+            ]
+        },
+        "public": true,
+        "created_at": "2021-12-06T04:21:52Z",
+        "org": {
+            "id": 91452511,
+            "login": "CMPUT404NotFound",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/CMPUT404NotFound",
+            "avatar_url": "https://avatars.githubusercontent.com/u/91452511?"
+        }
+    }
+]

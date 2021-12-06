@@ -100,6 +100,7 @@ urlpatterns = [
     
     re_path(r"^api/nodes/?$", nodeViews.getNodes),
     re_path(r"^api/nodes/authors/?$", nodeViews.getAllAuthors),
+    re_path(r"^api/github/(?P<authorId>[A-Za-z0-9-~.]+)/?$", nodeViews.getGithub),
 
     #api paths
     re_path(
