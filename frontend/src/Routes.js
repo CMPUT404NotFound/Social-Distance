@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Route, Switch } from "react-router";
+import { Route, Switch, Redirect } from "react-router";
 
 // Get Pages
 import Login from "./Pages/Login/login";
@@ -26,7 +26,8 @@ const Routes = () => {
 
 	useEffect(() => {
 		// get stored user from api
-		setUser(getSessionStorage("user").value);
+		const storedUser = getSessionStorage("user");
+		if (storedUser) setUser(storedUser.value);
 	}, []);
 
 	return (
@@ -78,9 +79,7 @@ const Routes = () => {
 					<Route exact path="/">
 						<Login />
 					</Route>
-					<Route>
-						<Login />
-					</Route>
+					<Redirect to="/" />
 				</Switch>
 			)}
 		</UserContext.Provider>

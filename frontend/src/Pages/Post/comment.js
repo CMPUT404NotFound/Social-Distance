@@ -12,7 +12,7 @@ const PostComment = ({ post }) => {
 	const [comment, setComment] = useState("");
 
 	const sendComment = () => {
-		const url = `${post.post_id}/comments`;
+		const url = `${post.post_id}/comments/`;
 
 		const config = {
 			headers: {

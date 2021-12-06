@@ -15,6 +15,7 @@ import history from "./../../history";
 import "./main.css";
 import { useState } from "react";
 import CreatePost from "../Create/create";
+import { removeSessionStorage } from "../../utils";
 
 const { Sider } = Layout;
 
@@ -25,6 +26,7 @@ const Main = ({ children }) => {
 
 	const logout = () => {
 		setUser(null);
+		removeSessionStorage("user");
 		history.push("");
 	};
 
