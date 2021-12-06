@@ -2,7 +2,7 @@ from typing import Union
 from django.http.request import HttpRequest
 from author.models import Author
 from author.token import TokenAuth, NodeBasicAuth
-from backend.utils.request import makeRequest
+from utils.request import makeRequest
 from comment.documentation import NoSchemaTitleInspector
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from drf_yasg.utils import swagger_auto_schema
@@ -34,7 +34,10 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             author = Author.objects.get(pk=author_id)
         except Author.DoesNotExist:
             return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
-
+    try:
+        author = Author.objects.get(pk=author_id)
+    except Author.DoesNotExist:
+        return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
     # Getting the Post with post_id
     if request.method == "GET":
         #checking if it exists in our server
