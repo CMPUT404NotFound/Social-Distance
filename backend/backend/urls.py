@@ -62,7 +62,8 @@ schema_view = get_schema_view(
         + GET api/author/<link-author>/posts/ (all posts of a author)
         + GET api/author/<ignored>/posts/<link-post>/ (get since post by id)
         + GET api/nodes/ (get a list of nodes)
-        + GET api/nodes/authors/ (get a list of all authors from every server, WIP)        ''',
+        + GET api/nodes/authors/ (get a list of all authors from every server, WIP)
+        ''',
       
         #license=openapi.License(name="BSD License"),
     ),
@@ -99,6 +100,7 @@ urlpatterns = [
     
     re_path(r"^api/nodes/?$", nodeViews.getNodes),
     re_path(r"^api/nodes/authors/?$", nodeViews.getAllAuthors),
+    re_path(r"^api/github/(?P<authorId>[A-Za-z0-9-~.]+)/?$", nodeViews.getGithub),
 
     #api paths
     re_path(
