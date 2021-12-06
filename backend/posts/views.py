@@ -66,7 +66,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             
             # checking the visibility of the post
          
-            is_it_visible = s.data.get("visibility") == "PUBLIC"
+            is_it_visible = s.data.get("visibility") == "PUBLIC" and s.data.get("unlisted") == False
             
             # if visible then just return the post, no authentication 
             if is_it_visible:
@@ -108,7 +108,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
         follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
         # checking the visibility of the post
-        if request.data.get("visibility") == "PUBLIC":
+        if request.data.get("visibility") == "PUBLIC" and request.data.get("unlisted") == False :
             is_it_visible = True
         else:
             is_it_visible = False
@@ -153,7 +153,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
             # checking the visibility of the post
-            if request.data.get("visibility") == "PUBLIC":
+            if request.data.get("visibility") == "PUBLIC" and request.data.get("unlisted") == False :
                 is_it_visible = True
             else:
                 is_it_visible = False
@@ -297,7 +297,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
             local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
             follower_id_string = findFollowers(Author.objects.get(pk=author_id))
             # checking the visibility of the post
-            if request.data.get("visibility") == "PUBLIC":
+            if request.data.get("visibility") == "PUBLIC" and request.data.get("unlisted") == False :
                 is_it_visible = True
             else:
                 is_it_visible = False
