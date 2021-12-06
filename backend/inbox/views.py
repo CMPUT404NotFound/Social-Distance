@@ -61,9 +61,13 @@ def handleLike(request, authorId):
             parentId = None
 
         if parentId:
+            
+            if Like.objects.filter(author = authorid).filter(parentId = parentId).exists():
+                return Response("like already created, and this request is ignored.", status=200)
+            
             like = Like.objects.create(author=authorid, parentId=parentId)
             InboxItem.objects.create(author=author, type="L", contentId=like.pk)
-            return Response(status=201)
+            return Response("like created", status=201)
 
         return Response("invalid id for comment or post", status=404)
 

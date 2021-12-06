@@ -45,7 +45,7 @@ def getPostLikes(request: Union[HttpRequest, ParsedRequest], authorId, postId):
 
         return Response(LikeSerializer(likes.all(), many=True).data, status=200)
     else:
-        return returnGETRequest(request.id)
+        return returnGETRequest(f"{request.id}likes")
 
 
 @swagger_auto_schema(
@@ -69,7 +69,7 @@ def getCommentLikes(request, authorId, postId, commentId):
         # pagination not required
         return Response(LikeSerializer(likes.all(), many=True).data, status=200)
     else:
-        return returnGETRequest(request.id)
+        return returnGETRequest(f"{request.id}likes")
 
 
 @swagger_auto_schema(
@@ -160,9 +160,11 @@ def addLikePost(request: Union[ParsedRequest, HttpRequest], authorId, postId: st
         try:
             post: Post = Post.objects.get(pk=request.id)
             targetAuthorId = post.author_id.pk
-        except Comment.DoesNotExist:
+        except Post.DoesNotExist:
             return Response("post not found!", status=404)
 
+        if Like.objects.filter(author=authorId).filter(parentId = request.id):
+            return Response(status = 204) #ignore like request if it exists already
         # this author id def exists, since it passed auth
         like = Like.objects.create(author=authorId, parentId=request.id)
 
@@ -206,6 +208,10 @@ def addLikeComment(request: Union[ParsedRequest, HttpRequest], authorId, comment
             return Response("comment not found!", status=404)
 
         # this author id def exists, since it passed auth
+        
+        if Like.objects.filter(author=authorId).filter(parentId = request.id):
+            return Response(status = 204) #ignore like request if it exists already
+        
         like = Like.objects.create(author=authorId, parentId=request.id)
         try:
             targetAuthor = Author.objects.get(pk=targetAuthorId)

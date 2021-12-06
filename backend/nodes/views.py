@@ -47,6 +47,7 @@ def getAllAuthors(request: Union[Request, HttpRequest]) -> Response:
     items = []
     for result in results:
         response = result[1]
+        print(result[0], response.status_code)
         if response.status_code == 200:
             j = json.loads(response.content)
             try:
@@ -116,7 +117,7 @@ def getGithub(request: Union[Request, HttpRequest], authorId) -> Response:
 
     # do stuff
     output = []
-    print(json.dumps(eventsJson))
+    # print(json.dumps(eventsJson))
     for events in eventsJson:
         if events["type"] != "PushEvent":
             continue
@@ -128,7 +129,7 @@ def getGithub(request: Union[Request, HttpRequest], authorId) -> Response:
                 "branch": events["payload"]["ref"][11:],
                 "creationtime": events["created_at"],
                 "commits": [
-                    {"name": commit["author"]["name"], "email": commit["author"]["email"], "message": commit    ["message"]}
+                    {"name": commit["author"]["name"], "email": commit["author"]["email"], "message": commit["message"]}
                     for commit in events["payload"]["commits"]
                 ],
             }

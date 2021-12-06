@@ -129,6 +129,7 @@ def makeRequest(method: str, url: str, data: Union[dict, None] = None) -> QueryR
 
     try:
         s = f"{node.outgoingName}:{node.outgoingPassword}".encode("utf-8")
+        print(s)
         result = requests.request(
             method,
             fixedurl,
@@ -200,10 +201,11 @@ def returnGETRequest(url: str) -> Response:
         return Response("The requested address is not registered with this server yet.", status=404)
 
     result = makeRequest("GET", url)
-    if 200 <= result.status_code < 300:
-        return Response(json.loads(result.content), status=200)
-    else:
-        return Response("foreign content not found, or some error occured.")
+    print("get,", result.status_code)
+    try:
+        return Response(json.loads(result.content), status=result.status_code)
+    except :
+        return Response(result.content, status=result.status_code)
 
 
 def returnPOSTRequest(url: str, data: Union[str, dict]) -> Response:
@@ -212,11 +214,12 @@ def returnPOSTRequest(url: str, data: Union[str, dict]) -> Response:
         return Response("The requested address is not registered with this server yet.", status=404)
 
     result = makeRequest("POST", url, data if type(data) is str else json.dumps(data))
+    print("post,", result.status_code, url)
+    try:
+        return Response(json.loads(result.content), status=result.status_code)
+    except :
+        return Response(result.content, status=result.status_code)
 
-    if 200 <= result.status_code < 300:
-        return Response(json.loads(result.content), status=200)
-    else:
-        return Response("foreign content not found, or some error occured.")
 
 
 def makeMultipleGETs(
