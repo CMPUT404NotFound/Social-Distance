@@ -52,7 +52,10 @@ class CommentSerializer(serializers.Serializer):
         data = checkIsLocal(obj.author, ClassType.AUTHOR)
         
         if data.isLocal:
-            return AuthorSerializer(Author.objects.get(pk = data.id)).data
+            try:
+                return AuthorSerializer(Author.objects.get(pk = data.id)).data
+            except Author.DoesNotExist:
+                return AuthorSerializer().data
         else:
             result = makeRequest("GET", data.longId)
  
