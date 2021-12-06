@@ -102,14 +102,14 @@ def getLiked(request: Union[ParsedRequest, HttpRequest], authorId):
 
     if request.islocal:
         try:
-            author = Author.objects.get(pk=authorId)
+            author = Author.objects.get(pk=request.id)
         except Author.DoesNotExist:
             return Response("author does not exist", status=404)
 
     if request.method == "GET":
 
         if not request.islocal:
-            return returnGETRequest(request.id)
+            return returnGETRequest(f"{request.id}liked/")
 
         likes = Like.objects.filter(author=request.id).all()
 
