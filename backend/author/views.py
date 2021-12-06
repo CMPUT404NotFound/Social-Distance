@@ -93,7 +93,7 @@ def handleAuthorById(request: Union[ParsedRequest, HttpRequest], authorId):
         Author Updates, auth needed
         """
         try:
-            a: Author = Author.objects.get(pk=id)
+            a: Author = Author.objects.get(pk=authorId)
             data = request.data
             a.displayName = data.get("displayName", a.displayName)
             a.github = data.get("github", a.github)
