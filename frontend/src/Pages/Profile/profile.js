@@ -23,7 +23,7 @@ const Profile = () => {
 	const [following, setFollowing] = useState(false);
 	const [editModalVisible, setEditModalVisible] = useState(false);
 
-	let url = `https://project-api-404.herokuapp.com/api/author/${getIDfromURL(person.id)}/`;
+	let url = `https://project-api-404.herokuapp.com/api/author/${getURLID(person.id)}/`;
 
 	const config = {
 		headers: {
@@ -79,7 +79,7 @@ const Profile = () => {
 		if (getIDfromURL(person.id) === user.uuid) return;
 
 		axios
-			.get(url + `/followers/${user.uuid}/`, config)
+			.get(url + `followers/${getURLID(user.id)}/`, config)
 			.then(function (response) {
 				console.log(response);
 				setFollowing(true);
@@ -103,7 +103,7 @@ const Profile = () => {
 		const data = {};
 
 		axios
-			.put(url + `followers/${user.uuid}/`, data, config)
+			.put(url + `followers/${getURLID(user.id)}/`, data, config)
 			.then(function (response) {
 				console.log(response);
 				setFollowing(true);
@@ -120,7 +120,7 @@ const Profile = () => {
 	// Unfollow
 	const unfollow = () => {
 		axios
-			.delete(url, config)
+			.delete(url + `followers/${getURLID(user.id)}/`, config)
 			.then(function (response) {
 				console.log(response);
 				setFollowing(false);
