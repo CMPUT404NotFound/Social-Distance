@@ -12,7 +12,7 @@ from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
 from inbox.models import InboxItem
-from .models import Post
+from .models import Post, postsManager
 from .serializers import PostsSerializer
 from utils.request import parseIncomingRequest, ParsedRequest, returnGETRequest, ClassType
 from django.http import HttpResponse
@@ -28,27 +28,29 @@ from django.http import HttpResponse
 @api_view(["GET", "POST", "DELETE", "PUT"])
 @parseIncomingRequest(["GET"], ClassType.POST)
 def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
+    '''
     
-    # if request.method != "GET" or request.islocal: #front end wont need to call post, delete, put to other servers.
-    #     try:
-    #         author = Author.objects.get(pk=author_id)
-    #     except Author.DoesNotExist:
-    #         return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
-    try:
-        author = Author.objects.get(pk=author_id)
-    except Author.DoesNotExist:
-        return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
+    http://localhost:8000/api/author/stuff/posts
+    /project-api-404.herokuapp.com~api~author~20d63709-f5ce-43c7-87c1-c3c39ebd3910~posts~669b8267-0c5d-4d35-8f0d-f9d700ac0c1f~/
+    '''
+    if request.method != "GET": #front end wont need to call post, delete, put to other servers.
+        try:
+            author = Author.objects.get(pk=author_id)
+        except Author.DoesNotExist:
+            return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
+
+    
     # Getting the Post with post_id
     if request.method == "GET":
         #checking if it exists in our server
         if request.islocal:
             try:
-                post = Post.objects.get(pk=post_id)
-            except:
+                post = Post.objects.get(pk=request.id)
+            except Post.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
             # getting friends list of that author  
-            friend_id_string = findFriends(Author.objects.get(pk= author_id))
+            friend_id_string = findFriends(post.author_id) 
            
             # token auth will return a Author in this case(by pass entirely is not true), and nodebasicauth will return 'True' on success.
             usingTokenAuth = (
@@ -62,16 +64,15 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             s = PostsSerializer(post, context={"request": request})
             
             # checking the visibility of the post
-            if request.data.get("visibility") == "PUBLIC":
-                is_it_visible = True
-            else:
-                is_it_visible = False
+         
+            is_it_visible = s.data.get("visibility") == "PUBLIC"
+            
             # if visible then just return the post, no authentication 
             if is_it_visible:
                 return Response(s.data, status=status.HTTP_200_OK)
-            else:
+            else: 
                 if usingTokenAuth:
-                    if request.user.id == author_id or is_friend:
+                    if request.user.id == post.author_id.id or is_friend:
                         return Response(s.data, status=status.HTTP_200_OK)
                     else:
                         return Response("no post under this id", status=status.HTTP_404_NOT_FOUND)
@@ -82,11 +83,14 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
 
     # PUT the specific post
     elif request.method == "PUT":
-    
-        s = PostsSerializer(data=request.data)
-        s.id = post_id
         
         
+        data= dict(request.data)
+        data["id"] = post_id
+        data["author"] = author_id
+        
+        s = PostsSerializer(data=data)
+
         # checking if the post is valid
         if s.is_valid():
             s.data.author = author_id
@@ -168,7 +172,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
         else:
             return Response("Post not updated, not a valid post", status=status.HTTP_400_BAD_REQUEST)
 
-# DELETE the post 
+    # DELETE the post 
     elif request.method == "DELETE":
         try:
             post = Post.objects.filter(pk=post_id)

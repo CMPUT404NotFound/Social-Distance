@@ -73,6 +73,7 @@ def parseIncomingRequest(methodToCheck: List[str] = None, type: ClassType = Clas
             if parsed.netloc == NETLOC:
                 # the netloc found is our domain, parse for real id.
                 parsedId = getId(parsedId, type)
+                print("parsed id", parsedId)
                 parsedRequest = ParsedRequest(request, islocal=True, id=parsedId)  # is local is true and id is author id provided by frontend
                 return func(parsedRequest, *args, **kwargs)
 
