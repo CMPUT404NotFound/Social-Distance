@@ -62,7 +62,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             s = PostsSerializer(post, context={"request": request}, many=True)
             
             # checking the visibility of the post
-            if s.data.get("visibility") == "PU":
+            if s.data.get("visibility") == "PUBLIC":
                 is_it_visible = True
             else:
                 is_it_visible = False
@@ -93,7 +93,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
             # checking the visibility of the post
-            if s.data.get("visibility") == "PU":
+            if s.data.get("visibility") == "PUBLIC":
                 is_it_visible = True
             else:
                 is_it_visible = False
@@ -138,7 +138,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
             # checking the visibility of the post
-            if s.data.get("visibility") == "PU":
+            if s.data.get("visibility") == "PUBLIC":
                 is_it_visible = True
             else:
                 is_it_visible = False
@@ -225,9 +225,9 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
                     if request.user.id == author_id or is_friend:
                         post = Post.objects.filter(author_id=author_id)
                     else:
-                        post = Post.objects.filter(author_id=author_id).filter(visibility="PU").exclude(unlisted=True)
+                        post = Post.objects.filter(author_id=author_id).filter(visibility="PUBLIC").exclude(unlisted=True)
                 else:
-                    post = Post.objects.filter(author_id=author_id).filter(visibility="PU").exclude(unlisted=True)
+                    post = Post.objects.filter(author_id=author_id).filter(visibility="PUBLIC").exclude(unlisted=True)
 
                 #doing pagination
                 if "page" in params and "size" in params:  # make sure param has both page and size in order to paginate
@@ -262,7 +262,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
             new_post = Post.objects.create(
                 author_id=author,
                 title=request.data.get("title", ""),
-                visibility=request.data.get("visibility", "PU"),
+                visibility=request.data.get("visibility", "PUBLIC"),
                 description=request.data.get("description", ""),
                 content=request.data.get("content", ""),
                 contentType=request.data.get("contentType", "plain"),
@@ -278,7 +278,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
             local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
             follower_id_string = findFollowers(Author.objects.get(pk=author_id))
             # checking the visibility of the post
-            if request.data.get("visibility") == "PU":
+            if request.data.get("visibility") == "PUBLIC":
                 is_it_visible = True
             else:
                 is_it_visible = False
