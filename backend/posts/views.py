@@ -17,6 +17,7 @@ from .models import Post, postsManager
 from .serializers import PostsSerializer
 from utils.request import parseIncomingRequest, ParsedRequest, returnGETRequest, ClassType
 from django.http import HttpResponse
+import json
 
 @swagger_auto_schema(method="get", tags=["Posts"])
 @swagger_auto_schema(method="post", tags=["Posts"], field_inspectors=[NoSchemaTitleInspector], request_body=PostsSerializer)
@@ -264,12 +265,28 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
         
         # if post is not on our server then go fetch it from pther server
         else:
-            friend_id_string = findFriends(request.user)
-            foreign_id = (request.id).replace("~","/").split("/")[-2]
-            if foreign_id in friend_id_string:
-                return returnGETRequest(f"{request.id if request.id.endswith('/') else (request.id + '/')}posts/").exclude(unlisted= True)
+            friend_id_strings = findFriends(request.user)
+            # foreign_id =  (request.id).replace("~","/").split("/")[-2]
+            "https://glowing-palm-tree1.herokuapp.com/service/author/81d961dc-a9a5-48fa-9eca-c973c70bd06e/"
+            print("foreign id", request.id)
+            
+            output = []
+            response =  returnGETRequest(f"{request.id}posts/")
+            if response.status_code < 300:
+                posts = json.loads(response.content)
+                if request.id in friend_id_strings:
+                    for post in posts:
+                        if not post.get("unlised", False):
+                            output.append(post)
+                else:
+                    for post in posts:
+                        if  post.get("visibility", "PUBLIC") == 'PUBLIC':
+                            output.append(post)
+                            
+                return Response(output, status=200)
             else:
-                return returnGETRequest(f"{request.id if request.id.endswith('/') else (request.id + '/')}posts/").filter(visibility="PRIVATE")
+                return response
+        
     
     #POST method
     elif request.method == "POST":
