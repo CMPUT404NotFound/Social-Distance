@@ -84,7 +84,7 @@ def handlePOST(request: Union[HttpRequest, ParsedRequest], authorId: str = "", p
                     if Author.objects.filter(pk=realAuthorId).exists():
                         # since if the db has the id already, then all other info is already in the db
                         comment = Comment.objects.create(
-                            author=Author.objects.get(pk=realAuthorId),
+                            author=realAuthorId,
                             comment=data["comment"],
                             contentType=data["contentType"],
                             post=post,

@@ -182,7 +182,7 @@ class NodeBasicAuth(BasicAuthentication):
             node : Node= Node.objects.get(incomingName = username)
             
             if not node.allowIncoming:
-                raise exceptions.AuthenticationFailed("The origin provided is not allowed to access this server")
+                raise exceptions.AuthenticationFailed("The node provided is not allowed to access this server")
 
             
             
@@ -190,7 +190,7 @@ class NodeBasicAuth(BasicAuthentication):
                 raise exceptions.AuthenticationFailed("Basic auth credentials does not match.")
                 
         except Node.DoesNotExist:
-            raise exceptions.AuthenticationFailed("The origin provided is not yet registered in this server")
+            raise exceptions.AuthenticationFailed("The node provided is not yet registered in this server")
         
         return (DummyAuthObject(True, True), None)
       
