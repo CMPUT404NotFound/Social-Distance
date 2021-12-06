@@ -37,4 +37,4 @@ class Comment(models.Model):
     published = models.DateTimeField("published", auto_now_add=True)
 
     def __str__(self):
-        return f"{self.author}/{self.id}"
+        return f"comment id : {self.id}"

@@ -145,7 +145,7 @@ def getLiked(request: Union[ParsedRequest, HttpRequest], authorId):
 
 @swagger_auto_schema(
     method="post",
-    operation_summary="add a record of a local author liking a local or foreign post, and send the like to their inbox",
+    operation_summary="(for frontend only)add a record of a local author liking a local or foreign post, and send the like to their inbox",
     operation_description="Note, no request body is needed, the semantics of this api is 'authorId' likes 'postId'. This post id can local or encoded foreign",
     field_inspectors=[NoSchemaTitleInspector],
     tags=["Likes"],
@@ -187,7 +187,7 @@ def addLikePost(request: Union[ParsedRequest, HttpRequest], authorId, postId: st
 # feeling lazy
 @swagger_auto_schema(
     method="post",
-    operation_summary="add a record of a local author liking a local or foreign comment, and send the like to their inbox",
+    operation_summary="(for frontend onlyu)add a record of a local author liking a local or foreign comment, and send the like to their inbox",
     operation_description="Note, no request body is needed, the semantics of this api is 'authorId' likes 'commentId'. This comment id can local or encoded foreign",
     field_inspectors=[NoSchemaTitleInspector],
     tags=["Likes"],
@@ -197,7 +197,7 @@ def addLikePost(request: Union[ParsedRequest, HttpRequest], authorId, postId: st
 @parseIncomingRequest(["POST"], ClassType.COMMENT)
 @authentication_classes([TokenAuth(needAuthorCheck=["POST"]), NodeBasicAuth])
 def addLikeComment(request: Union[ParsedRequest, HttpRequest], authorId, commentId: str):
-
+    print(request.islocal, "hiiiiiiiiiiiiii")
     if request.islocal:
         try:
             comment : Comment = Comment.objects.get(pk = request.id)
