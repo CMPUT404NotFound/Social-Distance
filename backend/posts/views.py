@@ -287,7 +287,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
                             
                 return Response(output, status=200)
             else:
-                return response
+                return Response(response.content, status=response.status_code)
         
     
     #POST method
