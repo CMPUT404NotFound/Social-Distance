@@ -61,7 +61,7 @@ def handleGET(request: Union[HttpRequest, ParsedRequest], authorId: str = "", po
         return Response(output, status=200)
     else:
         # sent foreign request.
-        stuff = returnGETRequest(f"{request.id}comments")
+        stuff = returnGETRequest(f"{request.id}comments", request.query_params)
         return stuff
 
 
