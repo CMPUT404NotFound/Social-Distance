@@ -13,6 +13,7 @@ import { useContext } from "react";
 import axios from "axios";
 import UserContext from "../../userContext";
 import { Link } from "react-router-dom";
+import Image from "react-bootstrap/Image";
 
 const Post = () => {
 	const location = useLocation();
@@ -85,7 +86,11 @@ const Post = () => {
 						<Link to={{ pathname: "/profile", state: post.author }}>{post.author.displayName}</Link>
 						<h3>{post.title}</h3>
 						<p className="post_description">{post.description}</p>
-						<ReactCommonmark source={post.content} className="post_description" />
+						{(post.contentType=="text/plain") ? (
+							<ReactCommonmark source={post.content} className="post_content" />
+							) : (
+							<Image source={post.content} className="post_content" fluid />
+						)}
 					</Col>
 				</Row>
 				<Row justify="end">
