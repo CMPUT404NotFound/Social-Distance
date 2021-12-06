@@ -257,7 +257,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
         
         # if post is not on our server then go fetch it from pther server
         else:
-            return returnGETRequest(request.id)
+            return returnGETRequest(f"{request.id if request.id.endswith('/') else (request.id + '/')}posts/")
     
     #POST method
     elif request.method == "POST":
