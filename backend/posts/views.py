@@ -29,11 +29,11 @@ from django.http import HttpResponse
 @parseIncomingRequest(["GET"], ClassType.POST)
 def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
     
-    if request.method != "GET" or request.islocal: #front end wont need to call post, delete, put to other servers.
-        try:
-            author = Author.objects.get(pk=author_id)
-        except Author.DoesNotExist:
-            return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
+    # if request.method != "GET" or request.islocal: #front end wont need to call post, delete, put to other servers.
+    #     try:
+    #         author = Author.objects.get(pk=author_id)
+    #     except Author.DoesNotExist:
+    #         return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
     try:
         author = Author.objects.get(pk=author_id)
     except Author.DoesNotExist:
@@ -59,7 +59,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             is_friend = request.user.id in friend_id_string #regardless if friend or not, 
 
             # Seriliazing the data
-            s = PostsSerializer(post, context={"request": request}, many=True)
+            s = PostsSerializer(post, context={"request": request})
             
             # checking the visibility of the post
             if request.data.get("visibility") == "PUBLIC":
@@ -82,11 +82,15 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
 
     # PUT the specific post
     elif request.method == "PUT":
-        s = PostsSerializer(request.data)
+    
+        s = PostsSerializer(data=request.data)
+        s.id = post_id
+        
         
         # checking if the post is valid
         if s.is_valid():
-            s.save(author, post_id)
+            s.data.author = author_id
+            s.save()
 
             # getting friends list of that author  
             local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
@@ -105,13 +109,13 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
                     if(follower.startswith("http")):
                         return makeRequest("PUT", f"{follower if follower.endswith('/') else (follower + '/')  }inbox/", s.data)
                     else:
-                        InboxItem.objects.create(author=follower, type="P", contentId=post_id)
+                        InboxItem.objects.create(author=Author.objects.get(pk = follower), type="P", contentId=post_id)
             
             else: # post is private
                 for friend in foreign_author_id_string:
                     return makeRequest("PUT", f"{friend if friend.endswith('/') else (friend + '/')}inbox/", s.data)
                 for local_freind in local_friend_id_string:    
-                    InboxItem.objects.create(author=local_freind, type="P", contentId=post_id)
+                    InboxItem.objects.create(author=Author.objects.get(pk = local_freind), type="P", contentId=post_id)
             
             # Post created        
             return Response("Post created", s.data, status=status.HTTP_201_CREATED)
@@ -119,12 +123,12 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
         # if data is not valid
         else:
             return Response("Data not valid, Post not created")  
-        
+     
     # Update a specific post 
     elif request.method == "POST":
         # check if the post exists
         try:
-            post: Post = Post.objects.filter(pk=post_id)
+            post: Post = Post.objects.get(pk=post_id)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
@@ -132,7 +136,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
         
        # check if the updated post is valid
         if s.is_valid():
-            post.save()
+            s.update()
             # getting friends list of that author  
             local_friend_id_string, foreign_author_id_string = findFriends(Author.objects.get(pk= author_id), True)
             follower_id_string = findFollowers(Author.objects.get(pk=author_id))
@@ -150,15 +154,15 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
                     if(follower.startswith("http")):
                         return makeRequest("PUT", f"{follower if follower.endswith('/') else (follower + '/')  }inbox/", s.data)
                     else:
-                        InboxItem.objects.create(author=follower, type="P", contentId=post_id)
+                        InboxItem.objects.create(author=Author.objects.get(pk = follower), type="P", contentId=post_id)
             
             else: # post is private
                 for friend in foreign_author_id_string:
                     return makeRequest("PUT", f"{friend if friend.endswith('/') else (friend + '/')}inbox/", s.data)
                 for local_freind in local_friend_id_string:    
-                    InboxItem.objects.create(author=local_freind, type="P", contentId=post_id)
+                    InboxItem.objects.create(author=Author.objects.get(pk = local_freind), type="P", contentId=post_id)
             
-            return Response("Post updated", s.data, status=status.HTTP_200_OK)
+            return Response("Post updated", status=status.HTTP_200_OK)
         
         # if post is not valid
         else:
