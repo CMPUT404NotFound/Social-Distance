@@ -10,20 +10,14 @@ const { TabPane } = Tabs;
 let ReactCommonmark = require("react-commonmark");
 
 // Main Create Post Page
-const CreatePost = ({ cancel }) => {
+const EditPost = ({ setVisible, post }) => {
 	const { user } = useContext(UserContext);
 
-	// post type
-	const [contentType, setContentType] = useState("text/plain");
-
-	// post data
-	const [content, setContent] = useState("");
-	const [title, setTitle] = useState("");
-	const [description, setDescription] = useState("");
-	const [visibility, setVisibility] = useState("PUBLIC");
+	const [content, setContent] = useState(post.content);
+	const [title, setTitle] = useState(post.title);
+	const [description, setDescription] = useState(post.description);
+	const [visibility, setVisibility] = useState(post.visibility);
 	const [image, setImage] = useState(null);
-
-	// post state
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
 
@@ -41,7 +35,7 @@ const CreatePost = ({ cancel }) => {
 			content,
 			visibility,
 			description,
-			contentType,
+			contentType: "text/plain",
 			unlisted: visibility === "UNLISTED",
 		};
 
@@ -122,19 +116,12 @@ const CreatePost = ({ cancel }) => {
 		}
 	};
 
-	const contentTypes = [
-		{ label: "Plain Text", value: "text/plain" },
-		{ label: "Markdown Text", value: "text/markdown" },
-	];
-
 	return (
 		<div className="create_page">
-			{/* Error Heading */}
 			{error && (
 				<Alert message="Error" description={error} type="error" className="error" showIcon />
 			)}
 
-			{/* Post data */}
 			<label>Title</label>
 			<Input
 				placeholder="Post Title"
@@ -198,16 +185,6 @@ const CreatePost = ({ cancel }) => {
 				</Space>
 			</Radio.Group>
 
-			{/* Content Type */}
-			<Divider>Text Type</Divider>
-			<Radio.Group
-				onChange={(e) => {
-					setContentType(e.target.value);
-				}}
-				value={contentType}
-				options={contentTypes}
-			></Radio.Group>
-
 			<Divider />
 
 			{/* Submit Button */}
@@ -224,4 +201,4 @@ const CreatePost = ({ cancel }) => {
 	);
 };
 
-export default CreatePost;
+export default EditPost;

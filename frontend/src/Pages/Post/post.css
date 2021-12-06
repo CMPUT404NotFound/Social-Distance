@@ -26,6 +26,6 @@
 }
 
 .post_page .post_content {
-	width: 100%;
+	max-width: 100%;
 	margin: 0.25rem;
 }

@@ -120,7 +120,15 @@ const Post = () => {
 						<h3>{post.title}</h3>
 						<p className="post_description">{post.description}</p>
 						{post.contentType === "image/png;base64" || post.contentType === "image/jpeg;base64" ? (
-							<img src={post.content} className="post_content" alt={post.description} />
+							<img
+								src={
+									post.content.includes(post.contentType)
+										? post.content
+										: "data:" + post.contentType + "," + post.content
+								}
+								className="post_content"
+								alt={post.description}
+							/>
 						) : post.contentType === "text/markdown" ? (
 							<ReactCommonmark source={post.content} className="post_content" />
 						) : (
