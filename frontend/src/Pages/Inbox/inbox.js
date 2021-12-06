@@ -4,6 +4,8 @@ import axios from "axios";
 import InboxPost from "./post";
 import UserContext from "../../userContext";
 import { Link } from "react-router-dom";
+import Profile from "../Explore/profile";
+import InboxLike from "./inboxLike";
 
 const Inbox = () => {
 	const { user } = useContext(UserContext);
@@ -65,7 +67,7 @@ const Inbox = () => {
 	const [posts, setPosts] = useState([examplepost]);
 	*/
 
-	const [posts, setPosts] = useState([]);
+	const [items, setItems] = useState([]);
 
 	useEffect(() => {
 		const url = `https://project-api-404.herokuapp.com/api/author/${user.uuid}/inbox/`;
@@ -80,7 +82,7 @@ const Inbox = () => {
 			.get(url, config)
 			.then(function (response) {
 				console.log(response);
-				setPosts(response.data.items);
+				setItems(response.data.items);
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -89,12 +91,26 @@ const Inbox = () => {
 
 	return (
 		<div className="inbox_page">
-			{posts &&
-				posts.map((post, i) => (
-					<Link to={{ pathname: "/post", state: post }} key={i}>
-						<InboxPost post={post} key={i} />
-					</Link>
-				))}
+			{items &&
+				items.map((item, i) => {
+					switch (item.type.toLowerCase()) {
+						default:
+						case "post":
+							return (
+								<Link to={{ pathname: "/post", state: item }} key={i}>
+									<InboxPost post={item} key={i} />
+								</Link>
+							);
+						case "follow":
+							return (
+								<Link to={{ pathname: "/profile", state: item.object }} key={i}>
+									<Profile post={item} key={i} follow />
+								</Link>
+							);
+						case "like":
+							return <InboxLike like={item} key={i} />;
+					}
+				})}
 		</div>
 	);
 };

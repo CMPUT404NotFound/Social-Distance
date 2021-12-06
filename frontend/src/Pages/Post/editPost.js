@@ -1,8 +1,7 @@
 import React, { useState, useContext } from "react";
-import { Button, Radio, Space, Checkbox, Tabs, Input, Alert, Divider } from "antd";
+import { Button, Radio, Space, Checkbox, Tabs, Input, Alert, Divider, Modal } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import TextArea from "rc-textarea";
-import "./create.css";
 import axios from "axios";
 import UserContext from "../../userContext";
 
@@ -10,18 +9,23 @@ const { TabPane } = Tabs;
 let ReactCommonmark = require("react-commonmark");
 
 // Main Create Post Page
-const EditPost = ({ setVisible, post }) => {
+const EditPost = ({ visible, setVisible, post }) => {
 	const { user } = useContext(UserContext);
 
+	// post type
+	const [contentType, setContentType] = useState(post.contentType);
+
+	// post data
 	const [content, setContent] = useState(post.content);
 	const [title, setTitle] = useState(post.title);
 	const [description, setDescription] = useState(post.description);
 	const [visibility, setVisibility] = useState(post.visibility);
-	const [image, setImage] = useState(null);
+
+	// post state
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
 
-	const url = `https://project-api-404.herokuapp.com/api/author/${user.uuid}/posts/`;
+	const url = post.id;
 
 	const config = {
 		headers: {
@@ -31,11 +35,12 @@ const EditPost = ({ setVisible, post }) => {
 
 	const submitPost = () => {
 		const data = {
+			id: post.id,
 			title,
 			content,
 			visibility,
 			description,
-			contentType: "text/plain",
+			contentType,
 			unlisted: visibility === "UNLISTED",
 		};
 
@@ -45,58 +50,13 @@ const EditPost = ({ setVisible, post }) => {
 				console.log(response);
 
 				// close the modal
-				cancel();
+				setVisible(false);
 			})
 			.catch(function (error) {
 				console.log(error);
 				setError("There was an error sharing your post. Please try again later.");
 				setLoading(false);
 			});
-	};
-
-	const submitImage = () => {
-		const data = {
-			title,
-			content: image,
-			visibility,
-			description,
-			contentType: "image/png;base64",
-		};
-
-		const config = {
-			headers: {
-				Authorization: `Token ${user.token}`,
-			},
-		};
-
-		axios
-			.post(url, data, config)
-			.then(function (response) {
-				console.log(response);
-
-				// close the modal
-				cancel();
-			})
-			.catch(function (error) {
-				console.log(error);
-				setError("There was an error sharing your post. Please try again later.");
-				setLoading(false);
-			});
-	};
-
-	const getBase64 = (file) => {
-		return new Promise((resolve, reject) => {
-			const reader = new FileReader();
-			reader.readAsDataURL(file);
-			reader.onload = () => resolve(reader.result);
-			reader.onerror = (error) => reject(error);
-		});
-	};
-
-	const handleImage = async (event) => {
-		const imageFile = await getBase64(event.target.files[0]);
-		setImage(imageFile);
-		console.log(imageFile);
 	};
 
 	const friends = [
@@ -109,19 +69,33 @@ const EditPost = ({ setVisible, post }) => {
 		setError("");
 		setLoading(true);
 		if (content) submitPost();
-		if (image) submitImage();
-		if (!content && !image) {
-			setError("You must have post content and/or an image");
+		else {
+			setError("You must have post content");
 			setLoading(false);
 		}
 	};
 
+	const contentTypes = [
+		{ label: "Plain Text", value: "text/plain" },
+		{ label: "Markdown Text", value: "text/markdown" },
+	];
+
 	return (
-		<div className="create_page">
+		<Modal
+			title="Edit Post"
+			visible={visible}
+			onCancel={() => {
+				setVisible(false);
+			}}
+			footer={null}
+			className="edit_post_modal"
+		>
+			{/* Error Heading */}
 			{error && (
 				<Alert message="Error" description={error} type="error" className="error" showIcon />
 			)}
 
+			{/* Post data */}
 			<label>Title</label>
 			<Input
 				placeholder="Post Title"
@@ -160,10 +134,6 @@ const EditPost = ({ setVisible, post }) => {
 				</TabPane>
 			</Tabs>
 
-			{/* Image Upload */}
-			<Divider>Upload Image</Divider>
-			<input type="file" accept="image/png" name="image" onChange={handleImage} />
-
 			{/* Visibility */}
 			<Divider>Visibility Settings</Divider>
 			<Radio.Group
@@ -185,6 +155,16 @@ const EditPost = ({ setVisible, post }) => {
 				</Space>
 			</Radio.Group>
 
+			{/* Content Type */}
+			<Divider>Text Type</Divider>
+			<Radio.Group
+				onChange={(e) => {
+					setContentType(e.target.value);
+				}}
+				value={contentType}
+				options={contentTypes}
+			></Radio.Group>
+
 			<Divider />
 
 			{/* Submit Button */}
@@ -197,7 +177,7 @@ const EditPost = ({ setVisible, post }) => {
 			>
 				Send Post
 			</Button>
-		</div>
+		</Modal>
 	);
 };
 

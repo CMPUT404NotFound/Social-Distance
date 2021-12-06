@@ -1,7 +1,6 @@
 import React from "react";
 import { Row, Col, Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-// import { Link } from "react-router-dom";
 
 const InboxPost = ({ post }) => {
 	return (

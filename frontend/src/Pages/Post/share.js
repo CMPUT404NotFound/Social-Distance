@@ -34,7 +34,7 @@ const Share = ({ post }) => {
 			});
 	};
 
-	return <Button type="primary" shape="circle" icon={<ShareAltOutlined />} danger />;
+	return <Button type="primary" shape="circle" icon={<ShareAltOutlined />} />;
 };
 
 export default Share;

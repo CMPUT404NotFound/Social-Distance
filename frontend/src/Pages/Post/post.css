@@ -29,3 +29,43 @@
 	max-width: 100%;
 	margin: 0.25rem;
 }
+
+.post_page .edit_post_modal {
+	max-width: 1000px;
+	margin: auto;
+}
+
+.post_page .edit_post_modal .title {
+	padding: 25px;
+}
+
+.edit_post_modal .textfield,
+.edit_post_modal .preview {
+	height: 50vh;
+	width: 100%;
+	display: block;
+	padding: 10px;
+	border-radius: 1rem;
+}
+
+.edit_post_modal .preview {
+	border: 1px solid rgb(43, 43, 43);
+}
+
+.edit_post_modal .tabs {
+	margin: 0 1rem;
+}
+
+.edit_post_modal .editor {
+	align-items: center;
+	gap: 1rem;
+}
+
+.edit_post_modal .options {
+	padding: 2rem;
+}
+
+.edit_post_modal .submitButton {
+	display: block;
+	margin-left: auto;
+}

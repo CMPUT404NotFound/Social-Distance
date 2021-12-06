@@ -6,22 +6,14 @@ import axios from "axios";
 import { getIDfromURL } from "../../utils";
 import { Link } from "react-router-dom";
 
-const Profile = ({ person, remoteUser }) => {
+const Profile = ({ person }) => {
 	const { user } = useContext(UserContext);
 
 	const [following, setFollowing] = useState(false);
 
-	let url;
-
-	if (remoteUser) {
-		url = `https://project-api-404.herokuapp.com/api/author/${getIDfromURL(person.id)}/followers/${
-			user.uuid
-		}/`;
-	} else {
-		url = `https://project-api-404.herokuapp.com/api/author/${getIDfromURL(person.id)}/followers/${
-			user.uuid
-		}/`;
-	}
+	let url = `https://project-api-404.herokuapp.com/api/author/${getIDfromURL(
+		person.id
+	)}/followers/${user.uuid}/`;
 
 	const config = {
 		headers: {
@@ -63,8 +55,6 @@ const Profile = ({ person, remoteUser }) => {
 					Promise.resolve(error);
 				} else console.log(error);
 			});
-
-		// TODO: send follow request to their inbox
 	};
 
 	const unfollow = () => {
