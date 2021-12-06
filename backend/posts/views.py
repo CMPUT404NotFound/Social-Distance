@@ -227,7 +227,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
                 )  
                 # checking if user is a friend and is in the server
                 is_friend = request.user.id in friend_id_string #regardless if friend or not, 
-                print(is_friend)
+
                 params: dict = request.query_params
                 
                 # if user is from our server then check; foreign server wont ask for private post
