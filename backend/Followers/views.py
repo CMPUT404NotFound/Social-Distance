@@ -257,3 +257,36 @@ def friendsView(request: Union[HttpRequest, Request], authorId:str):
             output.append(json.loads(obj.content))
     
     return Response(output, status=200)
+
+def findFollowers(author: Author):
+    followers : QuerySet = Follower.objects.filter(receiver = author).values("sender")
+    needFetch = []
+    localids = []
+    output = []
+    for follower in followers:
+        id : str= follower["sender"]
+        if id.startswith("http"):
+            #if the id is a link, it's foreign author, make request
+            needFetch.append(f"{id if id.endswith('/') else (id + '/')  }followers/{author.id}/")
+        else:
+            localids.append(id)
+    
+    for id in localids:
+        try:
+            f = Follower.objects.get(receiver = id)
+            output.append(id)
+        except:
+            pass
+    
+    responses = makeMultipleGETs(needFetch)
+    
+    for response in responses:
+        obj = response[1]
+        if obj.status_code >= 400:
+            continue
+        if obj.content.lower() != "true":
+            continue
+        output.append(response[0])
+    
+    return output
+

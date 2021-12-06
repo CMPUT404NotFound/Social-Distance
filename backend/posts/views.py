@@ -7,11 +7,12 @@ from author.token import TokenAuth, NodeBasicAuth
 from comment.documentation import NoSchemaTitleInspector
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from drf_yasg.utils import swagger_auto_schema
-from Followers.views import findFriends
+from Followers.views import findFriends, findFollowers
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
+from inbox.models import InboxItem
 
 from .models import Post
 from .serializers import PostsSerializer
@@ -31,6 +32,13 @@ from django.http import HttpResponse
 @api_view(["GET", "POST", "DELETE", "PUT"])
 @parseIncomingRequest(["GET"], ClassType.POST)
 def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
+    friend_id_string = findFriends(Author.objects.get(author= author_id))
+    follower_id_string = findFollowers(Author.objects.get(author=author_id))
+    
+    usingTokenAuth = (
+                    type(request.user) is Author
+                )
+    is_friend = usingTokenAuth and request.user.id in friend_id_string
 
     if request.method != "GET" or request.islocal: #front end wont need to call post, delete, put to other servers.
         try:
@@ -41,18 +49,34 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
     if request.method == "GET":
         if request.islocal:
             try:
-                post = Post.objects.filter(pk=post_id)
+                post = Post.objects.get(pk=post_id)
             except:
                 return Response(status=status.HTTP_404_NOT_FOUND)
+            usingTokenAuth = (
+                    type(request.user) is Author
+                )  # token auth will return a Author in this case(by pass entirely is not true), and nodebasicauth will return 'True' on success.
+            is_friend = usingTokenAuth and request.user.id in friend_id_string #regardless if friend or not, 
             s = PostsSerializer(post, context={"request": request}, many=True)
-            return Response(s.data, status=status.HTTP_200_OK)
+            if usingTokenAuth:
+                if request.user.id == author_id or is_friend:
+                    return Response(s.data, status=status.HTTP_200_OK)
+                else:
+                    return Response("no post under this id", status=status.HTTP_404_NOT_FOUND)
         else:
             return returnGETRequest(request.id)
 
     elif request.method == "PUT":
         s = PostsSerializer(request.data)
+        visible = request.data.get("visibility")
         if s.is_valid():
             s.save(author, post_id)
+            if(visible == "PU"):
+                for follower in follower_id_string:
+                    InboxItem.objects.create(author=follower, type="P", contentId=id)
+            elif(visible == "PR"):
+                for friend in friend_id_string:
+                    InboxItem.objects.create(author=friend, type="P", contentId=id)
+            
         return Response("Post created", s.data, status=status.HTTP_201_CREATED)
 
     elif request.method == "POST":
@@ -61,10 +85,16 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
         s = PostsSerializer(instance=post, data=request.data)
-
+        visible = request.data.get("visibility")
         if s.is_valid():
             post.save()
-
+            if(visible == "PU"):
+                for follower in follower_id_string:
+                    InboxItem.objects.create(author=follower, type="P", contentId=id)
+            elif(visible == "PR"):
+                for friend in friend_id_string:
+                    InboxItem.objects.create(author=friend, type="P", contentId=id)
+            
             return Response("Post updated", s.data, status=status.HTTP_200_OK)
         return Response("Post not updated", status=status.HTTP_400_BAD_REQUEST)
 
@@ -107,16 +137,23 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
 
     #     except posts.DoesNotExist:
     #         return Response(status=status.HTTP_404_NOT_FOUND)
-
+    try:
+            author = Author.objects.get(pk=author_id)
+    except Author.DoesNotExist:
+            return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
+    
+    friend_id_string = findFriends(Author.objects.get(author= author_id))
+    follower_id_string = findFollowers(Author.objects.get(author=author_id))
+    
     if request.method == "GET":
+        
         if request.islocal:
             try:
-                friend_id_string = findFriends(author_id)
                 usingTokenAuth = (
                     type(request.user) is Author
                 )  # token auth will return a Author in this case(by pass entirely is not true), and nodebasicauth will return 'True' on success.
-                is_friend = usingTokenAuth and request.islocal and request.user.id in friend_id_string #regardless if friend or not, 
-
+                is_friend = usingTokenAuth and request.user.id in friend_id_string #regardless if friend or not, 
+        
                 params: dict = request.query_params
                 if usingTokenAuth:
                     if request.user.id == author_id or is_friend:
@@ -145,7 +182,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
             author = Author.objects.get(pk=author_id)
         except Author.DoesNotExist:
             return Response("no author under this id", status=status.HTTP_404_NOT_FOUND)
-
+        
         try:
             new_post = Post.objects.create(
                 author_id=author,
@@ -161,6 +198,14 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
                 count=request.data.get("count", "0"),
             )
             new_post.save()
+            visible = request.data.get("visibility")
+            if(visible == "PU"):
+                for follower in follower_id_string:
+                    InboxItem.objects.create(author=follower, type="P", contentId=id)
+            elif(visible == "PR"):
+                for friend in friend_id_string:
+                    InboxItem.objects.create(author=friend, type="P", contentId=id)
+            
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         except KeyError:
