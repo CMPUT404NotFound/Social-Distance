@@ -1,3 +1,21 @@
 .profile_page .profile_container {
 	margin-block: 1rem;
 }
+
+.profile_page .post_container {
+	background: white;
+	padding: 1rem;
+	border-radius: 1rem;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+	cursor: pointer;
+	margin-block: 1rem;
+}
+
+.profile_page .post_container p,
+.profile_page .post_container h3 {
+	margin: 0;
+}
+
+.profile_page .post_container .post_description {
+	color: rgb(99, 99, 99);
+}

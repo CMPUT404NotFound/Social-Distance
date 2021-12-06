@@ -56,3 +56,18 @@ export const getIDfromURL = (url) => {
 	// http://host/something/.../id
 	return url.split("/").pop();
 };
+
+export const getURLID = (url) => {
+	// assumes that the url is of the form
+	// http://host/something/.../id
+
+	// remove schema
+	url = url.replace("https://", "");
+	url = url.replace("http://", "");
+
+	// replace / with ~
+	url = url.replaceAll("/", "~");
+	console.log(url);
+
+	return url;
+};
