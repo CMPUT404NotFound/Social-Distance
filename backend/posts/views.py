@@ -271,7 +271,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
             print("foreign id", request.id)
             
             output = []
-            response =  returnGETRequest(f"{request.id}posts/")
+            response =  makeRequest("GET", f"{request.id}posts/")
             if response.status_code < 300:
                 posts = json.loads(response.content)
                 if request.id in friend_id_strings:
