@@ -284,11 +284,11 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
                         if(follower.startswith("http")):
                             return makeRequest("PUT", f"{follower if follower.endswith('/') else (follower + '/')  }inbox/", new_post.data)
                         else:
-                            InboxItem.objects.create(author=follower, type="P", contentId=new_post.data.get("origin"))
+                            InboxItem.objects.create(author=follower, type="P", contentId=new_post.data.get(id))
             
                 else: # post is private
                     for friend in foreign_author_id_string:
-                        return makeRequest("PUT", f"{friend if friend.endswith('/') else (friend + '/')}inbox/", new_post.data.get(id))
+                        return makeRequest("PUT", f"{friend if friend.endswith('/') else (friend + '/')}inbox/", new_post.data)
                     for local_freind in local_friend_id_string:    
                         InboxItem.objects.create(author=local_freind, type="P", contentId= new_post.data.get(id))
                
