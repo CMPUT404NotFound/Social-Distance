@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from django.contrib.auth import authenticate
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authtoken.models import Token
 
@@ -44,11 +45,12 @@ def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
                 follower_id = follower.sender #follower.sender:  project-api-404.herokuapp.com~api~author~5c6affc9-1bb7-4997-a82b-7e1ce4a9b17b
                 print("follower_id.split 1~: ", follower_id.split("~")) #follower_id.split 1~:  ['project-api-404.herokuapp.com', 'api', 'author', '5c6affc9-1bb7-4997-a82b-7e1ce4a9b17b']
                 just_id = follower_id.split("~")[-1]
+                origin = follower_id.split("~")[0]
                 # print("TYPE: ", type(follower_id))
                 object = checkIsLocal(str(just_id), ClassType.AUTHOR)
                 print("object: ", object)
                 # print("HERE checkIsLocal(follower_id)23: ", object.isLocal)
-                if object.isLocal == False:
+                if origin != "project-api-404.herokuapp.com":
                     #print("NEW TO QUERY FOREIGN: ", checkIsLocal(str(request)))
                     replace_with_slash_follower = follower_id.replace("~", "/")
                     full_foreign_id = "https://" + replace_with_slash_follower + "/"
@@ -118,7 +120,8 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
             full_local_id = "https://" + replace_with_slash_local
             local_author = Author.objects.get(pk=follower_id.split("~")[-1])
             local_author_serialize = AuthorSerializer(local_author).data
-
+            print("local_author_serialize: ", local_author_serialize)
+            print("full_foreign_id: ", full_foreign_id)
             foreign_object = makeRequest("GET", full_foreign_id)
             json_foreign_object = json.loads(foreign_object.content)
             data = {"type":"Follow","summary":"","actor":{
@@ -137,7 +140,7 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
                                 "github":json_foreign_object.get("github"),
                                 "profileImage":json_foreign_object.get("profileImage")}}
             result = makeRequest("POST", full_foreign_id + "inbox/", data)
-            print("status code: ", result.status_code)
+            print("RESULT: ", result)
             if 200 <= result.status_code < 300:
                 return Response(status=status.HTTP_201_CREATED)
             else:
@@ -179,7 +182,7 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
 
 
 
-def findFriends(author : Author):
+def findFriends(author : Author, split = False):
     
     '''
     finds a list of string that are the ids of friends of the (local)author provided. 
@@ -188,7 +191,7 @@ def findFriends(author : Author):
     
     followers : List[QuerySet] = Follower.objects.filter(receiver = author).values("sender")
     
-    output = []
+    
     needFetch = []
     localids = []
 
@@ -200,16 +203,17 @@ def findFriends(author : Author):
         else:
             localids.append(id)
     
-    
+    localFriends = []
     for id in localids:
         try:
             f = Follower.objects.get(receiver = id)
-            output.append(id)
+            localFriends.append(id)
         except:
             pass
     
     responses = makeMultipleGETs(needFetch)
     
+    foreignFriends = []
     for response in responses:
         obj = response[1]
         if obj.status_code >= 400:
@@ -218,12 +222,20 @@ def findFriends(author : Author):
             continue
         #neither of the know falsy reponses are gotten, this link is prob a follower
         
-        output.append(response[0][:response[0].find("follower")])
+        foreignFriends.append(response[0][:response[0].find("follower")])
     
-    return output
+    return localFriends.extend(foreignFriends) if not split else (localFriends, foreignFriends)
 
 
-
+@swagger_auto_schema(
+    method="get",
+    operation_summary="find all friends of the given local author id",
+    responses={
+        200: openapi.Response("a list of local or foreign friends", AuthorSerializer(many = True)),
+        404: "author not found"
+    },
+    tags=["followers"]
+)
 @api_view(["GET"])
 def friendsView(request: Union[HttpRequest, Request], authorId:str):
     
@@ -234,8 +246,6 @@ def friendsView(request: Union[HttpRequest, Request], authorId:str):
         return Response("author requested does not exists", status=404)
     
     ids: List = findFriends(author)
-    print(ids)
-
     
     output = []
     needFetch = []

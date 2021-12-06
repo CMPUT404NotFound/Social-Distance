@@ -57,6 +57,7 @@ urlpatterns = [
     re_path(r"^api/authors/?$", authorViews.getAllAuthors),
     re_path(r"^api/login/?$", authorViews.login),
     re_path(r"^api/signup/?$", authorViews.signUp),
+    re_path(r"api/logout/?$", authorViews.logout),
     
     re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.]+)/comments/?$", commentViews.handleComments),
     
@@ -66,8 +67,10 @@ urlpatterns = [
     
     re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-~.]+)/inbox/?$", inboxViews.handleInbox),
     re_path(r'^api/author/(?P<authorId>[A-Za-z0-9-~.]+)/liked/?$', likeviews.getLiked ),
-    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.])/likes/?$", likeviews.getPostLikes),
-    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.])/comments/(?P<commentId>[A-Za-z0-9-~.])/likes/?$", likeviews.getCommentLikes),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.]+)/likes/?$", likeviews.getPostLikes),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/posts/(?P<postId>[A-Za-z0-9-~.]+)/comments/(?P<commentId>[A-Za-z0-9-~.]+)/likes/?$", likeviews.getCommentLikes),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/likes/posts/(?P<postId>[A-Za-z0-9-~.]+)/?$", likeviews.addLikePost),
+    re_path(r"^api/author/(?P<authorId>[A-Za-z0-9-]+)/likes/comments/(?P<commentId>[A-Za-z0-9-~.]+)/?$", likeviews.addLikeComment),
     
     re_path(r"^api/nodes/?$", nodeViews.getNodes),
 
