@@ -2,6 +2,7 @@ from typing import Union
 from django.http.request import HttpRequest
 from author.models import Author
 from author.token import TokenAuth, NodeBasicAuth
+from utils.image import handleImage
 from utils.request import makeRequest
 from comment.documentation import NoSchemaTitleInspector
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -84,13 +85,16 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
     # PUT the specific post
     elif request.method == "PUT":
         
+        #image is handled here
+        img_handled_data = handleImage(request.data) 
+
         s = Post.objects.create(
                 post_id = post_id,
                 author_id=author,
                 title=request.data.get("title", ""),
                 visibility=request.data.get("visibility", "PUBLIC"),
                 description=request.data.get("description", ""),
-                content=request.data.get("content", ""),
+                content= img_handled_data,
                 contentType=request.data.get("contentType", "plain"),
                 source=request.data.get("source", ""),
                 origin=request.data.get("origin", ""),
@@ -136,7 +140,10 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
-        s = PostsSerializer(instance=post, data=request.data)
+        #image is handled here
+        img_handled_data = handleImage(request.data) 
+
+        s = PostsSerializer(instance=post, data=img_handled_data)
         
        # check if the updated post is valid
         if s.is_valid():
@@ -269,12 +276,14 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
         
         # creating the post
         try:
+            #image is handled here
+            img_handled_data = handleImage(request.data) 
             new_post = Post.objects.create(
                 author_id=author,
                 title=request.data.get("title", ""),
                 visibility=request.data.get("visibility", "PUBLIC"),
                 description=request.data.get("description", ""),
-                content=request.data.get("content", ""),
+                content=img_handled_data,
                 contentType=request.data.get("contentType", "plain"),
                 source=request.data.get("source", ""),
                 origin=request.data.get("origin", ""),
