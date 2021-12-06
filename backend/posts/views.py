@@ -274,7 +274,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
             response =  makeRequest("GET", f"{request.id}posts/")
             if response.status_code < 300:
                 posts = json.loads(response.content).get("items", [])
-                if request.id in friend_id_strings or request.id[:-1]:
+                if request.id in friend_id_strings or request.id[:-1] in friend_id_strings:
                     for post in posts:
                         if not post.get("unlised", False):
                             output.append(post)
