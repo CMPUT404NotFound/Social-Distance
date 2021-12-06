@@ -205,7 +205,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
 def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
    # checking if the author exists
     
-    if request.method != "GET" or request.islocal:
+    if request.method != "GET":
         try:
             author = Author.objects.get(pk=author_id)
         except Author.DoesNotExist:
@@ -217,7 +217,7 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
         if request.islocal:
             try:
                 # getting friends list of that author  
-                friend_id_string = findFriends(Author.objects.get(pk= author_id))
+                friend_id_string = findFriends(Author.objects.get(pk= request.id))
                 # print(Author.objects.get(pk = author_id))
                 # print(friend_id_string)
                 
@@ -233,11 +233,11 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
                 # if user is from our server then check; foreign server wont ask for private post
                 if usingTokenAuth:
                     if request.user.id == author_id or is_friend:
-                        post = Post.objects.filter(author_id=author_id)
+                        post = Post.objects.filter(author_id=request.id)
                     else:
-                        post = Post.objects.filter(author_id=author_id).filter(visibility="PUBLIC").exclude(unlisted=True)
+                        post = Post.objects.filter(author_id=request.id).filter(visibility="PUBLIC").exclude(unlisted=True)
                 else:
-                    post = Post.objects.filter(author_id=author_id).filter(visibility="PUBLIC").exclude(unlisted=True)
+                    post = Post.objects.filter(author_id=request.id).filter(visibility="PUBLIC").exclude(unlisted=True)
 
                 #doing pagination
                 if "page" in params and "size" in params:  # make sure param has both page and size in order to paginate
