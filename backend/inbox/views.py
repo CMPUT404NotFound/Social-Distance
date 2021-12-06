@@ -1,12 +1,14 @@
 import json
 
+from drf_yasg import openapi
+
 from author.models import Author
 from author.token import TokenAuth, NodeBasicAuth
 from comment.documentation import NoSchemaTitleInspector
 from comment.models import Comment
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from drf_yasg.utils import swagger_auto_schema
-from Followers.models import Follow_Request, Follower
+from Followers.models import Follow_Request
 from Followers.serializers import FollowRequestSerializer
 from likes.models import Like
 from likes.serializers import LikeSerializer
@@ -200,6 +202,22 @@ def getInboxItems(request, authorId):
     responses={200: InboxItemSerializer, 400: "bag request or pagination", 404: "author not found"},
     field_inspectors=[NoSchemaTitleInspector],
     tags=["Inbox"],
+     manual_parameters=[
+        openapi.Parameter(
+            name="page",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_INTEGER,
+            description="Page number",
+            default=1,
+        ),
+        openapi.Parameter(
+            name="size",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_INTEGER,
+            description="Page size",
+            default=10,
+        ),
+    ],
 )
 @api_view(["POST", "DELETE", "GET"])
 @authentication_classes([TokenAuth(needAuthorCheck=["GET", "DELETE"]), NodeBasicAuth])

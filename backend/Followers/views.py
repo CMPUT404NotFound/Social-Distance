@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from django.contrib.auth import authenticate
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authtoken.models import Token
 
@@ -179,7 +180,7 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
 
 
 
-def findFriends(author : Author):
+def findFriends(author : Author, split = False):
     
     '''
     finds a list of string that are the ids of friends of the (local)author provided. 
@@ -188,7 +189,7 @@ def findFriends(author : Author):
     
     followers : List[QuerySet] = Follower.objects.filter(receiver = author).values("sender")
     
-    output = []
+    
     needFetch = []
     localids = []
 
@@ -200,16 +201,17 @@ def findFriends(author : Author):
         else:
             localids.append(id)
     
-    
+    localFriends = []
     for id in localids:
         try:
             f = Follower.objects.get(receiver = id)
-            output.append(id)
+            localFriends.append(id)
         except:
             pass
     
     responses = makeMultipleGETs(needFetch)
     
+    foreignFriends = []
     for response in responses:
         obj = response[1]
         if obj.status_code >= 400:
@@ -218,12 +220,20 @@ def findFriends(author : Author):
             continue
         #neither of the know falsy reponses are gotten, this link is prob a follower
         
-        output.append(response[0][:response[0].find("follower")])
+        foreignFriends.append(response[0][:response[0].find("follower")])
     
-    return output
+    return localFriends.extend(foreignFriends) if not split else (localFriends, foreignFriends)
 
 
-
+@swagger_auto_schema(
+    method="get",
+    operation_summary="find all friends of the given local author id",
+    responses={
+        200: openapi.Response("a list of local or foreign friends", AuthorSerializer(many = True)),
+        404: "author not found"
+    },
+    tags=["followers"]
+)
 @api_view(["GET"])
 def friendsView(request: Union[HttpRequest, Request], authorId:str):
     
@@ -234,8 +244,6 @@ def friendsView(request: Union[HttpRequest, Request], authorId:str):
         return Response("author requested does not exists", status=404)
     
     ids: List = findFriends(author)
-    print(ids)
-
     
     output = []
     needFetch = []
