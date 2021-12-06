@@ -26,7 +26,7 @@ class Post(models.Model):
         choices=visibility_choice, max_length=8, null=False, blank=False, default="PU"
     )
     description = models.CharField("description", max_length=100, blank=True)
-    content = models.TextField("content", max_length=400, blank=True)
+    content = models.TextField("content", blank=True)
     contentType = models.CharField(
         choices=content_choice, max_length= 20, null=False, default="plain"
     )
