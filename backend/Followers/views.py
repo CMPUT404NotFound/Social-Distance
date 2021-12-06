@@ -116,6 +116,8 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
     # print("request.islocal: ", request.islocal) #HELLO:  c76413d1-00bc-4cb7-8ca6-282b0bfcb953 <- FOREIGN!! USE ME AS EXAMPLE!
     if request.method == "PUT":
         #PUT author/{full_id_to_follow}/follower/{our_id_full}, is full_id_to_follow local? if yes do below
+        makeFollower = False
+        makeFollowerRequest = False
         if isRequestLocal == True:
             try:
                 receiver = Author.objects.get(pk=(request.id).split("/")[-1])
@@ -131,10 +133,19 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
                 try:#removing the follow request onject
                     follow_request = Follow_Request.objects.get(requestor=follower_id, requestee=receiver)
                     follow_request.delete()
+                    makeFollower = True
                 except:
                     pass
-                follow = Follower.objects.create(sender=follower_id, receiver=receiver)
-                follow.save()
+                if makeFollower == False:
+                    follow_request = Follow_Request.objects.create(requestor=follower_id, requestee=receiver)
+                    follow_request.save()
+                else:
+                    follow = Follower.objects.create(sender=follower_id, receiver=receiver)
+                    follow.save()
+
+                # follow_request = Follow_Request.objects.get(requestor=follower_id, requestee=receiver)
+                # follow = Follower.objects.create(sender=follower_id, receiver=receiver)
+                # follow.save()
                 return Response(status=status.HTTP_201_CREATED)
             except Author.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
