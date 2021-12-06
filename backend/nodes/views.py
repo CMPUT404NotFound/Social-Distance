@@ -21,7 +21,8 @@ import json
 from author.models import Author
 from requests import get
 from urllib.parse import urlparse
-
+from rest_framework.serializers import Serializer
+from rest_framework import serializers
 
 @api_view(["GET"])
 @authentication_classes([TokenAuth(bypassEntirely=["GET"])])
@@ -59,11 +60,25 @@ def getAllAuthors(request: Union[Request, HttpRequest]) -> Response:
     return Response({"type": "authors", "items": items}, status=200)
 
 
+class Commit(Serializer):
+    name = serializers.CharField()
+    email = serializers.CharField()
+    message = serializers.CharField()
+
+class GithubModel(Serializer):
+    type = serializers.CharField()
+    actor = serializers.CharField()
+    repo = serializers.CharField()
+    branch = serializers.CharField()
+    creationtime = serializers.CharField()
+    commits = Commit(many = True)
+
+
 # feeling lazy
 @swagger_auto_schema(
     method="get",
     operation_summary="Gets recent public github events for this author, right now only supports pushEvents",
-    responses={200: "im too tired to write this rn...... TODO FIXME", 404: "author not found, gitub link invalid etc"},
+    responses={200:GithubModel, 404: "author not found, gitub link invalid etc"},
     field_inspectors=[NoSchemaTitleInspector],
     manual_parameters=[
         openapi.Parameter(
