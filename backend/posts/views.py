@@ -62,7 +62,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             s = PostsSerializer(post, context={"request": request}, many=True)
             
             # checking the visibility of the post
-            if s.data.get("visibility") == "PUBLIC":
+            if request.data.get("visibility") == "PUBLIC":
                 is_it_visible = True
             else:
                 is_it_visible = False
@@ -93,7 +93,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
             # checking the visibility of the post
-            if s.data.get("visibility") == "PUBLIC":
+            if request.data.get("visibility") == "PUBLIC":
                 is_it_visible = True
             else:
                 is_it_visible = False
@@ -138,7 +138,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
             follower_id_string = findFollowers(Author.objects.get(pk=author_id))
 
             # checking the visibility of the post
-            if s.data.get("visibility") == "PUBLIC":
+            if request.data.get("visibility") == "PUBLIC":
                 is_it_visible = True
             else:
                 is_it_visible = False
