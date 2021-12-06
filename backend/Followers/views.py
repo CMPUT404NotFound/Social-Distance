@@ -191,6 +191,7 @@ def findFriends(author : Author, split = False):
     
     followers : List[QuerySet] = Follower.objects.filter(receiver = author).values("sender")
     
+    print(followers)
     
     needFetch = []
     localids = []
@@ -202,15 +203,13 @@ def findFriends(author : Author, split = False):
             needFetch.append(f"{id if id.endswith('/') else (id + '/')  }followers/{author.id}/")
         else:
             localids.append(id)
-    
+    print(localids)
     localFriends = []
     for id in localids:
-        try:
-            f = Follower.objects.get(receiver = id)
+        f = Follower.objects.filter(receiver = id).filter(sender = author.id).exists()
+        if f:
             localFriends.append(id)
-        except:
-            pass
-    
+             
     responses = makeMultipleGETs(needFetch)
     
     foreignFriends = []
@@ -223,7 +222,8 @@ def findFriends(author : Author, split = False):
         #neither of the know falsy reponses are gotten, this link is prob a follower
         
         foreignFriends.append(response[0][:response[0].find("follower")])
-   
+    
+    # print(localFriends)
     return localFriends + foreignFriends if not split else (localFriends, foreignFriends)
 
 
