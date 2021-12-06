@@ -135,3 +135,4 @@ def getGithub(request: Union[Request, HttpRequest], authorId) -> Response:
         )
 
     return Response(output, status=200)
+

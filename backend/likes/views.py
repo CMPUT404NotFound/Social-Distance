@@ -45,7 +45,7 @@ def getPostLikes(request: Union[HttpRequest, ParsedRequest], authorId, postId):
 
         return Response(LikeSerializer(likes.all(), many=True).data, status=200)
     else:
-        return returnGETRequest(request.id)
+        return returnGETRequest(f"{request.id}likes")
 
 
 @swagger_auto_schema(
@@ -69,7 +69,7 @@ def getCommentLikes(request, authorId, postId, commentId):
         # pagination not required
         return Response(LikeSerializer(likes.all(), many=True).data, status=200)
     else:
-        return returnGETRequest(request.id)
+        return returnGETRequest(f"{request.id}likes")
 
 
 @swagger_auto_schema(
