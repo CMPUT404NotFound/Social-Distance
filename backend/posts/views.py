@@ -264,8 +264,12 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
         
         # if post is not on our server then go fetch it from pther server
         else:
-            print(request.id)
-            return returnGETRequest(f"{request.id if request.id.endswith('/') else (request.id + '/')}posts/")
+            friend_id_string = findFriends(request.user)
+            foreign_id = (request.id).replace("~","/").split("/")[-2]
+            if foreign_id in friend_id_string:
+                return returnGETRequest(f"{request.id if request.id.endswith('/') else (request.id + '/')}posts/").exclude(unlisted= True)
+            else:
+                return returnGETRequest(f"{request.id if request.id.endswith('/') else (request.id + '/')}posts/").filter(visibility="PRIVATE")
     
     #POST method
     elif request.method == "POST":
