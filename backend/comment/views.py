@@ -76,7 +76,7 @@ def handlePOST(request: Union[HttpRequest, ParsedRequest], authorId: str = "", p
             return Response("no post under this id", status=status.HTTP_404_NOT_FOUND)
 
         try:
-            if all((item in data for item in ("type", "author", "comment", "contentType"))) and data["type"] == "comment":
+            if all((item in data for item in ("type", "author", "comment", "contentType"))) and data["type"].lower() == "comment":
                 if "id" in data["author"]:  # just check if author has id
 
                     realAuthorId = data["author"]["id"].split("/author/")[-1]
