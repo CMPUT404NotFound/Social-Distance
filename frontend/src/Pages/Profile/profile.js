@@ -9,6 +9,7 @@ import { Row, Col, Avatar, Button, Tabs } from "antd";
 import { UserOutlined, PlusOutlined, EditOutlined } from "@ant-design/icons";
 import { getIDfromURL, getURLID } from "../../utils";
 import EditProfile from "./editProfile";
+import GithubPost from "./githubPost";
 
 const { TabPane } = Tabs;
 
@@ -23,6 +24,7 @@ const Profile = () => {
 	const [likes, setLikes] = useState([]);
 	const [following, setFollowing] = useState(false);
 	const [editModalVisible, setEditModalVisible] = useState(false);
+	const [githubActivity, setGithubActivity] = useState(null);
 
 	let url = `https://project-api-404.herokuapp.com/api/author/${getURLID(person.id)}/`;
 
@@ -31,20 +33,6 @@ const Profile = () => {
 			Authorization: `Token ${user.token}`,
 		},
 	};
-
-	useEffect(() => {
-		// Get the user's posts
-		axios
-			.get(url + "posts/", config)
-			.then(function (response) {
-				console.log(response);
-				setPosts(response.data.data || response.data);
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-		// eslint-disable-next-line
-	}, [user, person]);
 
 	const getLikes = () => {
 		// Get the user's likes
@@ -72,6 +60,20 @@ const Profile = () => {
 			});
 	};
 
+	const getGithub = () => {
+		// Get the user's github activity
+		axios
+			.get(`https://project-api-404.herokuapp.com/api/github/${getIDfromURL(person.id)}/`, config)
+			.then(function (response) {
+				console.log(response);
+
+				setGithubActivity(response.data);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	};
+
 	// Check if following
 	const check_following = () => {
 		if (getIDfromURL(person.id) === user.uuid) return;
@@ -88,13 +90,6 @@ const Profile = () => {
 				} else console.log(error);
 			});
 	};
-
-	useEffect(() => {
-		// On load, check if following
-		check_following();
-		getLikes();
-		// eslint-disable-next-line
-	}, []);
 
 	// Follow
 	const follow = () => {
@@ -127,6 +122,28 @@ const Profile = () => {
 				console.log(error);
 			});
 	};
+
+	useEffect(() => {
+		// Get the user's posts
+		axios
+			.get(url + "posts/", config)
+			.then(function (response) {
+				console.log(response);
+				setPosts(response.data.data || response.data);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+		// eslint-disable-next-line
+	}, [user, person]);
+
+	useEffect(() => {
+		// On load, check if following
+		check_following();
+		getLikes();
+		getGithub();
+		// eslint-disable-next-line
+	}, []);
 
 	return (
 		<div className="profile_page">
@@ -189,6 +206,14 @@ const Profile = () => {
 							</Link>
 						))}
 				</TabPane>
+				{githubActivity && (
+					<TabPane tab="GitHub Stream" key="3">
+						{/* User Github Activity */}
+						{githubActivity.map((event, i) => (
+							<GithubPost event={event} />
+						))}
+					</TabPane>
+				)}
 			</Tabs>
 
 			{/* Edit Profile Modal */}

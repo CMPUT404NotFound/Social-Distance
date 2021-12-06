@@ -19,3 +19,11 @@
 .profile_page .post_container .post_description {
 	color: rgb(99, 99, 99);
 }
+
+.profile_page .github_post {
+	background: white;
+	padding: 1rem;
+	border-radius: 1rem;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+	margin-block: 1rem;
+}

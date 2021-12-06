@@ -3,7 +3,7 @@ import { Row, Col, Avatar, Button } from "antd";
 import { UserOutlined, PlusOutlined } from "@ant-design/icons";
 import UserContext from "../../userContext";
 import axios from "axios";
-import { getIDfromURL } from "../../utils";
+import { getURLID, getIDfromURL } from "../../utils";
 import { Link } from "react-router-dom";
 
 const Profile = ({ person }) => {
@@ -11,9 +11,9 @@ const Profile = ({ person }) => {
 
 	const [following, setFollowing] = useState(false);
 
-	let url = `https://project-api-404.herokuapp.com/api/author/${getIDfromURL(
+	let url = `https://project-api-404.herokuapp.com/api/author/${getURLID(
 		person.id
-	)}/followers/${user.uuid}/`;
+	)}/followers/${getURLID(user.id)}/`;
 
 	const config = {
 		headers: {
