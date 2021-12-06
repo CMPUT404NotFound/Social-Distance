@@ -11,7 +11,7 @@ from posts.models import Post
 
 class Comment(models.Model):
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False, max_length=40)
 
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name="post_comments"
