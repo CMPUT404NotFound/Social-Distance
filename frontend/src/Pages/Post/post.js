@@ -108,7 +108,7 @@ const Post = () => {
 						{(post.contentType=="text/plain") ? (
 							<ReactCommonmark source={post.content} className="post_content" />
 							) : (
-							<Image source={post.content} className="post_content" fluid />
+							<img src={post.content} className="post_content" />
 						)}
 					</Col>
 				</Row>

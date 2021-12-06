@@ -24,3 +24,8 @@
 	display: block;
 	margin-left: auto;
 }
+
+.post_content {
+	max-width: 80%;
+    max-height: 80%;
+}

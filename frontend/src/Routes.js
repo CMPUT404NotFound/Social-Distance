@@ -7,7 +7,6 @@ import CreatePost from "./Pages/Create/create";
 import Main from "./Pages/Main/main";
 import Inbox from "./Pages/Inbox/inbox";
 import Signup from "./Pages/Signup/signup";
-import Feed from "./Pages/Feed/feed";
 import Explore from "./Pages/Explore/explore";
 import Post from "./Pages/Post/post";
 
