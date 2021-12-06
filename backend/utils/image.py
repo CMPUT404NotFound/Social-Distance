@@ -8,7 +8,7 @@ def handleImage(img_req):
     if (type.startswith("image/")):
         post_content = img_req["content"]
         if post_content.startswith("http"):
-            response = requests.get(url=img_req)
+            response = requests.get(url=post_content)
             if response.ok:
                 img_req["content"] = base64.b64encode(response.content)  
                 return img_req
