@@ -51,15 +51,15 @@ from likes.models import Like
     responses={204: "update success", 404: "Author not found"},
     field_inspectors=[NoSchemaTitleInspector],
     request_body=AuthorUpdateSerializer,
-    manual_parameters=[
-        openapi.Parameter(
-            name="Authorization",
-            in_=openapi.IN_HEADER,
-            type=openapi.TYPE_STRING,
-            description="Authorization token",
-            default="Token <token>",
-        )
-    ],
+    # manual_parameters=[
+    #     openapi.Parameter(
+    #         name="Authorization",
+    #         in_=openapi.IN_HEADER,
+    #         type=openapi.TYPE_STRING,
+    #         description="Authorization token",
+    #         default="Token <token>",
+    #     )
+    # ],
     tags=["Author"],
 )
 @api_view(["GET", "POST"])

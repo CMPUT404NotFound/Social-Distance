@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from django.contrib.auth import authenticate
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authtoken.models import Token
 
@@ -223,7 +224,15 @@ def findFriends(author : Author):
     return output
 
 
-
+@swagger_auto_schema(
+    method="get",
+    operation_summary="find all friends of the given local author id",
+    responses={
+        200: openapi.Response("a list of local or foreign friends", AuthorSerializer(many = True)),
+        404: "author not found"
+    },
+    tags=["followers"]
+)
 @api_view(["GET"])
 def friendsView(request: Union[HttpRequest, Request], authorId:str):
     
@@ -234,8 +243,6 @@ def friendsView(request: Union[HttpRequest, Request], authorId:str):
         return Response("author requested does not exists", status=404)
     
     ids: List = findFriends(author)
-    print(ids)
-
     
     output = []
     needFetch = []

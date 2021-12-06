@@ -1,22 +1,24 @@
 from typing import Union
 
 from author.models import Author
+from author.serializers import AuthorSerializer
 from author.token import NodeBasicAuth, TokenAuth
 from comment.documentation import NoSchemaTitleInspector
+from comment.models import Comment
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpRequest
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from inbox.models import InboxItem
 from posts.models import Post
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
-from utils.request import (ClassType, ParsedRequest, checkIsLocal,
-                           parseIncomingRequest, returnGETRequest,)
+from utils.request import ClassType, ParsedRequest, checkIsLocal, parseIncomingRequest, returnGETRequest, returnPOSTRequest
 
 from likes.models import Like
 from likes.serializers import LikeSerializer
 
-from .documentation import AddLike, getLikesResponse
+from .documentation import getLikesResponse
 
 # Create your views here.
 
@@ -57,7 +59,6 @@ def getPostLikes(request: Union[HttpRequest, ParsedRequest], authorId, postId):
 @api_view(["GET"])
 @parseIncomingRequest(["GET"], ClassType.COMMENT)
 def getCommentLikes(request, authorId, postId, commentId):
-
     if request.islocal:
         try:
             comment = Post.objects.get(pk=request.id)
@@ -65,13 +66,12 @@ def getCommentLikes(request, authorId, postId, commentId):
             return Response("comment does not exist", status=404)
 
         likes = Like.objects.filter(parentId=request.id)
-        #pagination not required
+        # pagination not required
         return Response(LikeSerializer(likes.all(), many=True).data, status=200)
     else:
         return returnGETRequest(request.id)
 
 
-# todo make api endpoint for adding a like, when a local author likes a local or foreign content
 @swagger_auto_schema(
     method="GET",
     operation_summary="get all likes from a author",
@@ -96,16 +96,7 @@ def getCommentLikes(request, authorId, postId, commentId):
         ),
     ],
 )
-@swagger_auto_schema(
-    method="post",
-    operation_summary="add a record of a local author liking a local or foreign media",
-    field_inspectors=[NoSchemaTitleInspector],
-    tags=["Likes"],
-    responses={204: "like added", 400: "bad format"},
-    request_body=AddLike,
-)
-@api_view(["GET", "POST"])
-@authentication_classes([TokenAuth(needAuthorCheck=["POST"]), NodeBasicAuth])
+@api_view(["GET"])
 @parseIncomingRequest(["GET"])
 def getLiked(request: Union[ParsedRequest, HttpRequest], authorId):
 
@@ -150,3 +141,90 @@ def getLiked(request: Union[ParsedRequest, HttpRequest], authorId):
 
         except KeyError as e:
             return Response("bad request json format", status=400)
+
+
+@swagger_auto_schema(
+    method="post",
+    operation_summary="add a record of a local author liking a local or foreign post, and send the like to their inbox",
+    operation_description="Note, no request body is needed, the semantics of this api is 'authorId' likes 'postId'. This post id can local or encoded foreign",
+    field_inspectors=[NoSchemaTitleInspector],
+    tags=["Likes"],
+    responses={204: "like added", 400: "bad format", 404: "post to like, or author of the post is not found"},
+)
+@api_view(["POST"])
+@parseIncomingRequest(["POST"], ClassType.POST)
+@authentication_classes([TokenAuth(["POST"]), NodeBasicAuth])
+def addLikePost(request: Union[ParsedRequest, HttpRequest], authorId, postId: str):
+
+    if request.islocal:
+        try:
+            post : Post = Post.objects.get(pk = request.id)
+            targetAuthorId = post.author_id.pk
+        except Comment.DoesNotExist:
+            return Response("post not found!", status= 404)
+
+        # this author id def exists, since it passed auth
+        like = Like.objects.create(author=authorId, parentId=request.id)
+      
+        #post.author_id is linked a existing author via foreignkey
+        InboxItem.objects.create(author=post.author_id, type="L", contentId=like.pk) 
+        return Response(status=204)
+    else:
+        foreignid = request.id[: request.id.find("post")]
+        foreignid += "/" if not foreignid[-1] == "/" else ""
+
+        data = {
+            "@context": "https://www.w3.org/ns/activitystreams",
+            "summary": f"{request.user.displayName} likes your post",
+            "type": "Like",
+            "author": AuthorSerializer(request.user).data,
+            "object": request.id,
+        }
+
+        return returnPOSTRequest(f"{foreignid}inbox/", data=data)
+
+
+# feeling lazy
+@swagger_auto_schema(
+    method="post",
+    operation_summary="add a record of a local author liking a local or foreign comment, and send the like to their inbox",
+    operation_description="Note, no request body is needed, the semantics of this api is 'authorId' likes 'commentId'. This comment id can local or encoded foreign",
+    field_inspectors=[NoSchemaTitleInspector],
+    tags=["Likes"],
+    responses={204: "like added", 400: "bad format", 404: "post to like, or author of the post is not found"},
+)
+@api_view(["POST"])
+@parseIncomingRequest(["POST"], ClassType.COMMENT)
+@authentication_classes([TokenAuth(needAuthorCheck=["POST"]), NodeBasicAuth])
+def addLikeComment(request: Union[ParsedRequest, HttpRequest], authorId, commentId: str):
+
+    if request.islocal:
+        try:
+            comment : Comment = Comment.objects.get(pk = request.id)
+            targetAuthorId = comment.author
+        except Comment.DoesNotExist:
+            return Response("comment not found!", status= 404)
+
+        # this author id def exists, since it passed auth
+        like = Like.objects.create(author=authorId, parentId=request.id)
+        try:
+            targetAuthor = Author.objects.get(pk = targetAuthorId) 
+            InboxItem.objects.create(author=targetAuthor, type="L", contentId=like.pk) 
+        except Author.DoesNotExist:
+            # if owner of the comment no longer exists, just simply skip sending inbox
+            pass
+        
+        return Response(status=204)
+    else:
+        foreignid = request.id[: request.id.find("post")]
+        foreignid += "/" if not foreignid[-1] == "/" else ""
+
+        data = {
+            "@context": "https://www.w3.org/ns/activitystreams",
+            "summary": f"{request.user.displayName} likes your comment",
+            "type": "Like",
+            "author": AuthorSerializer(request.user).data,
+            "object": request.id,
+        }
+
+        return returnPOSTRequest(f"{foreignid}inbox/", data=data)
