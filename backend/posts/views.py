@@ -58,7 +58,7 @@ def managePost(request: Union[HttpRequest, ParsedRequest], author_id, post_id):
                 )  
 
             # Checking if the user asking for the post is local or foreign
-            is_friend = request.user.id in friend_id_string #regardless if friend or not, 
+            is_friend = usingTokenAuth and request.user.id in friend_id_string #regardless if friend or not, 
 
             # Seriliazing the data
             s = PostsSerializer(post, context={"request": request})
@@ -226,8 +226,8 @@ def getAllPosts(request: Union[HttpRequest, ParsedRequest], author_id):
                     type(request.user) is Author
                 )  
                 # checking if user is a friend and is in the server
-                is_friend = request.user.id in friend_id_string #regardless if friend or not, 
-
+                is_friend = usingTokenAuth and request.user.id in friend_id_string #regardless if friend or not, 
+                print(is_friend)
                 params: dict = request.query_params
                 
                 # if user is from our server then check; foreign server wont ask for private post
