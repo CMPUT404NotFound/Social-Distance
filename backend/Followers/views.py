@@ -151,7 +151,7 @@ def addFollower(request: Union[ParsedRequest, HttpRequest], author_id, follower_
 
 
                 else:
-                    follow = Follower.objects.create(sender=follower_id, receiver=receiver)
+                    follow = Follower.objects.create(sender=follower_id.split("~")[-1], receiver=receiver)
                     follow.save()
 
                 # follow_request = Follow_Request.objects.get(requestor=follower_id, requestee=receiver)
