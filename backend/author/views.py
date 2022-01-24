@@ -83,7 +83,8 @@ def handleAuthorById(request: Union[ParsedRequest, HttpRequest], authorId):
                 return Response("The requested address is not registered with this server yet.", status=404)
             
             result = makeRequest("GET", request.id)
-            if 200 <= result.status_code < 300:  # TIL chain comparison exist in python
+            if 200 <= result.status_code < 300:  # TIL chain comparison exist in
+                python
                 return Response(json.loads(result.content), status=200)
             else:
                 return Response("foreign content not found, or some error occured while fetching it", status=404)

@@ -42,6 +42,7 @@ from inbox.models import InboxItem
 @api_view(["GET"])
 @parseIncomingRequest(methodToCheck=["GET"], type= ClassType.AUTHOR)
 def getAllFollowers(request: Union[ParsedRequest, HttpRequest], author_id):
+    
     if request.method == "GET":
         try:
             results = []
