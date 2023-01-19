@@ -84,7 +84,7 @@ def handleAuthorById(request: Union[ParsedRequest, HttpRequest], authorId):
             
             result = makeRequest("GET", request.id)
             if 200 <= result.status_code < 300:  # TIL chain comparison exist in
-                python
+            
                 return Response(json.loads(result.content), status=200)
             else:
                 return Response("foreign content not found, or some error occured while fetching it", status=404)
@@ -300,8 +300,6 @@ def logout(request: Union[Request, HttpRequest]):
 
 
 # todo make logout api
-
-
 """
 {
     "token": "b1b4d2f1ec7aeef9f76f91c4d97269cde1bbacf3",

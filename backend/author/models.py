@@ -6,11 +6,8 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from backend.settings import SITE_ADDRESS
 
 class AuthorManager(BaseUserManager):
-    
-
-    
     def create_user(
-        self,
+        self,   
         userName=None,
         displayName="",
         github="",
